@@ -10,8 +10,9 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      width: 300.0,
-      height: 300.0,
+      margin: const EdgeInsets.all(30.0),
+      width: 340.0,
+      height: 340.0,
       decoration: new BoxDecoration(
         shape: BoxShape.circle,
         gradient: SweepGradient(
@@ -19,14 +20,14 @@ class HomePage extends StatelessWidget {
           startAngle: 0,
           //endAngle: math.pi *2,
           colors: const <Color>[
-            CupertinoColors.systemPurple, // blue
             CupertinoColors.systemIndigo,
             CupertinoColors.systemBlue,
             CupertinoColors.systemGreen,
             CupertinoColors.systemYellow,
             CupertinoColors.systemOrange,
             CupertinoColors.systemRed,
-            CupertinoColors.systemPurple
+            CupertinoColors.systemPurple,
+            CupertinoColors.systemIndigo,
           ],
           //stops: const <double>[0.0, 0.5],
         ),
@@ -41,29 +42,49 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             bigCircle,
             new Positioned(
-              child: new CircleButton(onTap: () => print("Cool"), iconData: CupertinoIcons.airplane),
-              top: 10.0,
-              left: 130.0,
+              child: Text('😊'),
+              top: 180.0,
+              left: 370.0,
             ),
             new Positioned(
-              child: new CircleButton(onTap: () => print("Hot"), iconData: CupertinoIcons.alarm_fill),
-              top: 120.0,
-              left: 10.0,
+              child: new Text("😃"),
+              top: 310.0,
+              left: 330.0,
             ),
             new Positioned(
-              child: new CircleButton(onTap: () => print("Warm"), iconData: CupertinoIcons.scissors),
-              top: 120.0,
-              right: 10.0,
+              child: new Text("😴"),
+              top: 370.0,
+              left: 180.0,
             ),
             new Positioned(
-              child: new CircleButton(onTap: () => print("Cold"), iconData: CupertinoIcons.shopping_cart),
-              top: 240.0,
-              left: 130.0,
+              child: new Text("😢"),
+              top: 310.0,
+              left: 50.0,
             ),
             new Positioned(
-              child: new CircleButton(onTap: () => print("Sweet"), iconData: CupertinoIcons.square_favorites_alt),
-              top: 120.0,
-              left: 130.0,
+              child: new Text("😔"),
+              top: 180.0,
+              left: 5.0,
+            ),
+            new Positioned(
+              child: new Text("🤒"),
+              top: 60.0,
+              left: 50.0,
+            ),
+            new Positioned(
+              child: new Text("😡"),
+              top: 0.0,
+              left: 180.0,
+            ),
+            new Positioned(
+              child: new Text("🤗"),
+              top: 60.0,
+              left: 330.0,
+            ),
+            new Positioned(
+              child: new Text("😐"),
+              top: 180.0,
+              left: 180.0,
             ),
 
           ],
