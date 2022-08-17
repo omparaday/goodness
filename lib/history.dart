@@ -3,7 +3,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:goodness/subscriber_chart.dart';
 import 'package:goodness/subscriber_series.dart';
 class ChartPage extends StatelessWidget {
-  const ChartPage({super.key});
+  const ChartPage();
   // ...
   static List<SubscriberSeries> data = [
     SubscriberSeries(

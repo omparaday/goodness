@@ -1,25 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'dart:ui' as ui;
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  double _x = 180, _y = 180;
+  bool enableSubmit = false;
   @override
   Widget build(BuildContext context) {
-    Widget bigCircle = new Container(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: RadialGradient(colors: [CupertinoColors.white.withOpacity(1), CupertinoColors.white.withOpacity(0)]
-          ),
-        ),
-      ),
+    Widget bigCircle = Container(
       margin: const EdgeInsets.all(30.0),
       width: 340.0,
       height: 340.0,
-      decoration: new BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
         gradient: SweepGradient(
           center: FractionalOffset.center,
           startAngle: 0,
-          //endAngle: math.pi *2,
-          colors: const <Color>[
+          colors: <Color>[
             CupertinoColors.systemIndigo,
             CupertinoColors.systemBlue,
             CupertinoColors.systemGreen,
@@ -30,6 +30,35 @@ class HomePage extends StatelessWidget {
             CupertinoColors.systemIndigo,
           ],
           //stops: const <double>[0.0, 0.5],
+        ),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: RadialGradient(colors: [CupertinoColors.white.withOpacity(1), CupertinoColors.white.withOpacity(0)]
+          ),
+        ),
+        child:
+        GestureDetector(
+          onTapUp: (TapUpDetails details) {
+            setState(() {
+              _x = details.localPosition.dx;
+              _y = details.localPosition.dy;
+            });
+          },
+          child: Container(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    top: _y-15,
+                    left: _x-10,
+                    child: Text('🛟'),
+                  )
+                ]
+            ),
+          ),
         ),
       ),
 
@@ -80,11 +109,6 @@ class HomePage extends StatelessWidget {
               child: new Text("🤗"),
               top: 60.0,
               left: 330.0,
-            ),
-            new Positioned(
-              child: new Text("😐"),
-              top: 180.0,
-              left: 180.0,
             ),
 
           ],

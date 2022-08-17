@@ -13,7 +13,7 @@ class ProfilePage extends StatefulWidget {
   static const String KEY_MARRIED = 'married';
   static const String KEY_DISABLED = 'disabled';
 
-  ProfilePage({super.key});
+  ProfilePage();
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
