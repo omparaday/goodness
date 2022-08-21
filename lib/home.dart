@@ -1,13 +1,30 @@
 import 'package:flutter/cupertino.dart';
+import 'package:goodness/dbhelpers/DeedHelper.dart';
 import 'dart:ui' as ui;
+
+import 'package:goodness/dbhelpers/WordData.dart';
+
+enum ProcessState { NotTaken, Greeting, WritingAbout, ShowingWord, OfferingDeed, ShowingQuote, Completed }
+
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  double _x = 180, _y = 180;
-  bool enableSubmit = false;
+  double _x = 165, _y = 175;
+  bool _enableSubmit = false;
+  ProcessState _processState = ProcessState.NotTaken;
+  late TextEditingController _writeAboutController;
+  late WordData _wordData;
+  late Deed _deed;
+
+  @override
+  void initState() {
+    super.initState();
+    _writeAboutController = TextEditingController();
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget bigCircle = Container(
@@ -34,168 +51,139 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Container(
         decoration: BoxDecoration(
-          gradient: RadialGradient(colors: [CupertinoColors.white.withOpacity(1), CupertinoColors.white.withOpacity(0)]
-          ),
+          gradient: RadialGradient(colors: [
+            CupertinoColors.white.withOpacity(1),
+            CupertinoColors.white.withOpacity(0)
+          ]),
         ),
-        child:
-        GestureDetector(
-          onTapUp: (TapUpDetails details) {
+        child: GestureDetector(
+          onTapUp: _processState == ProcessState.NotTaken ? (TapUpDetails details) => {
             setState(() {
               _x = details.localPosition.dx;
               _y = details.localPosition.dy;
-            });
-          },
+              print('$_x, $_y');
+              _enableSubmit = true;
+            })
+          } : (TapUpDetails details) => null,
           child: Container(
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
             ),
-            child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    top: _y-15,
-                    left: _x-10,
-                    child: Text('🛟'),
-                  )
-                ]
-            ),
+            child: Stack(children: <Widget>[
+              Positioned(
+                top: _y - 15,
+                left: _x - 10,
+                child: Text('🛟'),
+              )
+            ]),
           ),
         ),
       ),
-
     );
 
-    return new CupertinoApp(
-      color: CupertinoColors.black,
-      home: new Center(
-        child: new Stack(
-          children: <Widget>[
-            bigCircle,
-            new Positioned(
-              child: Text('😊'),
-              top: 180.0,
-              left: 370.0,
-            ),
-            new Positioned(
-              child: new Text("😃"),
-              top: 310.0,
-              left: 330.0,
-            ),
-            new Positioned(
-              child: new Text("😴"),
-              top: 370.0,
-              left: 180.0,
-            ),
-            new Positioned(
-              child: new Text("😢"),
-              top: 310.0,
-              left: 50.0,
-            ),
-            new Positioned(
-              child: new Text("😔"),
-              top: 180.0,
-              left: 5.0,
-            ),
-            new Positioned(
-              child: new Text("🤒"),
-              top: 60.0,
-              left: 50.0,
-            ),
-            new Positioned(
-              child: new Text("😡"),
-              top: 0.0,
-              left: 180.0,
-            ),
-            new Positioned(
-              child: new Text("🤗"),
-              top: 60.0,
-              left: 330.0,
-            ),
-
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CircleButton extends StatelessWidget {
-  final GestureTapCallback onTap;
-  final IconData iconData;
-
-  const CircleButton({Key? key, required this.onTap, required this.iconData}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    double size = 50.0;
-
-    return new GestureDetector(
-      onTap: onTap,
-      child: new Container(
-        width: size,
-        height: size,
-        decoration: new BoxDecoration(
-          color: CupertinoColors.white,
-          shape: BoxShape.circle,
-        ),
-        child: new Icon(
-          iconData,
-          color: CupertinoColors.black,
-        ),
-      ),
-
-    );
-  }
-}
-
-
-//Add this CustomPaint widget to the Widget Tree
-
-//Copy this CustomPainter code to the Bottom of the File
-class RPSCustomPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-
-    Path path_0 = Path();
-    path_0.moveTo(size.width*0.1666667,size.height*0.02727273);
-    path_0.lineTo(size.width*0.3333333,size.height*0.2545455);
-    path_0.lineTo(size.width*0.3333333,size.height*0.6818182);
-    path_0.lineTo(size.width*0.1666667,size.height*0.9090909);
-    path_0.lineTo(size.width*0.01000000,size.height*0.6818182);
-    path_0.lineTo(size.width*0.01000000,size.height*0.2272727);
-    path_0.close();
-
-    Paint paint_0_stroke = Paint()..style=PaintingStyle.stroke..strokeWidth=size.width*0.01666667;
-    paint_0_stroke.color=CupertinoColors.systemYellow.withOpacity(1.0);
-    canvas.drawPath(path_0,paint_0_stroke);
-
-    Paint paint_0_fill = Paint()..style=PaintingStyle.fill;
-    paint_0_fill.color = CupertinoColors.systemYellow.withOpacity(1.0);
-    canvas.drawPath(path_0,paint_0_fill);
-
+    return CupertinoApp(
+        color: CupertinoColors.black,
+        home: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Stack(
+                children: <Widget>[
+                  bigCircle,
+                  const Positioned(
+                    top: 180.0,
+                    left: 370.0,
+                    child: Text('😊'),
+                  ),
+                  const Positioned(
+                    top: 310.0,
+                    left: 330.0,
+                    child: Text("😃"),
+                  ),
+                  const Positioned(
+                    top: 370.0,
+                    left: 180.0,
+                    child: Text("😴"),
+                  ),
+                  const Positioned(
+                    top: 310.0,
+                    left: 50.0,
+                    child: Text("😢"),
+                  ),
+                  const Positioned(
+                    top: 180.0,
+                    left: 5.0,
+                    child: Text("😔"),
+                  ),
+                  const Positioned(
+                    top: 60.0,
+                    left: 50.0,
+                    child: Text("🤒"),
+                  ),
+                  const Positioned(
+                    top: 0.0,
+                    left: 180.0,
+                    child: Text("😡"),
+                  ),
+                  const Positioned(
+                    top: 60.0,
+                    left: 330.0,
+                    child: Text("🤗"),
+                  ),
+                ],
+              ),
+              //SizedBox.shrink(),
+              (_processState.index > ProcessState.NotTaken.index ? Text('Take a deep breath') : SizedBox.shrink()),
+              (_processState.index >= ProcessState.WritingAbout.index ? Text('Write a few words about why you feel so today.') : SizedBox.shrink()),
+              (_processState.index >= ProcessState.WritingAbout.index ?
+              CupertinoTextField(
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                controller: _writeAboutController,
+                placeholder: 'About your mind',
+              ) : SizedBox.shrink()),
+              (_processState.index >= ProcessState.ShowingWord.index ? Text('Word of the Day: ${_wordData.word}') : SizedBox.shrink()),
+              (_processState.index >= ProcessState.ShowingWord.index ? Text('Definition:\n${_wordData.meaning}') : SizedBox.shrink()),
+              (_processState.index >= ProcessState.OfferingDeed.index ? Text('Good Deed for the day:\n${_deed.content}') : SizedBox.shrink()),
+              CupertinoButton(
+                onPressed: _enableSubmit ? () => startFlow() :null,
+                child: Text('Proceed'),
+              ),
+            ],
+          ),
+        ));
   }
 
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
-}
-
-//Add this CustomPaint widget to the Widget Tree
-
-
-//Copy this CustomPainter code to the Bottom of the File
-class RPSCustomPainter1 extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-
-    Paint paint_0_fill = Paint()..style=PaintingStyle.fill;
-    paint_0_fill.shader = ui.Gradient.radial(Offset(size.width*0.5000000,size.height*0.5000000),size.width*0.5000000, [Color.fromRGBO(255,255,255,1.0).withOpacity(0),Color.fromRGBO(0,0,255,1.0).withOpacity(1)], [0,1]);
-    canvas.drawOval(Rect.fromCenter(center:Offset(size.width*0.4000000,size.height*0.2000000),width:size.width*0.3400000,height:size.height*0.1100000),paint_0_fill);
-
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+  startFlow() async {
+    print('inside flow');
+    if (_processState == ProcessState.WritingAbout) {
+      _wordData = await getNewWord();
+    } else if (_processState == ProcessState.ShowingWord) {
+      _deed = await getNewDeed();
+    }
+    setState(() {
+      // NotTaken, Greeting, WritingAbout, ShowingWord, OfferingDeed, ShowingQuote, Completed
+      switch (_processState) {
+        case ProcessState.NotTaken:
+          _processState = ProcessState.Greeting;
+          break;
+        case ProcessState.Greeting:
+          _processState = ProcessState.WritingAbout;
+          break;
+        case ProcessState.WritingAbout:
+          _processState = ProcessState.ShowingWord;
+          break;
+        case ProcessState.ShowingWord:
+          _processState = ProcessState.OfferingDeed;
+          break;
+        case ProcessState.OfferingDeed:
+          _processState = ProcessState.ShowingQuote;
+          break;
+        case ProcessState.ShowingQuote:
+          _processState = ProcessState.Completed;
+          break;
+      }
+    });
   }
 }
