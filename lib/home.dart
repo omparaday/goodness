@@ -4,6 +4,8 @@ import 'dart:ui' as ui;
 
 import 'package:goodness/dbhelpers/WordData.dart';
 
+import 'dbhelpers/QuoteHelper.dart';
+
 enum ProcessState { NotTaken, Greeting, WritingAbout, ShowingWord, OfferingDeed, ShowingQuote, Completed }
 
 class HomePage extends StatefulWidget {
@@ -18,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   late TextEditingController _writeAboutController;
   late WordData _wordData;
   late Deed _deed;
+  late Quote _quote;
 
   @override
   void initState() {
@@ -82,8 +85,9 @@ class _HomePageState extends State<HomePage> {
     );
 
     return CupertinoApp(
-        color: CupertinoColors.black,
-        home: SafeArea(
+        //color: CupertinoColors.black,
+        home: SingleChildScrollView(
+          child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -145,12 +149,16 @@ class _HomePageState extends State<HomePage> {
               ) : SizedBox.shrink()),
               (_processState.index >= ProcessState.ShowingWord.index ? Text('Word of the Day: ${_wordData.word}') : SizedBox.shrink()),
               (_processState.index >= ProcessState.ShowingWord.index ? Text('Definition:\n${_wordData.meaning}') : SizedBox.shrink()),
-              (_processState.index >= ProcessState.OfferingDeed.index ? Text('Good Deed for the day:\n${_deed.content}') : SizedBox.shrink()),
+              (_processState.index >= ProcessState.OfferingDeed.index ? Text('Good Deed for the day') : SizedBox.shrink()),
+              (_processState.index >= ProcessState.OfferingDeed.index ? Text(_deed.content) : SizedBox.shrink()),
+              (_processState.index >= ProcessState.ShowingQuote.index ? Text('Quote for the day') : SizedBox.shrink()),
+              (_processState.index >= ProcessState.ShowingQuote.index ? Text(_quote.content) : SizedBox.shrink()),
               CupertinoButton(
                 onPressed: _enableSubmit ? () => startFlow() :null,
-                child: Text('Proceed'),
+                child: _processState == ProcessState.Completed ? Text('Edit') : Text('Proceed'),
               ),
             ],
+          ),
           ),
         ));
   }
@@ -161,6 +169,8 @@ class _HomePageState extends State<HomePage> {
       _wordData = await getNewWord();
     } else if (_processState == ProcessState.ShowingWord) {
       _deed = await getNewDeed();
+    } else if (_processState == ProcessState.OfferingDeed) {
+      _quote = await getNewQuote();
     }
     setState(() {
       // NotTaken, Greeting, WritingAbout, ShowingWord, OfferingDeed, ShowingQuote, Completed

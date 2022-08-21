@@ -53,8 +53,6 @@ class _HomeState extends State<Home> {
           return CupertinoTabView(
             builder: (BuildContext context) {
               return SafeArea(
-                top: false,
-                bottom: false,
                 child: CupertinoApp(
                   home: CupertinoPageScaffold(
                     resizeToAvoidBottomInset: false,
