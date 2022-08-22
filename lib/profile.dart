@@ -66,7 +66,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-        backgroundColor: CupertinoColors.white,
         navigationBar: CupertinoNavigationBar(
           leading: Visibility(
             visible: isEditing ? true : false,
@@ -81,8 +80,9 @@ class _ProfilePageState extends State<ProfilePage> {
             child: new Icon(_editsave),
           ),
         ),
-        child: SafeArea(
-            child: isEditing ? buildEditableColumn() : buildDisplayColumn()));
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: isEditing ? buildEditableColumn() : buildDisplayColumn())));
   }
 
   Column buildDisplayColumn() {
