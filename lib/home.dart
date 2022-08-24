@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:goodness/dbhelpers/DeedHelper.dart';
-import 'dart:ui' as ui;
+import 'package:goodness/dbhelpers/DailyData.dart' as dailydata;
+import 'package:goodness/dbhelpers/DeedHelper.dart' as deed;
 import 'dart:math' as math;
+import 'package:intl/intl.dart';
 
-import 'package:goodness/dbhelpers/WordData.dart';
+import 'package:goodness/dbhelpers/WordData.dart' as word;
 
-import 'dbhelpers/QuoteHelper.dart';
+import 'dbhelpers/QuoteHelper.dart' as quote;
 
 enum ProcessState {
   NotTaken,
@@ -32,15 +33,20 @@ class _HomePageState extends State<HomePage> {
   bool _enableSubmit = false;
   ProcessState _processState = ProcessState.NotTaken;
   late TextEditingController _writeAboutController;
-  late WordData _wordData;
+  late word.WordData _wordData;
   bool _showDeed = false;
-  late Deed _deed;
-  late Quote _quote;
+  late deed.Deed? _deed;
+  late quote.Quote _quote;
+  late int _goodnessScore;
+  late dailydata.DailyData? _todayData;
+  late String _dateKey;
 
   @override
   void initState() {
     super.initState();
     _writeAboutController = TextEditingController();
+    _dateKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    readTodayData();
   }
 
   @override
@@ -87,10 +93,6 @@ class _HomePageState extends State<HomePage> {
                 setState(() {
                   _x = details.localPosition.dx;
                   _y = details.localPosition.dy;
-                  print('$_x, $_y');
-                  double angle = -math.atan2(_y - 165, _x - 165);
-                  double degree = angle * 180/math.pi;
-                  //print(degree);
                   _enableSubmit = true;
                 })
               }
@@ -177,6 +179,7 @@ class _HomePageState extends State<HomePage> {
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   controller: _writeAboutController,
+                  enabled: _processState.index != ProcessState.Completed.index,
                   placeholder: 'Write a few words about why you feel so today.',
                 )
                     : SizedBox.shrink()),
@@ -195,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                     ? Text('Good Deed for the day')
                     : SizedBox.shrink()),
                 (_processState.index >= ProcessState.OfferingDeed.index && _showDeed
-                    ? Text(_deed.content)
+                    ? Text(_deed!.content)
                     : SizedBox.shrink()),
                 (_processState.index >= ProcessState.ShowingQuote.index
                     ? Text('Quote for the day')
@@ -203,12 +206,13 @@ class _HomePageState extends State<HomePage> {
                 (_processState.index >= ProcessState.ShowingQuote.index
                     ? Text(_quote.content)
                     : SizedBox.shrink()),
-                CupertinoButton(
+                (_processState.index < ProcessState.Completed.index
+                    ? CupertinoButton(
                   onPressed: _enableSubmit ? () => startFlow() : null,
                   child: _processState == ProcessState.ShowingQuote
                       ? Text('Submit')
                       : Text('Proceed'),
-                ),
+                ) : Text('Your goodness score is $_goodnessScore')),
               ],
             ),
           ),
@@ -216,13 +220,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   startFlow() async {
-    print('inside flow');
     if (_processState == ProcessState.WritingAbout) {
-      _wordData = await getNewWord();
+      _wordData = await word.getNewWord();
     } else if (_processState == ProcessState.ShowingWord) {
-      _deed = await getNewDeed();
+      _deed = await deed.getNewDeed();
     } else if (_processState == ProcessState.OfferingDeed) {
-      _quote = await getNewQuote();
+      _quote = await quote.getNewQuote();
+    } else if (_processState == ProcessState.ShowingQuote) {
+      measureGoodness();
+      submit();
     }
     setState(() {
       // NotTaken, Greeting, WritingAbout, ShowingWord, OfferingDeed, ShowingQuote, Completed
@@ -253,6 +259,74 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _showDeed = true;
     });
+  }
+
+  void measureGoodness() {
+    double angle = -math.atan2(_y - 165, _x - 165);
+    double degree = angle * 180/math.pi;
+    print('angle $angle');
+    bool isHappy = (degree >= -95 && degree <=95);
+    print('ishappy $isHappy');
+    double distance = math.sqrt(math.pow(_x-radius, 2) + math.pow(_y-radius, 2));
+    print('distance $distance');
+    print('angle $degree');
+    _goodnessScore = (50 * distance/radius).round();
+    print('gs1 $_goodnessScore');
+    int aboutLength = _writeAboutController.text.length;
+    double aboutFactor = 1;
+    if (aboutLength <= 10) {
+      aboutFactor = 0.6;
+    } else if (aboutLength <= 30) {
+      aboutFactor = 0.8;
+    }
+    print('about fac $aboutFactor');
+    if (isHappy) {
+      _goodnessScore += 50;
+      print('gs2 $_goodnessScore');
+      _goodnessScore = (_goodnessScore * aboutFactor).round();
+      print('gs3 $_goodnessScore');
+    } else {
+      _goodnessScore = 50-_goodnessScore;
+      print('gs4 $_goodnessScore');
+      _goodnessScore = (_goodnessScore * aboutFactor).round();
+      print('gs5 $_goodnessScore');
+    }
+    if (_showDeed) {
+      _goodnessScore = (_goodnessScore * 1.1).round();
+      print('gs6 $_goodnessScore');
+    }
+    if (_goodnessScore >100) {
+      _goodnessScore = 100;
+      print('gs7 $_goodnessScore');
+    }
+    print('gs8 $_goodnessScore');
+  }
+
+  Future<void> readTodayData() async {
+    _todayData = await dailydata.getDataForDay(_dateKey);
+    if (_todayData != null) {
+      var quote2 = await quote.getQuoteForKey(_todayData!.quoteKey);
+      var wordData2 = await word.getWordForKey(_todayData!.wordKey);
+      var deedKey2 = _todayData!.deedKey;
+      if (deedKey2 != null) {
+        _showDeed = true;
+        _deed = await deed.getDeedForKey(deedKey2);
+      }
+      setState(() {
+        _processState = ProcessState.Completed;
+        _x = _todayData!.x;
+        _y = _todayData!.y;
+        _goodnessScore = _todayData!.goodness;
+        _writeAboutController.text = _todayData!.about;
+        _quote = quote2;
+        _wordData = wordData2;
+      });
+    }
+  }
+
+  void submit() {
+    _todayData = new dailydata.DailyData(_x, _y, _quote.name, _writeAboutController.text, _wordData.word, _showDeed ? _deed!.name: null, _goodnessScore);
+    dailydata.addDailyData(_dateKey, _todayData!);
   }
 }
 

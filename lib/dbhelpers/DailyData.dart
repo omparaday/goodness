@@ -11,26 +11,27 @@ String fileName = "submissions.json";
 @JsonSerializable()
 class DailyData {
   final double x, y;
-  final String quote, about, word, deed;
-  final String question, answer;
+  final String quoteKey, about, wordKey;
+  final String? deedKey;
+  final int goodness;
 
-  DailyData(this.x, this.y, this.quote, this.about, this.word, this.deed, this.question, this.answer);
+  DailyData(this.x, this.y, this.quoteKey, this.about, this.wordKey, this.deedKey, this.goodness);
 
   factory DailyData.fromJson(Map<String, dynamic> json) => _$DailyDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$DailyDataToJson(this);
 }
 
-Future<DailyData>? getDataForDay(DateTime day) {
-  getApplicationDocumentsDirectory().then((Directory directory) {
-    Directory  dir = directory;
+Future<DailyData?>? getDataForDay(String day) async {
+  Directory  dir = await getApplicationDocumentsDirectory();
     File jsonFile = File("${dir.path}/$fileName");
     bool fileExists = jsonFile.existsSync();
     if (fileExists) {
       Map<String, dynamic> fileContent = Map<String,dynamic>.from(jsonDecode(jsonFile.readAsStringSync()));
-      return DailyData.fromJson(fileContent[day.toString()]);
+      return DailyData.fromJson(fileContent[day]);
     }
-  });
+    return null;
+
 }
 
 void createFile(Map<String, dynamic> content, Directory dir, String fileName) {

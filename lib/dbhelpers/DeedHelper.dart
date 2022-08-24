@@ -20,3 +20,10 @@ Future<Deed> getNewDeed() async {
   String deedName = fileContent.keys.elementAt(new Random().nextInt(fileContent.length));
   return Deed(deedName, fileContent[deedName]);
 }
+
+Future<Deed> getDeedForKey(String deedName) async {
+  String data = await rootBundle.loadString("assets/deeds.json");
+
+  Map<String, dynamic> fileContent = Map<String,dynamic>.from(jsonDecode(data));
+  return Deed(deedName, fileContent[deedName]);
+}

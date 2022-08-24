@@ -17,6 +17,13 @@ Future<Quote> getNewQuote() async {
   String data = await rootBundle.loadString("assets/quotes.json");
 
   Map<String, dynamic> fileContent = Map<String,dynamic>.from(jsonDecode(data));
-  String deedName = fileContent.keys.elementAt(new Random().nextInt(fileContent.length));
-  return Quote(deedName, fileContent[deedName]);
+  String quoteName = fileContent.keys.elementAt(new Random().nextInt(fileContent.length));
+  return Quote(quoteName, fileContent[quoteName]);
+}
+
+Future<Quote> getQuoteForKey(String quoteName) async {
+  String data = await rootBundle.loadString("assets/quotes.json");
+
+  Map<String, dynamic> fileContent = Map<String,dynamic>.from(jsonDecode(data));
+  return Quote(quoteName, fileContent[quoteName]);
 }

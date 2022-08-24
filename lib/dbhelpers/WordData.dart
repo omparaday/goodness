@@ -22,3 +22,10 @@ Future<WordData> getNewWord() async {
   String word = fileContent.keys.elementAt(new Random().nextInt(fileContent.length));
   return WordData(word, fileContent[word]);
 }
+
+Future<WordData> getWordForKey(String word) async {
+  String data = await rootBundle.loadString("assets/celebwords_en.json");
+
+  Map<String, dynamic> fileContent = Map<String,dynamic>.from(jsonDecode(data));
+  return WordData(word, fileContent[word]);
+}
