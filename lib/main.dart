@@ -21,7 +21,7 @@ class _HomeState extends State<Home> {
     _currentIndex = 0;
     _children = [
       HomePage(),
-      ChartPage(),
+      HistoryPage(),
       ProfilePage(),
     ];
     super.initState();
