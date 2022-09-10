@@ -1,22 +1,48 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:goodness/history.dart';
 
 class HistoryChart extends StatelessWidget {
-  const HistoryChart({
+  HistoryChart({
     Key? key,
     required this.chartWidth,
     required this.chartHeight,
-    required this.barList,
-    required this.rowList,
+    required this.plotList,
+    required this.historyType
   }) : super(key: key);
 
   final double chartWidth;
   final double chartHeight;
-  final List<Widget> barList;
-  final List<Widget> rowList;
+  late List<Widget> barList;
+  late  List<Widget> rowList;
+  final Map<String, int> plotList;
+  final HistoryType historyType;
 
   @override
   Widget build(BuildContext context) {
+    final Size textHeight = (TextPainter(
+        text: TextSpan(text: 'S'),
+        maxLines: 1,
+        textScaleFactor: MediaQuery.of(context).textScaleFactor,
+        textDirection: TextDirection.ltr)
+      ..layout())
+        .size;
+    barList = [];
+    rowList = [];
+    plotList.forEach((barName, barValue) {
+        rowList.add(historyType == HistoryType.Month ? Text('') : Text('${barName.substring(0,1)}'));
+        barList.add(Container(
+          decoration: BoxDecoration(
+            color: CupertinoColors.systemBlue,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20.0),
+              topLeft: Radius.circular(20.0),
+            ),
+          ),
+          height: barValue*(chartHeight-(textHeight.height+3))/100,
+          width: 5,
+        ));
+    });
     return Container(
       width: chartWidth,
       height: chartHeight,
@@ -119,4 +145,11 @@ class Divider extends StatelessWidget {
       ),
     );
   }
+}
+
+class BarPlotInfo {
+  String barName;
+  int barValue;
+
+  BarPlotInfo(this.barName, this.barValue);
 }

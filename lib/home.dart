@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:goodness/dbhelpers/DailyData.dart' as dailydata;
 import 'package:goodness/dbhelpers/DeedHelper.dart' as deed;
 import 'dart:math' as math;
-import 'package:intl/intl.dart';
 
 import 'package:goodness/dbhelpers/WordData.dart' as word;
 
@@ -45,9 +44,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _writeAboutController = TextEditingController();
-    _dateKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    _dateKey = dailydata.getDateKeyFormat(DateTime.now());
     readTodayData();
   }
+
 
   @override
   Widget build(BuildContext context) {
