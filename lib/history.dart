@@ -137,6 +137,8 @@ class _HistoryPageState extends State<HistoryPage> {
 
   Future<void> fetchChartData() async {
     plotInfoMap = {};
+    chartName = '';
+    chartAverage = 0.toString();
     switch (historyType) {
       case HistoryType.Week:
         await fetchWeeklyData();
@@ -145,9 +147,51 @@ class _HistoryPageState extends State<HistoryPage> {
         await fetchMonthlyData();
         break;
       case HistoryType.Year:
+        await fetchYearlyData();
+        break;
       case HistoryType.All:
+        await fetchAllData();
     }
     setState(() {});
+  }
+
+  Future<void> fetchAllData() async {
+    DateTime start = getFirstDayOfYear(DateTime(2022));
+    DateTime today = DateTime.now();
+    bool startFound = false;
+    double totalDays = 0, totalScore = 0;
+    while (start.year <= today.year) {
+      Map<String, dynamic>? yearlyData = await getDataForYear(start);
+      Map<String, double>? monthlyData = yearlyData!['monthlyData'];
+      Map<String, double>? metaData = yearlyData!['metaData'];
+      if (metaData!['Average'] != 0 || startFound) {
+        startFound = true;
+        int avg = metaData!['Average']?.round() ?? 0;
+        plotInfoMap.putIfAbsent((start.year).toString(), () => avg);
+        totalDays += metaData!['totalDays'] ?? 0;
+        totalScore += metaData!['totalScore'] ?? 0;
+      }
+      start = getNextYear(start);
+    }
+    if (totalDays != 0) {
+      chartAverage = (totalScore / totalDays).toStringAsFixed(1);
+    }
+  }
+
+  Future<void> fetchYearlyData() async {
+    Map<String, dynamic>? yearlyData = await getDataForYear(chartYear);
+    Map<String, double>? monthlyData = yearlyData!['monthlyData'];
+    Map<String, double>? metaData = yearlyData!['metaData'];
+    chartName = chartYear.year.toString();
+    print(monthlyData!.length.toString());
+    if (yearlyData != null) {
+      chartAverage = metaData!['Average']?.toStringAsFixed(1) ?? '0.0';
+      monthlyData?.forEach((key, value) {
+        print(key);
+        int intval = value.round();
+        plotInfoMap.putIfAbsent(key, () => intval);
+      });
+    }
   }
 
   Future<void> fetchMonthlyData() async {

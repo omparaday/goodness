@@ -66,6 +66,43 @@ Future<Map<String, dynamic>?>? getDataForMonth(String day) async {
   return null;
 }
 
+Future<Map<String, dynamic>?>? getDataForYear(DateTime date) async {
+  double totalDays = 0, totalScore = 0;
+  DateTime transDate = date;
+  Map<String, dynamic> result = {};
+  Map<String, double> monthlyData = {};
+  Map<String, double> metaData = {};
+  while (transDate.year == date.year) {
+    Map<String, dynamic>? monthData =
+        await getDataForMonth(getDateKeyFormat(transDate));
+    int monthDays = 0, monthScore = 0;
+    monthData?.forEach((key, value) {
+      monthDays++;
+      DailyData dd = DailyData.fromJson(value);
+      monthScore += dd.goodness;
+    });
+    totalDays += monthDays;
+    totalScore += monthScore;
+    if (monthDays != 0) {
+      monthlyData.putIfAbsent(
+          getMonthName(transDate), () => monthScore / monthDays);
+    } else {
+      monthlyData.putIfAbsent(getMonthName(transDate), () => 0);
+    }
+    transDate = getNextMonth(transDate);
+  }
+  if (totalDays == 0) {
+    metaData.putIfAbsent('Average', () => 0);
+  } else {
+    metaData.putIfAbsent('Average', () => totalScore / totalDays);
+  }
+  metaData.putIfAbsent('totalScore', () => totalScore);
+  metaData.putIfAbsent('totalDays', () => totalDays);
+  result.putIfAbsent('monthlyData', () => monthlyData);
+  result.putIfAbsent('metaData', () => metaData);
+  return result;
+}
+
 Future<Map<String, DailyData>?>? getRecentData() async {
   DateTime historyDate = DateTime.now();
   Directory dir = await getApplicationDocumentsDirectory();
