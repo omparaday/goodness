@@ -5,25 +5,19 @@ import 'package:goodness/profile.dart';
 import 'history.dart';
 
 void main() {
-  runApp(new CupertinoApp(home: new Home()));
+  runApp(new CupertinoApp(home: new Main()));
 }
-class Home extends StatefulWidget {
+class Main extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _MainState createState() => _MainState();
 }
 
-class _HomeState extends State<Home> {
+class _MainState extends State<Main> with SingleTickerProviderStateMixin {
   late int _currentIndex;
-  late List<Widget> _children;
 
   @override
   void initState() {
     _currentIndex = 0;
-    _children = [
-      HomePage(),
-      HistoryPage(),
-      ProfilePage(),
-    ];
     super.initState();
   }
 
@@ -56,7 +50,14 @@ class _HomeState extends State<Home> {
                 child: CupertinoApp(
                   home: CupertinoPageScaffold(
                     resizeToAvoidBottomInset: false,
-                    child: _children[_currentIndex],
+                    child: IndexedStack(
+                      index:_currentIndex,
+                      children: [
+                        HomePage(),
+                        HistoryPage(),
+                        ProfilePage(),
+                      ],
+                    ),
                   ),
                 ),
               );

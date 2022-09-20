@@ -13,13 +13,11 @@ class ProfilePage extends StatefulWidget {
   static const String KEY_MARRIED = 'married';
   static const String KEY_DISABLED = 'disabled';
 
-  ProfilePage();
-
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClientMixin {
   String? _name;
   IconData _editsave = CupertinoIcons.pen;
   bool isEditing = false;
@@ -96,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
           DecoratedText(_dob != null
               ? 'Date of birth: ${_dob?.month}-${_dob?.day}-${_dob?.year}'
               : 'Not Set'),
-          DecoratedText('Gender $_gender'),
+          DecoratedText('Gender: ${_gender.name}'),
           DecoratedText(_married
               ? 'Marital Status: Married'
               : 'Marital Status: Unmarried'),
@@ -235,4 +233,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ));
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

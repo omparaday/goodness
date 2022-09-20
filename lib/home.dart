@@ -44,7 +44,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    print('inside home init');
     _writeAboutController = TextEditingController();
     _dateKey =
         dailydata.getDateKeyFormat(DateTime.now());

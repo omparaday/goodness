@@ -52,11 +52,8 @@ class _HistoryPageState extends State<HistoryPage> {
               CupertinoSegmentedControl<HistoryType>(
                 groupValue: historyType,
                 onValueChanged: (HistoryType value) {
-                  setState(() {
-                    print(value);
                     historyType = value;
                     fetchChartData();
-                  });
                 },
                 children: const <HistoryType, Widget>{
                   HistoryType.Week: Text('Week'),
@@ -102,13 +99,9 @@ class _HistoryPageState extends State<HistoryPage> {
   Future<void> fetchRecentHistory() async {
     Map<String, dynamic>? pastData = await getRecentData();
     DailyData dd;
-    pastData?.forEach((key, value) async {
+    recentData.clear();
+    pastData?.forEach((key, value) {
       dd = value;
-      String deedStr = 'Not opted for deed';
-      if (dd.deedKey != null) {
-        Deed deed = await getDeedForKey(dd.deedKey ?? '');
-        deedStr = deed.content;
-      }
       recentData.add(Container(
           margin: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
@@ -131,7 +124,7 @@ class _HistoryPageState extends State<HistoryPage> {
               Text(dd.wordKey),
             ],
           ),
-          Text(deedStr)
+          dd.about.isNotEmpty ? Text(dd.about) : SizedBox.shrink(),
         ],
       )));
       //recentData.add(Divider());
@@ -158,7 +151,8 @@ class _HistoryPageState extends State<HistoryPage> {
       case HistoryType.All:
         await fetchAllData();
     }
-    setState(() {});
+    setState(() {
+    });
   }
 
   Future<void> fetchAllData() async {
@@ -189,11 +183,9 @@ class _HistoryPageState extends State<HistoryPage> {
     Map<String, double>? monthlyData = yearlyData!['monthlyData'];
     Map<String, double>? metaData = yearlyData!['metaData'];
     chartName = chartYear.year.toString();
-    print(monthlyData!.length.toString());
     if (yearlyData != null) {
       chartAverage = metaData!['Average']?.toStringAsFixed(1) ?? '0.0';
       monthlyData?.forEach((key, value) {
-        print(key);
         int intval = value.round();
         plotInfoMap.putIfAbsent(key, () => intval);
       });
