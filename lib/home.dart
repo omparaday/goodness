@@ -4,6 +4,7 @@ import 'package:goodness/dbhelpers/DeedHelper.dart' as deed;
 import 'dart:math' as math;
 
 import 'package:goodness/dbhelpers/WordData.dart' as word;
+import 'package:goodness/widgets/DecoratedText.dart';
 
 import 'dbhelpers/QuoteHelper.dart' as quote;
 
@@ -24,8 +25,8 @@ class HomePage extends StatefulWidget {
 
 const double diameter = 300;
 const double inset = 30;
-const double radius = diameter/2;
-const double sideOfSquare = diameter/(2*math.sqrt2);
+const double radius = diameter / 2;
+const double sideOfSquare = diameter / (2 * math.sqrt2);
 
 class _HomePageState extends State<HomePage> {
   double _x = radius, _y = radius;
@@ -43,11 +44,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    print('inside home init');
     _writeAboutController = TextEditingController();
-    _dateKey = dailydata.getDateKeyFormat(DateTime.now().add(Duration(days: 1)));
+    _dateKey =
+        dailydata.getDateKeyFormat(DateTime.now());
     readTodayData();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -90,12 +92,12 @@ class _HomePageState extends State<HomePage> {
             child: GestureDetector(
               onTapUp: _processState == ProcessState.NotTaken
                   ? (TapUpDetails details) => {
-                setState(() {
-                  _x = details.localPosition.dx;
-                  _y = details.localPosition.dy;
-                  _enableSubmit = true;
-                })
-              }
+                        setState(() {
+                          _x = details.localPosition.dx;
+                          _y = details.localPosition.dy;
+                          _enableSubmit = true;
+                        })
+                      }
                   : (TapUpDetails details) => null,
               child: Container(
                 decoration: const BoxDecoration(
@@ -115,108 +117,104 @@ class _HomePageState extends State<HomePage> {
       ),
     );
 
-    return CupertinoApp(
-      //color: CupertinoColors.black,
-        home: SingleChildScrollView(
-          child: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
+    return Container(
+        //color: CupertinoColors.black,
+        child: SingleChildScrollView(
+      child: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Stack(
               children: <Widget>[
-                Stack(
-                  children: <Widget>[
-                    bigCircle,
-                    const Positioned(
-                      top: sideOfSquare,
-                      left: diameter + inset,
-                      child: Text('😊'),
-                    ),
-                    const Positioned(
-                      top: diameter - sideOfSquare + inset,
-                      left: diameter + inset,
-                      child: Text("😃"),
-                    ),
-                    const Positioned(
-                      top: diameter + inset/2,
-                      left: radius + sideOfSquare,
-                      child: Text("😴"),
-                    ),
-                    const Positioned(
-                      top: diameter + inset/2,
-                      left: sideOfSquare,
-                      child: Text("😢"),
-                    ),
-                    const Positioned(
-                      top: diameter - sideOfSquare + inset,
-                      left: inset/2,
-                      child: Text("😔"),
-                    ),
-                    const Positioned(
-                      top: sideOfSquare,
-                      left: inset/2,
-                      child: Text("🤒"),
-                    ),
-                    const Positioned(
-                      top: inset/2,
-                      left: sideOfSquare,
-                      child: Text("😡"),
-                    ),
-                    const Positioned(
-                      top: inset/2,
-                      left: radius + sideOfSquare,
-                      child: Text("🤗"),
-                    ),
-                  ],
+                bigCircle,
+                const Positioned(
+                  top: sideOfSquare,
+                  left: diameter + inset,
+                  child: Text('😊'),
                 ),
-                (_processState.index > ProcessState.NotTaken.index
-                    ? Text('Take a deep breath')
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.WritingAbout.index
-                    ? Text('Your mood')
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.WritingAbout.index
-                    ? CupertinoTextField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  controller: _writeAboutController,
-                  enabled: _processState.index != ProcessState.Completed.index,
-                  placeholder: 'Write a few words about why you feel so today.',
-                )
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.ShowingWord.index
-                    ? Text('Word of the Day: ${_wordData.word}')
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.ShowingWord.index
-                    ? Text('Definition:\n${_wordData.meaning}')
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.OfferingDeed.index && !_showDeed
-                    ? CupertinoButton(
-                    onPressed: () => showDeed(),
-                    child: Text('Click here you want to do a good deed'))
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.OfferingDeed.index && _showDeed
-                    ? Text('Good Deed for the day')
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.OfferingDeed.index && _showDeed
-                    ? Text(_deed!.content)
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.ShowingQuote.index
-                    ? Text('Quote for the day')
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.ShowingQuote.index
-                    ? Text(_quote.content)
-                    : SizedBox.shrink()),
-                (_processState.index < ProcessState.Completed.index
-                    ? CupertinoButton(
-                  onPressed: _enableSubmit ? () => startFlow() : null,
-                  child: _processState == ProcessState.ShowingQuote
-                      ? Text('Submit')
-                      : Text('Proceed'),
-                ) : Text('Your goodness score is $_goodnessScore')),
+                const Positioned(
+                  top: diameter - sideOfSquare + inset,
+                  left: diameter + inset,
+                  child: Text("😃"),
+                ),
+                const Positioned(
+                  top: diameter + inset / 2,
+                  left: radius + sideOfSquare,
+                  child: Text("😴"),
+                ),
+                const Positioned(
+                  top: diameter + inset / 2,
+                  left: sideOfSquare,
+                  child: Text("😢"),
+                ),
+                const Positioned(
+                  top: diameter - sideOfSquare + inset,
+                  left: inset / 2,
+                  child: Text("😔"),
+                ),
+                const Positioned(
+                  top: sideOfSquare,
+                  left: inset / 2,
+                  child: Text("🤒"),
+                ),
+                const Positioned(
+                  top: inset / 2,
+                  left: sideOfSquare,
+                  child: Text("😡"),
+                ),
+                const Positioned(
+                  top: inset / 2,
+                  left: radius + sideOfSquare,
+                  child: Text("🤗"),
+                ),
               ],
             ),
-          ),
-        ));
+            (_processState.index > ProcessState.NotTaken.index
+                ? Text('Take a deep breath')
+                : SizedBox.shrink()),
+            (_processState.index >= ProcessState.WritingAbout.index
+                ? Text('Your mood')
+                : SizedBox.shrink()),
+            (_processState.index >= ProcessState.WritingAbout.index
+                ? CupertinoTextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    controller: _writeAboutController,
+                    enabled:
+                        _processState.index != ProcessState.Completed.index,
+                    placeholder:
+                        'Write a few words about why you feel so today.',
+                  )
+                : SizedBox.shrink()),
+            (_processState.index >= ProcessState.ShowingWord.index
+                ? DecoratedText(
+                    'Word of the Day: ${_wordData.word}\n\nDefinition:\n${_wordData.meaning}')
+                : SizedBox.shrink()),
+            (_processState.index >= ProcessState.OfferingDeed.index  && _processState != ProcessState.Completed &&
+                    !_showDeed
+                ? CupertinoButton(
+                    onPressed: () => showDeed(),
+                    child: Text('Click here you want to do a good deed'))
+                : SizedBox.shrink()),
+            (_processState.index >= ProcessState.OfferingDeed.index && _showDeed
+                ? DecoratedText('Good Deed for the day\n\n${_deed!.content}')
+                : SizedBox.shrink()),
+            (_processState.index >= ProcessState.ShowingQuote.index
+                ? DecoratedText('Quote for the day\n\n${_quote.content}')
+                : SizedBox.shrink()),
+            (_processState.index < ProcessState.Completed.index
+                ? CupertinoButton(
+                    onPressed: _enableSubmit ? () => startFlow() : null,
+                    child: _processState == ProcessState.ShowingQuote
+                        ? Text('Submit')
+                        : Text('Proceed'),
+                  )
+                : DecoratedText('Your goodness score is $_goodnessScore')),
+          ],
+        ),
+      ),
+    ));
   }
 
   startFlow() async {
@@ -263,14 +261,15 @@ class _HomePageState extends State<HomePage> {
 
   void measureGoodness() {
     double angle = -math.atan2(_y - 165, _x - 165);
-    double degree = angle * 180/math.pi;
+    double degree = angle * 180 / math.pi;
     print('angle $angle');
-    bool isHappy = (degree >= -95 && degree <=95);
+    bool isHappy = (degree >= -95 && degree <= 95);
     print('ishappy $isHappy');
-    double distance = math.sqrt(math.pow(_x-radius, 2) + math.pow(_y-radius, 2));
+    double distance =
+        math.sqrt(math.pow(_x - radius, 2) + math.pow(_y - radius, 2));
     print('distance $distance');
     print('angle $degree');
-    _goodnessScore = (50 * distance/radius).round();
+    _goodnessScore = (50 * distance / radius).round();
     print('gs1 $_goodnessScore');
     int aboutLength = _writeAboutController.text.length;
     double aboutFactor = 1;
@@ -286,7 +285,7 @@ class _HomePageState extends State<HomePage> {
       _goodnessScore = (_goodnessScore * aboutFactor).round();
       print('gs3 $_goodnessScore');
     } else {
-      _goodnessScore = 50-_goodnessScore;
+      _goodnessScore = 50 - _goodnessScore;
       print('gs4 $_goodnessScore');
       _goodnessScore = (_goodnessScore * aboutFactor).round();
       print('gs5 $_goodnessScore');
@@ -295,7 +294,7 @@ class _HomePageState extends State<HomePage> {
       _goodnessScore = (_goodnessScore * 1.1).round();
       print('gs6 $_goodnessScore');
     }
-    if (_goodnessScore >100) {
+    if (_goodnessScore > 100) {
       _goodnessScore = 100;
       print('gs7 $_goodnessScore');
     }
@@ -325,10 +324,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   void submit() {
-    _todayData = new dailydata.DailyData(_x, _y, _quote.name, _writeAboutController.text, _wordData.word, _showDeed ? _deed!.name: null, _goodnessScore);
+    _todayData = new dailydata.DailyData(
+        _x,
+        _y,
+        _quote.name,
+        _writeAboutController.text,
+        _wordData.word,
+        _showDeed ? _deed!.name : null,
+        _goodnessScore);
     dailydata.addDailyData(_dateKey, _todayData!);
   }
 }
+
 
 class LinePainter extends CustomPainter {
   @override
@@ -338,8 +345,10 @@ class LinePainter extends CustomPainter {
       ..strokeWidth = 5;
     canvas.drawLine(Offset(radius, 0), Offset(radius, diameter), paint);
     canvas.drawLine(Offset(0, radius), Offset(diameter, radius), paint);
-    canvas.drawLine(Offset(radius - sideOfSquare, radius - sideOfSquare), Offset(radius + sideOfSquare, radius + sideOfSquare), paint);
-    canvas.drawLine(Offset(radius - sideOfSquare, radius + sideOfSquare), Offset(radius + sideOfSquare, radius - sideOfSquare), paint);
+    canvas.drawLine(Offset(radius - sideOfSquare, radius - sideOfSquare),
+        Offset(radius + sideOfSquare, radius + sideOfSquare), paint);
+    canvas.drawLine(Offset(radius - sideOfSquare, radius + sideOfSquare),
+        Offset(radius + sideOfSquare, radius - sideOfSquare), paint);
     //canvas.drawLine(Offset(90, 23), Offset(243, 317), paint);
     //canvas.drawLine(Offset(24, 90), Offset(319, 226), paint);
   }

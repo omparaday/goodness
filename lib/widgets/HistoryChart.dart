@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:goodness/history.dart';
+
+enum HistoryType { Week, Month, Year, All }
 
 class HistoryChart extends StatelessWidget {
   HistoryChart(

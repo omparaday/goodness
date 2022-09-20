@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum Gender { Male, Female, Transgender, NonBinary, PreferNotToRespond }
@@ -81,8 +81,9 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         child: SingleChildScrollView(
-          child: SafeArea(
-            child: isEditing ? buildEditableColumn() : buildDisplayColumn())));
+            child: SafeArea(
+                child:
+                    isEditing ? buildEditableColumn() : buildDisplayColumn())));
   }
 
   Column buildDisplayColumn() {
@@ -90,16 +91,16 @@ class _ProfilePageState extends State<ProfilePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Text(_name ?? 'Your Name'),
-          Text(_cor ?? 'Your Country'),
-          Text(_dob != null
+          DecoratedText(_name ?? 'Your Name'),
+          DecoratedText(_cor ?? 'Your Country'),
+          DecoratedText(_dob != null
               ? 'Date of birth: ${_dob?.month}-${_dob?.day}-${_dob?.year}'
               : 'Not Set'),
-          Text('Gender $_gender'),
-          Text(_married
+          DecoratedText('Gender $_gender'),
+          DecoratedText(_married
               ? 'Marital Status: Married'
               : 'Marital Status: Unmarried'),
-          Text(_disabled
+          DecoratedText(_disabled
               ? 'Physical Conditions: Disabled'
               : 'Physical Conditions: No Disability'),
         ]);

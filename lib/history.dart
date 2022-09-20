@@ -4,8 +4,6 @@ import 'package:goodness/widgets/HistoryChart.dart';
 
 import 'dbhelpers/DeedHelper.dart';
 
-enum HistoryType { Week, Month, Year, All }
-
 class HistoryPage extends StatefulWidget {
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -44,8 +42,8 @@ class _HistoryPageState extends State<HistoryPage> {
       plotList: plotInfoMap,
       historyType: historyType,
     );
-    return CupertinoApp(
-      home: SingleChildScrollView(
+    return Container(
+      child: SingleChildScrollView(
         child: SafeArea(
           child: Column(
             children: <Widget>[
@@ -112,6 +110,14 @@ class _HistoryPageState extends State<HistoryPage> {
         deedStr = deed.content;
       }
       recentData.add(Container(
+          margin: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: CupertinoColors.opaqueSeparator,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+            shape: BoxShape.rectangle,
+          ),
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -128,7 +134,7 @@ class _HistoryPageState extends State<HistoryPage> {
           Text(deedStr)
         ],
       )));
-      recentData.add(Divider());
+      //recentData.add(Divider());
     });
     setState(() {
       recentData = recentData;
