@@ -58,8 +58,8 @@ class _HistoryPageState extends State<HistoryPage> {
               CupertinoSegmentedControl<HistoryType>(
                 groupValue: historyType,
                 onValueChanged: (HistoryType value) {
-                    historyType = value;
-                    fetchChartData();
+                  historyType = value;
+                  fetchChartData();
                 },
                 children: const <HistoryType, Widget>{
                   HistoryType.Week: Text('Week'),
@@ -107,57 +107,59 @@ class _HistoryPageState extends State<HistoryPage> {
     recentData.clear();
     pastData?.forEach((key, value) {
       DailyData dd = value;
+      DateTime datetime = DateTime(int.parse(key.substring(0, 4)),
+          int.parse(key.substring(5, 7)), int.parse(key.substring(8, 10)));
       recentData.add(GestureDetector(
           onTap: () async {
             WordData wd = await getWordForKey(dd.wordKey);
             Quote quote = await getQuoteForKey(dd.quoteKey);
             String deedStr = 'Not opted for deed';
             if (dd.deedKey != null) {
-              Deed deed = await getDeedForKey(dd.deedKey?? '');
+              Deed deed = await getDeedForKey(dd.deedKey ?? '');
               deedStr = deed.content;
             }
             showCupertinoModalPopup<void>(
               context: context,
               builder: (BuildContext context) => CupertinoAlertDialog(
-                title: Text(key),
-                content: Column(
-                  children: [
-                    MoodCircle(150, 15, 75, 150 / (2 * math.sqrt2), ProcessState.Completed, ()=>{}, dd.x/2, dd.y/2),
-                    DecoratedText(dd.about),
-                    DecoratedText('Word: ${wd.word}\n${wd.meaning}'),
-                    DecoratedText('Quote\n${quote.content}'),
-                    DecoratedText('Deed for the day\n$deedStr'),
-                    DecoratedText('Score: ${dd.goodness}')
-                  ],
-                )
-              ),
+                  title: Text('${getDisplayDate(datetime)}'),
+                  content: Column(
+                    children: [
+                      MoodCircle(150, 15, 75, 150 / (2 * math.sqrt2),
+                          ProcessState.Completed, () => {}, dd.x / 2, dd.y / 2),
+                      DecoratedText(dd.about),
+                      DecoratedText('Word: ${wd.word}\n${wd.meaning}'),
+                      DecoratedText('Quote\n${quote.content}'),
+                      DecoratedText('Deed for the day\n$deedStr'),
+                      DecoratedText('Score: ${dd.goodness}')
+                    ],
+                  )),
             );
           },
           child: Container(
-          margin: const EdgeInsets.all(10.0),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Color.fromARGB(200, 153, 204, 255),
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(4)),
-            shape: BoxShape.rectangle,
-          ),
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(key),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text('Score: ${dd.goodness}'),
-              Spacer(),
-              Text(dd.wordKey),
-            ],
-          ),
-          dd.about.isNotEmpty ? Text(dd.about) : SizedBox.shrink(),
-        ],
-      ))));
+              margin: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Color.fromARGB(200, 153, 204, 255),
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+                shape: BoxShape.rectangle,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(getDisplayDate(datetime)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text('Score: ${dd.goodness}'),
+                      Spacer(),
+                      Text(dd.wordKey),
+                    ],
+                  ),
+                  dd.about.isNotEmpty ? Text(dd.about) : SizedBox.shrink(),
+                ],
+              ))));
       //recentData.add(Divider());
     });
     setState(() {
@@ -182,8 +184,7 @@ class _HistoryPageState extends State<HistoryPage> {
       case HistoryType.All:
         await fetchAllData();
     }
-    setState(() {
-    });
+    setState(() {});
   }
 
   Future<void> fetchAllData() async {

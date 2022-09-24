@@ -39,5 +39,5 @@ Future<Deed> getDeedForKey(String deedName) async {
   String data = await rootBundle.loadString("assets/deeds.json");
 
   Map<String, dynamic> fileContent = Map<String,dynamic>.from(jsonDecode(data));
-  return Deed(deedName, fileContent[deedName]);
+  return Deed(deedName, fileContent[deedName]?? '');
 }

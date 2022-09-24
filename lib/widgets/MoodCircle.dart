@@ -4,7 +4,10 @@ import '../home.dart';
 import 'dart:math' as math;
 
 class MoodCircle extends StatelessWidget {
-  MoodCircle(double this.diameter, this.inset, this.radius, this.sideOfSquare, this._processState, this.onTapUp, this.x,  this.y, {Key? key}) : super(key: key);
+  MoodCircle(double this.diameter, this.inset, this.radius, this.sideOfSquare,
+      this._processState, this.onTapUp, this.x, this.y,
+      {Key? key})
+      : super(key: key);
 
   double diameter;
   double inset;
@@ -16,7 +19,7 @@ class MoodCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    Widget bigCircle = Container(
       margin: EdgeInsets.all(inset),
       width: diameter,
       height: diameter,
@@ -24,7 +27,7 @@ class MoodCircle extends StatelessWidget {
         shape: BoxShape.circle,
         gradient: SweepGradient(
           center: FractionalOffset.center,
-          transform: GradientRotation(-math.pi/5),
+          transform: GradientRotation(-math.pi / 5),
           colors: <Color>[
             CupertinoColors.systemIndigo,
             CupertinoColors.systemBlue,
@@ -73,14 +76,58 @@ class MoodCircle extends StatelessWidget {
         ],
       ),
     );
+    return Stack(
+      children: <Widget>[
+        bigCircle,
+        Positioned(
+          top: sideOfSquare,
+          left: diameter + inset,
+          child: Text('😊'),
+        ),
+        Positioned(
+          top: diameter - sideOfSquare + inset,
+          left: diameter + inset,
+          child: Text("😃"),
+        ),
+        Positioned(
+          top: diameter + inset / 2,
+          left: radius + sideOfSquare,
+          child: Text("😴"),
+        ),
+        Positioned(
+          top: diameter + inset / 2,
+          left: sideOfSquare,
+          child: Text("😢"),
+        ),
+        Positioned(
+          top: diameter - sideOfSquare + inset,
+          left: inset / 2,
+          child: Text("😔"),
+        ),
+        Positioned(
+          top: sideOfSquare,
+          left: inset / 2,
+          child: Text("🤒"),
+        ),
+        Positioned(
+          top: inset / 2,
+          left: sideOfSquare,
+          child: Text("😡"),
+        ),
+        Positioned(
+          top: inset / 2,
+          left: radius + sideOfSquare,
+          child: Text("🤗"),
+        ),
+      ],
+    );
   }
 }
 
 class LinePainter extends CustomPainter {
-  LinePainter(this.diameter, this.radius, this.sideOfSquare) {
-
-  }
+  LinePainter(this.diameter, this.radius, this.sideOfSquare) {}
   double radius, diameter, sideOfSquare;
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()

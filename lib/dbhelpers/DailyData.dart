@@ -205,6 +205,8 @@ DateTime getFirstDayOfWeek(DateTime date) {
 
 String getDayOfWeek(DateTime date) => DateFormat('EEEE').format(date);
 
+String getDisplayDate(DateTime date) => DateFormat('MMM dd, yyyy EEEE').format(date);
+
 DateTime getPreviousWeek(DateTime date) {
   return date.subtract(Duration(days: 7));
 }

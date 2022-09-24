@@ -46,14 +46,13 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _writeAboutController = TextEditingController();
-    _dateKey =
-        dailydata.getDateKeyFormat(DateTime.now());
+    _dateKey = dailydata.getDateKeyFormat(DateTime.now());
     readTodayData();
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget bigCircle = getMoodCircle();
+    Widget moodCircle = getMoodCircle();
 
     return Container(
         //color: CupertinoColors.black,
@@ -63,53 +62,11 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Stack(
-              children: <Widget>[
-                bigCircle,
-                const Positioned(
-                  top: sideOfSquare,
-                  left: diameter + inset,
-                  child: Text('😊'),
-                ),
-                const Positioned(
-                  top: diameter - sideOfSquare + inset,
-                  left: diameter + inset,
-                  child: Text("😃"),
-                ),
-                const Positioned(
-                  top: diameter + inset / 2,
-                  left: radius + sideOfSquare,
-                  child: Text("😴"),
-                ),
-                const Positioned(
-                  top: diameter + inset / 2,
-                  left: sideOfSquare,
-                  child: Text("😢"),
-                ),
-                const Positioned(
-                  top: diameter - sideOfSquare + inset,
-                  left: inset / 2,
-                  child: Text("😔"),
-                ),
-                const Positioned(
-                  top: sideOfSquare,
-                  left: inset / 2,
-                  child: Text("🤒"),
-                ),
-                const Positioned(
-                  top: inset / 2,
-                  left: sideOfSquare,
-                  child: Text("😡"),
-                ),
-                const Positioned(
-                  top: inset / 2,
-                  left: radius + sideOfSquare,
-                  child: Text("🤗"),
-                ),
-              ],
-            ),
+            moodCircle,
             (_processState.index > ProcessState.NotTaken.index
-                ? Text(getHappyState() ? 'Look around with a good smile' : 'Take a deep breath')
+                ? Text(getHappyState()
+                    ? 'Look around with a good smile'
+                    : 'Take a deep breath')
                 : SizedBox.shrink()),
             (_processState.index >= ProcessState.WritingAbout.index
                 ? Text('Your mood')
@@ -129,7 +86,8 @@ class _HomePageState extends State<HomePage> {
                 ? DecoratedText(
                     'Word of the Day: ${_wordData.word}\n\nDefinition:\n${_wordData.meaning}')
                 : SizedBox.shrink()),
-            (_processState.index >= ProcessState.OfferingDeed.index  && _processState != ProcessState.Completed &&
+            (_processState.index >= ProcessState.OfferingDeed.index &&
+                    _processState != ProcessState.Completed &&
                     !_showDeed
                 ? CupertinoButton(
                     onPressed: () => showDeed(),
@@ -156,17 +114,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   MoodCircle getMoodCircle() {
-    return MoodCircle(diameter, inset, radius, sideOfSquare, _processState, onTapUpCallback, _x, _y);
+    return MoodCircle(diameter, inset, radius, sideOfSquare, _processState,
+        onTapUpCallback, _x, _y);
   }
 
   Set<void> onTapUpCallback(TapUpDetails details) {
     return {
-                    setState(() {
-                      _x = details.localPosition.dx;
-                      _y = details.localPosition.dy;
-                      _enableSubmit = true;
-                    })
-                  };
+      setState(() {
+        _x = details.localPosition.dx;
+        _y = details.localPosition.dy;
+        _enableSubmit = true;
+      })
+    };
   }
 
   startFlow() async {
