@@ -12,7 +12,7 @@ class Main extends StatefulWidget {
   _MainState createState() => _MainState();
 }
 
-class _MainState extends State<Main> with SingleTickerProviderStateMixin {
+class _MainState extends State<Main> {
   late int _currentIndex;
 
   @override

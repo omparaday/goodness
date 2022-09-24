@@ -42,7 +42,7 @@ class HistoryChart extends StatelessWidget {
           message: '$barName: $barValue',
           child: Container(
             decoration: BoxDecoration(
-              color: CupertinoColors.systemBlue,
+              color: Color.fromARGB(255, 255, 153, 102),
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20.0),
                 topLeft: Radius.circular(20.0),

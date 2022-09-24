@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart'; //add path provider dart plugin on pubspec.yaml file
 import 'package:json_annotation/json_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @JsonSerializable()
 class Quote {
@@ -12,12 +13,19 @@ class Quote {
 
   Quote(this.name, this.content);
 }
+const QUOTE_START_KEY = 'QUOTE_START';
 
 Future<Quote> getNewQuote() async {
   String data = await rootBundle.loadString("assets/quotes.json");
 
   Map<String, dynamic> fileContent = Map<String,dynamic>.from(jsonDecode(data));
-  String quoteName = fileContent.keys.elementAt(new Random().nextInt(fileContent.length));
+  final prefs = await SharedPreferences.getInstance();
+  int? startPos = prefs.getInt(QUOTE_START_KEY);
+  if (startPos == null) {
+    startPos = new Random().nextInt(fileContent.length);
+  }
+  String quoteName = fileContent.keys.elementAt(startPos);
+  prefs.setInt(QUOTE_START_KEY, (startPos + 1) % fileContent.length);
   return Quote(quoteName, fileContent[quoteName]);
 }
 

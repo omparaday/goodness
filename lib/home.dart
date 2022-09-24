@@ -5,6 +5,7 @@ import 'dart:math' as math;
 
 import 'package:goodness/dbhelpers/WordData.dart' as word;
 import 'package:goodness/widgets/DecoratedText.dart';
+import 'package:goodness/widgets/MoodCircle.dart';
 
 import 'dbhelpers/QuoteHelper.dart' as quote;
 
@@ -52,69 +53,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget bigCircle = Container(
-      margin: const EdgeInsets.all(inset),
-      width: diameter,
-      height: diameter,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: SweepGradient(
-          center: FractionalOffset.center,
-          startAngle: -1.5,
-          colors: <Color>[
-            CupertinoColors.systemIndigo,
-            CupertinoColors.systemBlue,
-            CupertinoColors.systemTeal,
-            CupertinoColors.systemGreen,
-            CupertinoColors.systemYellow,
-            CupertinoColors.systemOrange,
-            CupertinoColors.systemRed,
-            CupertinoColors.systemPurple,
-            CupertinoColors.systemIndigo,
-          ],
-        ),
-      ),
-      child: Stack(
-        children: <Widget>[
-          Container(
-            child: CustomPaint(
-              painter: LinePainter(),
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              gradient: RadialGradient(colors: [
-                CupertinoColors.white.withOpacity(1),
-                CupertinoColors.white.withOpacity(0)
-              ]),
-            ),
-            child: GestureDetector(
-              onTapUp: _processState == ProcessState.NotTaken
-                  ? (TapUpDetails details) => {
-                        setState(() {
-                          _x = details.localPosition.dx;
-                          _y = details.localPosition.dy;
-                          _enableSubmit = true;
-                        })
-                      }
-                  : (TapUpDetails details) => null,
-              child: Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: Stack(children: <Widget>[
-                  Positioned(
-                    top: _y - 15,
-                    left: _x - 10,
-                    child: Text('🛟'),
-                  )
-                ]),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    Widget bigCircle = getMoodCircle();
 
     return Container(
         //color: CupertinoColors.black,
@@ -170,7 +109,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             (_processState.index > ProcessState.NotTaken.index
-                ? Text('Take a deep breath')
+                ? Text(getHappyState() ? 'Look around with a good smile' : 'Take a deep breath')
                 : SizedBox.shrink()),
             (_processState.index >= ProcessState.WritingAbout.index
                 ? Text('Your mood')
@@ -216,9 +155,23 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
+  MoodCircle getMoodCircle() {
+    return MoodCircle(diameter, inset, radius, sideOfSquare, _processState, onTapUpCallback, _x, _y);
+  }
+
+  Set<void> onTapUpCallback(TapUpDetails details) {
+    return {
+                    setState(() {
+                      _x = details.localPosition.dx;
+                      _y = details.localPosition.dy;
+                      _enableSubmit = true;
+                    })
+                  };
+  }
+
   startFlow() async {
     if (_processState == ProcessState.WritingAbout) {
-      _wordData = await word.getNewWord();
+      _wordData = await word.getNewWord(getHappyState());
     } else if (_processState == ProcessState.ShowingWord) {
       _deed = await deed.getNewDeed();
     } else if (_processState == ProcessState.OfferingDeed) {
@@ -259,15 +212,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void measureGoodness() {
-    double angle = -math.atan2(_y - 165, _x - 165);
-    double degree = angle * 180 / math.pi;
-    print('angle $angle');
-    bool isHappy = (degree >= -95 && degree <= 95);
-    print('ishappy $isHappy');
+    bool isHappy = getHappyState();
     double distance =
         math.sqrt(math.pow(_x - radius, 2) + math.pow(_y - radius, 2));
     print('distance $distance');
-    print('angle $degree');
     _goodnessScore = (50 * distance / radius).round();
     print('gs1 $_goodnessScore');
     int aboutLength = _writeAboutController.text.length;
@@ -298,6 +246,15 @@ class _HomePageState extends State<HomePage> {
       print('gs7 $_goodnessScore');
     }
     print('gs8 $_goodnessScore');
+  }
+
+  bool getHappyState() {
+    double angle = -math.atan2(_y - 165, _x - 165);
+    double degree = angle * 180 / math.pi;
+    print('angle $angle');
+    bool isHappy = (degree >= -95 && degree <= 95);
+    print('ishappy $isHappy');
+    return isHappy;
   }
 
   Future<void> readTodayData() async {
@@ -332,28 +289,5 @@ class _HomePageState extends State<HomePage> {
         _showDeed ? _deed!.name : null,
         _goodnessScore);
     dailydata.addDailyData(_dateKey, _todayData!);
-  }
-}
-
-
-class LinePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = CupertinoColors.white
-      ..strokeWidth = 5;
-    canvas.drawLine(Offset(radius, 0), Offset(radius, diameter), paint);
-    canvas.drawLine(Offset(0, radius), Offset(diameter, radius), paint);
-    canvas.drawLine(Offset(radius - sideOfSquare, radius - sideOfSquare),
-        Offset(radius + sideOfSquare, radius + sideOfSquare), paint);
-    canvas.drawLine(Offset(radius - sideOfSquare, radius + sideOfSquare),
-        Offset(radius + sideOfSquare, radius - sideOfSquare), paint);
-    //canvas.drawLine(Offset(90, 23), Offset(243, 317), paint);
-    //canvas.drawLine(Offset(24, 90), Offset(319, 226), paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter old) {
-    return false;
   }
 }

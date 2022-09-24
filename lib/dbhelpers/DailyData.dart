@@ -109,7 +109,6 @@ Future<Map<String, DailyData>?>? getRecentData() async {
   Map<String, DailyData> result = {};
   while (true) {
     String day = DateFormat('yyyy-MM-dd').format(historyDate);
-    //print(day);
     historyDate = getPreviousDay(historyDate);
     if (historyDate.month == 6 && historyDate.year == 2022) {
       break;
@@ -219,29 +218,24 @@ String getMonthName(DateTime dateTime) {
 }
 
 void createFile(Map<String, dynamic> content, Directory dir, String fileName) {
-  print("Creating file!");
   File file = File("${dir.path}/$fileName");
   file.createSync();
   file.writeAsStringSync(jsonEncode(content));
 }
 
 void addDailyData(String key, DailyData value) {
-  print("Writing to file!");
   String fileName = key.substring(0, 7);
-  print(fileName);
   Map<String, dynamic> content = {key: value};
   getApplicationDocumentsDirectory().then((Directory directory) {
     Directory dir = directory;
     File jsonFile = File("${dir.path}/$fileName");
     bool fileExists = jsonFile.existsSync();
     if (fileExists) {
-      print("File exists ${jsonFile.readAsStringSync()}");
       Map<String, dynamic> jsonFileContent =
           Map<String, dynamic>.from(jsonDecode(jsonFile.readAsStringSync()));
       jsonFileContent.addAll(content);
       jsonFile.writeAsStringSync(jsonEncode(jsonFileContent));
     } else {
-      print("File does not exist!");
       createFile(content, dir, fileName);
     }
     print("File contents ${jsonFile.readAsStringSync()}");

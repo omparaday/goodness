@@ -1,6 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:goodness/dbhelpers/DailyData.dart';
+import 'package:goodness/dbhelpers/QuoteHelper.dart';
+import 'package:goodness/dbhelpers/WordData.dart';
+import 'package:goodness/home.dart';
+import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:goodness/widgets/HistoryChart.dart';
+import 'package:goodness/widgets/MoodCircle.dart';
+import 'dart:math' as math;
 
 import 'dbhelpers/DeedHelper.dart';
 
@@ -98,15 +104,40 @@ class _HistoryPageState extends State<HistoryPage> {
 
   Future<void> fetchRecentHistory() async {
     Map<String, dynamic>? pastData = await getRecentData();
-    DailyData dd;
     recentData.clear();
     pastData?.forEach((key, value) {
-      dd = value;
-      recentData.add(Container(
+      DailyData dd = value;
+      recentData.add(GestureDetector(
+          onTap: () async {
+            WordData wd = await getWordForKey(dd.wordKey);
+            Quote quote = await getQuoteForKey(dd.quoteKey);
+            String deedStr = 'Not opted for deed';
+            if (dd.deedKey != null) {
+              Deed deed = await getDeedForKey(dd.deedKey?? '');
+              deedStr = deed.content;
+            }
+            showCupertinoModalPopup<void>(
+              context: context,
+              builder: (BuildContext context) => CupertinoAlertDialog(
+                title: Text(key),
+                content: Column(
+                  children: [
+                    MoodCircle(150, 15, 75, 150 / (2 * math.sqrt2), ProcessState.Completed, ()=>{}, dd.x/2, dd.y/2),
+                    DecoratedText(dd.about),
+                    DecoratedText('Word: ${wd.word}\n${wd.meaning}'),
+                    DecoratedText('Quote\n${quote.content}'),
+                    DecoratedText('Deed for the day\n$deedStr'),
+                    DecoratedText('Score: ${dd.goodness}')
+                  ],
+                )
+              ),
+            );
+          },
+          child: Container(
           margin: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
             border: Border.all(
-              color: CupertinoColors.opaqueSeparator,
+              color: Color.fromARGB(200, 153, 204, 255),
             ),
             borderRadius: BorderRadius.all(Radius.circular(4)),
             shape: BoxShape.rectangle,
@@ -126,7 +157,7 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
           dd.about.isNotEmpty ? Text(dd.about) : SizedBox.shrink(),
         ],
-      )));
+      ))));
       //recentData.add(Divider());
     });
     setState(() {
