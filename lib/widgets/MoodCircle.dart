@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../home.dart';
 import 'dart:math' as math;
@@ -82,46 +83,71 @@ class MoodCircle extends StatelessWidget {
         Positioned(
           top: sideOfSquare,
           left: diameter + inset,
-          child: Text('😊'),
+          child: getEmoji('😊', 'Happy'),
         ),
         Positioned(
           top: diameter - sideOfSquare + inset,
           left: diameter + inset,
-          child: Text("😃"),
+          child: getEmoji("😃", 'Excited'),
         ),
         Positioned(
           top: diameter + inset / 2,
           left: radius + sideOfSquare,
-          child: Text("😴"),
+          child: getEmoji("😴", 'Peaceful'),
         ),
         Positioned(
           top: diameter + inset / 2,
           left: sideOfSquare,
-          child: Text("😢"),
+          child: getEmoji("😢", 'Fear'),
         ),
         Positioned(
           top: diameter - sideOfSquare + inset,
           left: inset / 2,
-          child: Text("😔"),
+          child: getEmoji("😔", 'Sad'),
         ),
         Positioned(
           top: sideOfSquare,
           left: inset / 2,
-          child: Text("🤒"),
+          child: getEmoji("🤒", 'Weak'),
         ),
         Positioned(
           top: inset / 2,
           left: sideOfSquare,
-          child: Text("😡"),
+          child: getEmoji("😡", 'Angry'),
         ),
         Positioned(
           top: inset / 2,
           left: radius + sideOfSquare,
-          child: Text("🤗"),
+          child: getEmoji("🤗", 'Strong'),
         ),
       ],
     );
   }
+
+  Widget getEmoji(String s, String tip) {
+    return Tooltip(message: tip, child: Text(s));
+  }
+}
+
+String getEmojiForXy(double x, double y) {
+  double angle = -math.atan2(y - 165, x - 165);
+  double degree = angle * 180 / math.pi;
+  if (degree > 6 && degree <= 52) {
+    return '😊';
+  } else if (degree > 52 && degree <= 95) {
+    return '🤗';
+  } else if (degree > -44 && degree <= 6) {
+    return '😃';
+  } else if (degree > 95 && degree <= 134) {
+    return '😡';
+  } else if (degree > 134 && degree <= 175) {
+    return '🤒';
+  } else if (degree > -94 && degree <= -44) {
+    return '😴';
+  } else if (degree > -143 && degree <= -94) {
+    return '😢';
+  }
+  return '😔';
 }
 
 class LinePainter extends CustomPainter {
