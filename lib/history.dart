@@ -21,7 +21,7 @@ class _HistoryPageState extends State<HistoryPage> {
   late DateTime chartWeek;
   late DateTime chartMonth;
   late DateTime chartYear;
-  Map<String, int> plotInfoMap = {};
+  Map<String, BarPlotInfo> plotInfoMap = {};
   String chartName = '';
   String chartAverage = '0.0';
 
@@ -46,7 +46,7 @@ class _HistoryPageState extends State<HistoryPage> {
       chartWidth: chartWidth,
       chartHeight: chartHeight,
       plotList: plotInfoMap,
-      historyType: historyType,
+      historyType: historyType, showHistoryDialog: showHistoryDialog,
     );
     return Container(
       child: SingleChildScrollView(
@@ -110,31 +110,7 @@ class _HistoryPageState extends State<HistoryPage> {
       DateTime datetime = DateTime(int.parse(key.substring(0, 4)),
           int.parse(key.substring(5, 7)), int.parse(key.substring(8, 10)));
       recentData.add(GestureDetector(
-          onTap: () async {
-            WordData wd = await getWordForKey(dd.wordKey);
-            Quote quote = await getQuoteForKey(dd.quoteKey);
-            String deedStr = 'Not opted for deed';
-            if (dd.deedKey != null) {
-              Deed deed = await getDeedForKey(dd.deedKey ?? '');
-              deedStr = deed.content;
-            }
-            showCupertinoModalPopup<void>(
-              context: context,
-              builder: (BuildContext context) => CupertinoAlertDialog(
-                  title: Text('${getDisplayDate(datetime)}'),
-                  content: Column(
-                    children: [
-                      MoodCircle(150, 15, 75, 150 / (2 * math.sqrt2),
-                          ProcessState.Completed, () => {}, dd.x / 2, dd.y / 2),
-                      DecoratedText(dd.about),
-                      DecoratedText('Word: ${wd.word}\n${wd.meaning}'),
-                      DecoratedText('Quote\n${quote.content}'),
-                      DecoratedText('Deed for the day\n$deedStr'),
-                      DecoratedText('Score: ${dd.goodness}')
-                    ],
-                  )),
-            );
-          },
+          onTap: () => showHistoryDialog(dd, datetime),
           child: Container(
               margin: const EdgeInsets.all(10.0),
               decoration: BoxDecoration(
@@ -160,7 +136,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text('Score: ${dd.goodness}'),
+                      Text(dd.goodness >= 100 ? 'Score: Perfect 💯 ' :'Score: ${dd.goodness}'),
                       Spacer(),
                       Text(dd.wordKey),
                     ],
@@ -173,6 +149,35 @@ class _HistoryPageState extends State<HistoryPage> {
     setState(() {
       recentData = recentData;
     });
+  }
+
+  void showHistoryDialog(DailyData? dd, DateTime? datetime) async {
+    if (dd == null || datetime == null) {
+      return;
+    }
+    WordData wd = await getWordForKey(dd.wordKey);
+    Quote quote = await getQuoteForKey(dd.quoteKey);
+    String deedStr = 'Not opted for deed';
+    if (dd.deedKey != null) {
+      Deed deed = await getDeedForKey(dd.deedKey ?? '');
+      deedStr = deed.content;
+    }
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+          title: Text('${getDisplayDate(datetime)}'),
+          content: Column(
+            children: [
+              MoodCircle(150, 15, 75, 150 / (2 * math.sqrt2),
+                  ProcessState.Completed, () => {}, dd.x / 2, dd.y / 2),
+              DecoratedText(dd.about),
+              DecoratedText('Word: ${wd.word}\n${wd.meaning}'),
+              DecoratedText('Quote\n${quote.content}'),
+              DecoratedText('Deed for the day\n$deedStr'),
+              DecoratedText('Score: ${dd.goodness}')
+            ],
+          )),
+    );
   }
 
   Future<void> fetchChartData() async {
@@ -207,7 +212,7 @@ class _HistoryPageState extends State<HistoryPage> {
       if (metaData!['Average'] != 0 || startFound) {
         startFound = true;
         int avg = metaData!['Average']?.round() ?? 0;
-        plotInfoMap.putIfAbsent((start.year).toString(), () => avg);
+        plotInfoMap.putIfAbsent((start.year).toString(), () => BarPlotInfo(avg, null, null));
         totalDays += metaData!['totalDays'] ?? 0;
         totalScore += metaData!['totalScore'] ?? 0;
       }
@@ -227,7 +232,7 @@ class _HistoryPageState extends State<HistoryPage> {
       chartAverage = metaData!['Average']?.toStringAsFixed(1) ?? '0.0';
       monthlyData?.forEach((key, value) {
         int intval = value.round();
-        plotInfoMap.putIfAbsent(key, () => intval);
+        plotInfoMap.putIfAbsent(key, () => BarPlotInfo(intval, null, null));
       });
     }
   }
@@ -246,11 +251,11 @@ class _HistoryPageState extends State<HistoryPage> {
         var json = chartData[transKey];
         if (json != null) {
           dd = DailyData.fromJson(json);
-          plotInfoMap.putIfAbsent(transKey, () => dd.goodness);
+          plotInfoMap.putIfAbsent(transKey, () => BarPlotInfo(dd.goodness, dd, trans));
           count++;
           sum = sum + dd.goodness;
         } else {
-          plotInfoMap.putIfAbsent(transKey, () => 0);
+          plotInfoMap.putIfAbsent(transKey, () => BarPlotInfo(0, null, null));
         }
         trans = trans.add(Duration(days: 1));
       }
@@ -273,11 +278,11 @@ class _HistoryPageState extends State<HistoryPage> {
         var json = chartData[movingDateKey];
         if (json != null) {
           dd = DailyData.fromJson(json);
-          plotInfoMap.putIfAbsent(getDayOfWeek(movingDate), () => dd.goodness);
+          plotInfoMap.putIfAbsent(getDayOfWeek(movingDate), () => BarPlotInfo(dd.goodness, dd, movingDate));
           count++;
           sum = sum + dd.goodness;
         } else {
-          plotInfoMap.putIfAbsent(getDayOfWeek(movingDate), () => 0);
+          plotInfoMap.putIfAbsent(getDayOfWeek(movingDate), () => BarPlotInfo(0, null, null));
         }
         movingDate = movingDate.add(Duration(days: 1));
       }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:goodness/dbhelpers/DailyData.dart';
 
 enum HistoryType { Week, Month, Year, All }
 
@@ -9,15 +10,17 @@ class HistoryChart extends StatelessWidget {
       required this.chartWidth,
       required this.chartHeight,
       required this.plotList,
-      required this.historyType})
+      required this.historyType,
+      required this.showHistoryDialog})
       : super(key: key);
 
   final double chartWidth;
   final double chartHeight;
   late List<Widget> barList;
   late List<Widget> rowList;
-  final Map<String, int> plotList;
+  final Map<String, BarPlotInfo> plotList;
   final HistoryType historyType;
+  final Function showHistoryDialog;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,8 @@ class HistoryChart extends StatelessWidget {
         .size;
     barList = [];
     rowList = [];
-    plotList.forEach((barName, barValue) {
+    plotList.forEach((barName, barPlotInfo) {
+      int barValue = barPlotInfo.barValue;
       if (historyType == HistoryType.Month) {
         rowList.add(Text(''));
       } else if (historyType == HistoryType.All) {
@@ -38,8 +42,8 @@ class HistoryChart extends StatelessWidget {
       } else {
         rowList.add(Text(barName.substring(0, 1)));
       }
-      barList.add(Tooltip(
-          message: '$barName: $barValue',
+      barList.add(GestureDetector(
+          onTap: () => showHistoryDialog(barPlotInfo.dailyData, barPlotInfo.dateTime),
           child: Container(
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 255, 153, 102),
@@ -49,7 +53,7 @@ class HistoryChart extends StatelessWidget {
               ),
             ),
             height: barValue * (chartHeight - (textHeight.height + 3)) / 100,
-            width: 5,
+            width: historyType == HistoryType.Month ? 8 : 15,
           )));
     });
     return Container(
@@ -157,8 +161,9 @@ class Divider extends StatelessWidget {
 }
 
 class BarPlotInfo {
-  String barName;
   int barValue;
+  DailyData? dailyData;
+  DateTime? dateTime;
 
-  BarPlotInfo(this.barName, this.barValue);
+  BarPlotInfo(this.barValue, this.dailyData, this.dateTime);
 }
