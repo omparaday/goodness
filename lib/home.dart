@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     Widget moodCircle = getMoodCircle();
 
     return Container(
-        //color: CupertinoColors.black,
+        margin: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
       child: SafeArea(
         child: Column(

@@ -51,6 +51,7 @@ class _HistoryPageState extends State<HistoryPage> {
       historyType: historyType, showHistoryDialog: showHistoryDialog,
     );
     return Container(
+      margin: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         child: SafeArea(
           child: Column(
@@ -114,7 +115,8 @@ class _HistoryPageState extends State<HistoryPage> {
       recentData.add(GestureDetector(
           onTap: () => showHistoryDialog(dd, datetime),
           child: Container(
-              margin: const EdgeInsets.all(10.0),
+              margin: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+              padding: const EdgeInsets.all(5.0),
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Color.fromARGB(200, 153, 204, 255),

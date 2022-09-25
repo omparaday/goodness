@@ -17,7 +17,8 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClientMixin {
+class _ProfilePageState extends State<ProfilePage>
+    with AutomaticKeepAliveClientMixin {
   String? _name;
   IconData _editsave = CupertinoIcons.pen;
   bool isEditing = false;
@@ -81,9 +82,12 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
           ),
         ),
         child: SingleChildScrollView(
-            child: SafeArea(
-                child:
-                    isEditing ? buildEditableColumn() : buildDisplayColumn())));
+            child: Container(
+                margin: const EdgeInsets.all(10.0),
+                child: SafeArea(
+                    child: isEditing
+                        ? buildEditableColumn()
+                        : buildDisplayColumn()))));
   }
 
   Column buildDisplayColumn() {
