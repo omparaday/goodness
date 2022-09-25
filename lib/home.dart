@@ -29,30 +29,57 @@ const double inset = 30;
 const double radius = diameter / 2;
 const double sideOfSquare = diameter / (2 * math.sqrt2);
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   double _x = radius, _y = radius;
   bool _enableSubmit = false;
   ProcessState _processState = ProcessState.NotTaken;
   late TextEditingController _writeAboutController;
-  late word.WordData _wordData;
+  late word.WordData? _wordData;
   bool _showDeed = false;
   late deed.Deed? _deed;
-  late quote.Quote _quote;
+  late quote.Quote? _quote;
   late int _goodnessScore;
   late dailydata.DailyData? _todayData;
   late String _dateKey;
 
   @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        print('home resumed');
+        if (_dateKey != dailydata.getDateKeyFormat(DateTime.now())) {
+          _dateKey =
+              dailydata.getDateKeyFormat(DateTime.now());
+          readTodayData();
+        }
+        break;
+      case AppLifecycleState.inactive:
+        print('home inactive');
+        break;
+      case AppLifecycleState.paused:
+        print('home paused');
+        break;
+      case AppLifecycleState.detached:
+        print('home detached');
+        break;
+    }
+  }
+
+
+  @override
   void initState() {
+    print('home initState');
     super.initState();
     _writeAboutController = TextEditingController();
     _dateKey =
         dailydata.getDateKeyFormat(DateTime.now());
     readTodayData();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   Widget build(BuildContext context) {
+    print('home build');
     Widget moodCircle = getMoodCircle();
 
     return Container(
@@ -85,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                 : SizedBox.shrink()),
             (_processState.index >= ProcessState.ShowingWord.index
                 ? DecoratedText(
-                    'Word of the Day: ${_wordData.word}\n\nDefinition:\n${_wordData.meaning}')
+                    'Word of the Day: ${_wordData!.word}\n\nDefinition:\n${_wordData!.meaning}')
                 : SizedBox.shrink()),
             (_processState.index >= ProcessState.OfferingDeed.index &&
                     _processState != ProcessState.Completed &&
@@ -98,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                 ? DecoratedText('Good Deed for the day\n\n${_deed!.content}')
                 : SizedBox.shrink()),
             (_processState.index >= ProcessState.ShowingQuote.index
-                ? DecoratedText('Quote for the day\n\n${_quote.content}')
+                ? DecoratedText('Quote for the day\n\n${_quote!.content}')
                 : SizedBox.shrink()),
             (_processState.index < ProcessState.Completed.index
                 ? CupertinoButton(
@@ -211,9 +238,7 @@ class _HomePageState extends State<HomePage> {
   bool getHappyState() {
     double angle = -math.atan2(_y - 165, _x - 165);
     double degree = angle * 180 / math.pi;
-    print('angle $angle');
     bool isHappy = (degree >= -95 && degree <= 95);
-    print('ishappy $isHappy');
     return isHappy;
   }
 
@@ -236,6 +261,19 @@ class _HomePageState extends State<HomePage> {
         _quote = quote2;
         _wordData = wordData2;
       });
+    } else {
+      setState(() {
+        _processState = ProcessState.NotTaken;
+        _x = radius;
+        _y = radius;
+        _goodnessScore = 0;
+        _writeAboutController.text = '';
+        _quote = null;
+        _wordData = null;
+        _showDeed = false;
+        _deed = null;
+        _enableSubmit = false;
+      });
     }
   }
 
@@ -243,9 +281,9 @@ class _HomePageState extends State<HomePage> {
     _todayData = new dailydata.DailyData(
         _x,
         _y,
-        _quote.name,
+        _quote!.name,
         _writeAboutController.text,
-        _wordData.word,
+        _wordData!.word,
         _showDeed ? _deed!.name : null,
         _goodnessScore);
     dailydata.addDailyData(_dateKey, _todayData!);

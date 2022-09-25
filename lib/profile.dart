@@ -30,6 +30,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
 
   @override
   void initState() {
+    print('profile initState');
     super.initState();
     _nameController = TextEditingController();
     _corController = TextEditingController();
@@ -63,6 +64,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
 
   @override
   Widget build(BuildContext context) {
+    print('profile build');
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           leading: Visibility(

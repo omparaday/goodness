@@ -18,6 +18,7 @@ class _MainState extends State<Main> {
   @override
   void initState() {
     _currentIndex = 0;
+    print('main initstate');
     super.initState();
   }
 
