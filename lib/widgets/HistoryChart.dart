@@ -42,19 +42,23 @@ class HistoryChart extends StatelessWidget {
       } else {
         rowList.add(Text(barName.substring(0, 1)));
       }
-      barList.add(GestureDetector(
-          onTap: () => showHistoryDialog(barPlotInfo.dailyData, barPlotInfo.dateTime),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 255, 153, 102),
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20.0),
-                topLeft: Radius.circular(20.0),
-              ),
-            ),
-            height: barValue * (chartHeight - (textHeight.height + 3)) / 100,
-            width: historyType == HistoryType.Month ? 8 : 15,
-          )));
+      barList.add(Tooltip(
+          message: '$barName: $barValue',
+          child: GestureDetector(
+              onTap: () => showHistoryDialog(
+                  barPlotInfo.dailyData, barPlotInfo.dateTime),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 255, 153, 102),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20.0),
+                    topLeft: Radius.circular(20.0),
+                  ),
+                ),
+                height:
+                    barValue * (chartHeight - (textHeight.height + 3)) / 100,
+                width: historyType == HistoryType.Month ? 8 : 15,
+              ))));
     });
     return Container(
       width: chartWidth,

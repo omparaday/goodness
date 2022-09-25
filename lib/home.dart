@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                         ? Text('Submit')
                         : Text('Proceed'),
                   )
-                : DecoratedText('Your goodness score is ${_goodnessScore >= 100 ? '💯' : _goodnessScore}')),
+                : DecoratedText('Your goodness score is ${_goodnessScore >= 100 ? 'Perfect 💯' : _goodnessScore}')),
           ],
         ),
       ),

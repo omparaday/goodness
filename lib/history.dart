@@ -174,7 +174,7 @@ class _HistoryPageState extends State<HistoryPage> {
               DecoratedText('Word: ${wd.word}\n${wd.meaning}'),
               DecoratedText('Quote\n${quote.content}'),
               DecoratedText('Deed for the day\n$deedStr'),
-              DecoratedText('Score: ${dd.goodness}')
+              DecoratedText('Score: ${dd.goodness >=100 ? 'Perfect 💯' : dd.goodness}')
             ],
           )),
     );
