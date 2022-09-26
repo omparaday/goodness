@@ -95,6 +95,24 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Column buildDisplayColumn() {
+    String genderStr = L10n.of(context).resource('notSet');
+    switch(_gender) {
+      case Gender.PreferNotToRespond:
+        genderStr = L10n.of(context).resource('preferNotToRespond');
+        break;
+      case Gender.Transgender:
+        genderStr = L10n.of(context).resource('transgender');
+        break;
+      case Gender.NonBinary:
+        genderStr = L10n.of(context).resource('nonBinary');
+        break;
+      case Gender.Female:
+        genderStr = L10n.of(context).resource('female');
+        break;
+      case Gender.Male:
+        genderStr = L10n.of(context).resource('male');
+        break;
+    }
     return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -107,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage>
                 ? getDisplayDate(_dob!)
                 : L10n.of(context).resource('notSet')
           ])),
-          DecoratedText('Gender: ${_gender.name}'),
+          DecoratedText(sprintf(L10n.of(context).resource('genderDisplay'), [genderStr])),
           DecoratedText(_married
               ? L10n.of(context).resource('maritalStatusMarried')
               : L10n.of(context).resource('maritalStatusUnmarried')),

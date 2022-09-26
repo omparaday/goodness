@@ -70,7 +70,8 @@ class L10n {
       'phyConditionsDisabled': 'Physical Conditions: Disabled',
       'maritalStatusUnmarried': 'Marital Status: Unmarried',
       'maritalStatusMarried': 'Marital Status: Married',
-      'dateOfBirthDisplay': 'Date of Birth: %s'
+      'dateOfBirthDisplay': 'Date of Birth: %s',
+      'genderDisplay': 'Gender: %s',
     },
     'ta': {
       'home': 'முகப்பு',
@@ -129,7 +130,8 @@ class L10n {
       'phyConditionsDisabled': 'உடல் நிலைகள்: ஊனமுற்றவர்',
       'maritalStatusUnmarried': 'திருமண நிலை: திருமணமாகாதவர்',
       'maritalStatusMarried': 'திருமண நிலை: திருமணமானவர்',
-      'dateOfBirthDisplay': 'பிறந்த நாள்: %s'
+      'dateOfBirthDisplay': 'பிறந்த நாள்: %s',
+      'genderDisplay': 'பாலினம்: %s',
     },
   };
 
