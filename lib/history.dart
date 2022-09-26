@@ -293,7 +293,7 @@ class _HistoryPageState extends State<HistoryPage> {
     Map<String, dynamic>? chartData = await getDataForWeek(chartWeek);
     DateTime movingDate = chartWeek;
     chartName = sprintf(L10n.of(context).resource('weekWithStart'),
-        [getDateKeyFormat(chartWeek)]);
+        [getDisplayDateWithoutDoW(chartWeek)]);
     chartAverage = '0.0';
     int count = 0, sum = 0;
     if (chartData != null) {

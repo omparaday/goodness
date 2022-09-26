@@ -85,66 +85,70 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         margin: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
           child: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                moodCircle,
-                (_processState.index > ProcessState.NotTaken.index
-                    ? Text(getHappyState()
-                        ? L10n.of(context).resource('lookAroundSmile')
-                        : L10n.of(context).resource('deepBreath'))
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.WritingAbout.index
-                    ? Text(L10n.of(context).resource('yourMood'))
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.WritingAbout.index
-                    ? CupertinoTextField(
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        controller: _writeAboutController,
-                        enabled:
-                            _processState.index != ProcessState.Completed.index,
-                        placeholder:
-                            L10n.of(context).resource('writeAboutFeel'),
-                      )
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.ShowingWord.index
-                    ? DecoratedText(sprintf(
-                        L10n.of(context).resource('wordWithDetails'),
-                        [_wordData!.word, _wordData!.meaning]))
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.OfferingDeed.index &&
-                        _processState != ProcessState.Completed &&
-                        !_showDeed
-                    ? CupertinoButton(
-                        onPressed: () => showDeed(),
-                        child:
-                            Text(L10n.of(context).resource('clickForGoodDeed')))
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.OfferingDeed.index &&
-                        _showDeed
-                    ? DecoratedText(sprintf(
-                        L10n.of(context).resource('deedForTheDay'),
-                        [_deed!.content]))
-                    : SizedBox.shrink()),
-                (_processState.index >= ProcessState.ShowingQuote.index
-                    ? DecoratedText(sprintf(
-                        L10n.of(context).resource('quoteWithContent'),
-                        [_quote!.content]))
-                    : SizedBox.shrink()),
-                (_processState.index < ProcessState.Completed.index
-                    ? CupertinoButton(
-                        onPressed: _enableSubmit ? () => startFlow() : null,
-                        child: _processState == ProcessState.ShowingQuote
-                            ? Text(L10n.of(context).resource('submit'))
-                            : Text(L10n.of(context).resource('proceed')),
-                      )
-                    : DecoratedText(_goodnessScore >= 100
-                        ? L10n.of(context).resource('yourscorePerfect100')
-                        : sprintf(L10n.of(context).resource('yourscoreWithVal'),
-                            [_goodnessScore]))),
-              ],
+            child: Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  moodCircle,
+                  (_processState.index > ProcessState.NotTaken.index
+                      ? Text(getHappyState()
+                          ? L10n.of(context).resource('lookAroundSmile')
+                          : L10n.of(context).resource('deepBreath'))
+                      : SizedBox.shrink()),
+                  (_processState.index >= ProcessState.WritingAbout.index
+                      ? Text(L10n.of(context).resource('yourMood'))
+                      : SizedBox.shrink()),
+                  (_processState.index >= ProcessState.WritingAbout.index
+                      ? CupertinoTextField(
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          controller: _writeAboutController,
+                          enabled: _processState.index !=
+                              ProcessState.Completed.index,
+                          placeholder:
+                              L10n.of(context).resource('writeAboutFeel'),
+                        )
+                      : SizedBox.shrink()),
+                  (_processState.index >= ProcessState.ShowingWord.index
+                      ? DecoratedText(sprintf(
+                          L10n.of(context).resource('wordWithDetails'),
+                          [_wordData!.word, _wordData!.meaning]))
+                      : SizedBox.shrink()),
+                  (_processState.index >= ProcessState.OfferingDeed.index &&
+                          _processState != ProcessState.Completed &&
+                          !_showDeed
+                      ? CupertinoButton(
+                          onPressed: () => showDeed(),
+                          child: Text(
+                              L10n.of(context).resource('clickForGoodDeed')))
+                      : SizedBox.shrink()),
+                  (_processState.index >= ProcessState.OfferingDeed.index &&
+                          _showDeed
+                      ? DecoratedText(sprintf(
+                          L10n.of(context).resource('deedForTheDay'),
+                          [_deed!.content]))
+                      : SizedBox.shrink()),
+                  (_processState.index >= ProcessState.ShowingQuote.index
+                      ? DecoratedText(sprintf(
+                          L10n.of(context).resource('quoteWithContent'),
+                          [_quote!.content]))
+                      : SizedBox.shrink()),
+                  (_processState.index < ProcessState.Completed.index
+                      ? CupertinoButton(
+                          onPressed: _enableSubmit ? () => startFlow() : null,
+                          child: _processState == ProcessState.ShowingQuote
+                              ? Text(L10n.of(context).resource('submit'))
+                              : Text(L10n.of(context).resource('proceed')),
+                        )
+                      : DecoratedText(_goodnessScore >= 100
+                          ? L10n.of(context).resource('yourscorePerfect100')
+                          : sprintf(
+                              L10n.of(context).resource('yourscoreWithVal'),
+                              [_goodnessScore]))),
+                ],
+              ),
             ),
           ),
         ));
