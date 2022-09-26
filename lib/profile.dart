@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:goodness/dbhelpers/DailyData.dart';
 import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sprintf/sprintf.dart';
+
+import 'l10n/Localizations.dart';
 
 enum Gender { Male, Female, Transgender, NonBinary, PreferNotToRespond }
 
@@ -75,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage>
               child: new Icon(CupertinoIcons.pencil_slash),
             ),
           ),
-          middle: Text(_name ?? 'Your Profile'),
+          middle: Text(_name ?? L10n.of(context).resource('yourProfile')),
           trailing: CupertinoButton(
             onPressed: () => toggleEdit(),
             child: new Icon(_editsave),
@@ -95,18 +99,21 @@ class _ProfilePageState extends State<ProfilePage>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          DecoratedText(_name ?? 'Your Name'),
-          DecoratedText(_cor ?? 'Your Country'),
-          DecoratedText(_dob != null
-              ? 'Date of birth: ${_dob?.month}-${_dob?.day}-${_dob?.year}'
-              : 'Not Set'),
+          DecoratedText(_name ?? L10n.of(context).resource('yourName')),
+          DecoratedText(_cor ?? L10n.of(context).resource('yourCountry')),
+          DecoratedText(sprintf(
+              L10n.of(context).resource('dateOfBirthDisplay'), [
+            _dob != null
+                ? getDisplayDate(_dob!)
+                : L10n.of(context).resource('notSet')
+          ])),
           DecoratedText('Gender: ${_gender.name}'),
           DecoratedText(_married
-              ? 'Marital Status: Married'
-              : 'Marital Status: Unmarried'),
+              ? L10n.of(context).resource('maritalStatusMarried')
+              : L10n.of(context).resource('maritalStatusUnmarried')),
           DecoratedText(_disabled
-              ? 'Physical Conditions: Disabled'
-              : 'Physical Conditions: No Disability'),
+              ? L10n.of(context).resource('phyConditionsDisabled')
+              : L10n.of(context).resource('phyConditionsNotDisabled')),
         ]);
   }
 
@@ -118,13 +125,13 @@ class _ProfilePageState extends State<ProfilePage>
         children: <Widget>[
           CupertinoTextField(
             controller: _nameController,
-            placeholder: 'Your Name',
+            placeholder: L10n.of(context).resource('yourName'),
           ),
           CupertinoTextField(
             controller: _corController,
-            placeholder: 'Your Country',
+            placeholder: L10n.of(context).resource('yourCountry'),
           ),
-          Text('Date of Birth'),
+          Text(L10n.of(context).resource('dateOfBirth')),
           CupertinoButton(
             onPressed: () => _showDialog(
               CupertinoDatePicker(
@@ -140,14 +147,14 @@ class _ProfilePageState extends State<ProfilePage>
             // to format the value based on user's locale settings.
             child: Text(
               _dob != null
-                  ? '${_dob?.month}-${_dob?.day}-${_dob?.year}'
-                  : 'Not Set',
+                  ? getDisplayDate(_dob!)
+                  : L10n.of(context).resource('notSet'),
               style: const TextStyle(
                 fontSize: 22.0,
               ),
             ),
           ),
-          Text('Gender'),
+          Text(L10n.of(context).resource('gender')),
           CupertinoSegmentedControl<Gender>(
             groupValue: _gender,
             onValueChanged: (Gender value) {
@@ -155,15 +162,17 @@ class _ProfilePageState extends State<ProfilePage>
                 _gender = value;
               });
             },
-            children: const <Gender, Widget>{
-              Gender.Male: Text('Male'),
-              Gender.Female: Text('Female'),
-              Gender.NonBinary: Text('NonBinary'),
-              Gender.Transgender: Text('Transgender'),
-              Gender.PreferNotToRespond: Text('PreferNotToRespond'),
+            children: <Gender, Widget>{
+              Gender.Male: Text(L10n.of(context).resource('male')),
+              Gender.Female: Text(L10n.of(context).resource('female')),
+              Gender.NonBinary: Text(L10n.of(context).resource('nonBinary')),
+              Gender.Transgender:
+                  Text(L10n.of(context).resource('transgender')),
+              Gender.PreferNotToRespond:
+                  Text(L10n.of(context).resource('preferNotToRespond')),
             },
           ),
-          Text('Marital Status'),
+          Text(L10n.of(context).resource('maritalStatus')),
           CupertinoSegmentedControl<bool>(
             groupValue: _married,
             onValueChanged: (bool value) {
@@ -171,12 +180,12 @@ class _ProfilePageState extends State<ProfilePage>
                 _married = value;
               });
             },
-            children: const <bool, Widget>{
-              true: Text('Married'),
-              false: Text('Unmarried'),
+            children: <bool, Widget>{
+              true: Text(L10n.of(context).resource('married')),
+              false: Text(L10n.of(context).resource('unmarried')),
             },
           ),
-          Text('Physical Conditions'),
+          Text(L10n.of(context).resource('phyCondidtions')),
           CupertinoSegmentedControl<bool>(
             groupValue: _disabled,
             onValueChanged: (bool value) {
@@ -184,9 +193,9 @@ class _ProfilePageState extends State<ProfilePage>
                 _disabled = value;
               });
             },
-            children: const <bool, Widget>{
-              true: Text('Disabled'),
-              false: Text('No Disability'),
+            children: <bool, Widget>{
+              true: Text(L10n.of(context).resource('disabled')),
+              false: Text(L10n.of(context).resource('noDisability')),
             },
           ),
         ]);

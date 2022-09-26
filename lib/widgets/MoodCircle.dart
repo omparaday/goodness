@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../home.dart';
 import 'dart:math' as math;
 
+import '../l10n/Localizations.dart';
+
 class MoodCircle extends StatelessWidget {
   MoodCircle(double this.diameter, this.inset, this.radius, this.sideOfSquare,
       this._processState, this.onTapUp, this.x, this.y,
@@ -83,42 +85,42 @@ class MoodCircle extends StatelessWidget {
         Positioned(
           top: sideOfSquare,
           left: diameter + inset,
-          child: getEmoji('😊', 'Happy'),
+          child: getEmoji('😊', L10n.of(context).resource('happy')),
         ),
         Positioned(
           top: diameter - sideOfSquare + inset,
           left: diameter + inset,
-          child: getEmoji("😃", 'Excited'),
+          child: getEmoji("😃", L10n.of(context).resource('excited')),
         ),
         Positioned(
           top: diameter + inset / 2,
           left: radius + sideOfSquare,
-          child: getEmoji("😴", 'Peaceful'),
+          child: getEmoji("😴", L10n.of(context).resource('peaceful')),
         ),
         Positioned(
           top: diameter + inset / 2,
           left: sideOfSquare,
-          child: getEmoji("😢", 'Fear'),
+          child: getEmoji("😢", L10n.of(context).resource('fear')),
         ),
         Positioned(
           top: diameter - sideOfSquare + inset,
           left: inset / 2,
-          child: getEmoji("😔", 'Sad'),
+          child: getEmoji("😔", L10n.of(context).resource('sad')),
         ),
         Positioned(
           top: sideOfSquare,
           left: inset / 2,
-          child: getEmoji("🤒", 'Weak'),
+          child: getEmoji("🤒", L10n.of(context).resource('weak')),
         ),
         Positioned(
           top: inset / 2,
           left: sideOfSquare,
-          child: getEmoji("😡", 'Angry'),
+          child: getEmoji("😡", L10n.of(context).resource('angry')),
         ),
         Positioned(
           top: inset / 2,
           left: radius + sideOfSquare,
-          child: getEmoji("🤗", 'Strong'),
+          child: getEmoji("🤗", L10n.of(context).resource('strong')),
         ),
       ],
     );

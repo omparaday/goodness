@@ -6,9 +6,11 @@ import 'package:goodness/home.dart';
 import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:goodness/widgets/HistoryChart.dart';
 import 'package:goodness/widgets/MoodCircle.dart';
+import 'package:sprintf/sprintf.dart';
 import 'dart:math' as math;
 
 import 'dbhelpers/DeedHelper.dart';
+import 'l10n/Localizations.dart';
 
 class HistoryPage extends StatefulWidget {
   @override
@@ -48,7 +50,8 @@ class _HistoryPageState extends State<HistoryPage> {
       chartWidth: chartWidth,
       chartHeight: chartHeight,
       plotList: plotInfoMap,
-      historyType: historyType, showHistoryDialog: showHistoryDialog,
+      historyType: historyType,
+      showHistoryDialog: showHistoryDialog,
     );
     return Container(
       margin: const EdgeInsets.all(10.0),
@@ -56,7 +59,7 @@ class _HistoryPageState extends State<HistoryPage> {
         child: SafeArea(
           child: Column(
             children: <Widget>[
-              Text('History'),
+              Text(L10n.of(context).resource('history')),
               SizedBox(width: 0, height: 10),
               CupertinoSegmentedControl<HistoryType>(
                 groupValue: historyType,
@@ -64,11 +67,11 @@ class _HistoryPageState extends State<HistoryPage> {
                   historyType = value;
                   fetchChartData();
                 },
-                children: const <HistoryType, Widget>{
-                  HistoryType.Week: Text('Week'),
-                  HistoryType.Month: Text('Month'),
-                  HistoryType.Year: Text('Year'),
-                  HistoryType.All: Text('All'),
+                children: <HistoryType, Widget>{
+                  HistoryType.Week: Text(L10n.of(context).resource('week')),
+                  HistoryType.Month: Text(L10n.of(context).resource('month')),
+                  HistoryType.Year: Text(L10n.of(context).resource('year')),
+                  HistoryType.All: Text(L10n.of(context).resource('all')),
                 },
               ),
               SizedBox(width: 0, height: 10),
@@ -76,22 +79,25 @@ class _HistoryPageState extends State<HistoryPage> {
                 children: <Widget>[
                   Text(chartName),
                   Spacer(),
-                  Text('Average Score: $chartAverage')
+                  Text(sprintf(L10n.of(context).resource('averageScore'),
+                      [chartAverage]))
                 ],
               ),
               Row(
                 children: <Widget>[
                   CupertinoButton(
-                      child: Text('Prev'), onPressed: () => goPrevious()),
+                      child: Text(L10n.of(context).resource('prev')),
+                      onPressed: () => goPrevious()),
                   Spacer(),
                   CupertinoButton(
-                      child: Text('Next'), onPressed: () => goNext())
+                      child: Text(L10n.of(context).resource('next')),
+                      onPressed: () => goNext())
                 ],
               ),
               SizedBox(width: 0, height: 10),
               chart,
               SizedBox(width: 0, height: 10),
-              Text('Recent Submissions'),
+              Text(L10n.of(context).resource('recentSubmissions')),
               SizedBox(width: 0, height: 10),
               Container(
                   child: Column(
@@ -140,7 +146,10 @@ class _HistoryPageState extends State<HistoryPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(dd.goodness >= 100 ? 'Score: Perfect 💯 ' :'Score: ${dd.goodness}'),
+                      Text(dd.goodness >= 100
+                          ? L10n.of(context).resource('scorePerfect100')
+                          : sprintf(L10n.of(context).resource('scoreWithVal'),
+                              [dd.goodness])),
                       Spacer(),
                       Text(dd.wordKey),
                     ],
@@ -161,7 +170,7 @@ class _HistoryPageState extends State<HistoryPage> {
     }
     WordData wd = await getWordForKey(dd.wordKey);
     Quote quote = await getQuoteForKey(dd.quoteKey);
-    String deedStr = 'Not opted for deed';
+    String deedStr = L10n.of(context).resource('notOptedForDeed');
     if (dd.deedKey != null) {
       Deed deed = await getDeedForKey(dd.deedKey ?? '');
       deedStr = deed.content;
@@ -175,10 +184,18 @@ class _HistoryPageState extends State<HistoryPage> {
               MoodCircle(150, 15, 75, 150 / (2 * math.sqrt2),
                   ProcessState.Completed, () => {}, dd.x / 2, dd.y / 2),
               DecoratedText(dd.about),
-              DecoratedText('Word: ${wd.word}\n${wd.meaning}'),
-              DecoratedText('Quote\n${quote.content}'),
-              DecoratedText('Deed for the day\n$deedStr'),
-              DecoratedText('Score: ${dd.goodness >=100 ? 'Perfect 💯' : dd.goodness}')
+              DecoratedText(sprintf(
+                  L10n.of(context).resource('wordWithDetails'),
+                  [wd.word, wd.meaning])),
+              DecoratedText(sprintf(
+                  L10n.of(context).resource('deedForTheDay'), [deedStr])),
+              DecoratedText(sprintf(
+                  L10n.of(context).resource('quoteWithContent'),
+                  [quote.content])),
+              DecoratedText(dd.goodness >= 100
+                  ? L10n.of(context).resource('scorePerfect100')
+                  : sprintf(
+                      L10n.of(context).resource('scoreWithVal'), [dd.goodness]))
             ],
           )),
     );
@@ -216,7 +233,8 @@ class _HistoryPageState extends State<HistoryPage> {
       if (metaData!['Average'] != 0 || startFound) {
         startFound = true;
         int avg = metaData!['Average']?.round() ?? 0;
-        plotInfoMap.putIfAbsent((start.year).toString(), () => BarPlotInfo(avg, null, null));
+        plotInfoMap.putIfAbsent(
+            (start.year).toString(), () => BarPlotInfo(avg, null, null));
         totalDays += metaData!['totalDays'] ?? 0;
         totalScore += metaData!['totalScore'] ?? 0;
       }
@@ -255,7 +273,8 @@ class _HistoryPageState extends State<HistoryPage> {
         var json = chartData[transKey];
         if (json != null) {
           dd = DailyData.fromJson(json);
-          plotInfoMap.putIfAbsent(transKey, () => BarPlotInfo(dd.goodness, dd, trans));
+          plotInfoMap.putIfAbsent(
+              transKey, () => BarPlotInfo(dd.goodness, dd, trans));
           count++;
           sum = sum + dd.goodness;
         } else {
@@ -273,7 +292,8 @@ class _HistoryPageState extends State<HistoryPage> {
     DailyData dd;
     Map<String, dynamic>? chartData = await getDataForWeek(chartWeek);
     DateTime movingDate = chartWeek;
-    chartName = 'Week ${getDateKeyFormat(chartWeek)}';
+    chartName = sprintf(L10n.of(context).resource('weekWithStart'),
+        [getDateKeyFormat(chartWeek)]);
     chartAverage = '0.0';
     int count = 0, sum = 0;
     if (chartData != null) {
@@ -282,11 +302,13 @@ class _HistoryPageState extends State<HistoryPage> {
         var json = chartData[movingDateKey];
         if (json != null) {
           dd = DailyData.fromJson(json);
-          plotInfoMap.putIfAbsent(getDayOfWeek(movingDate), () => BarPlotInfo(dd.goodness, dd, movingDate));
+          plotInfoMap.putIfAbsent(getDayOfWeek(movingDate),
+              () => BarPlotInfo(dd.goodness, dd, movingDate));
           count++;
           sum = sum + dd.goodness;
         } else {
-          plotInfoMap.putIfAbsent(getDayOfWeek(movingDate), () => BarPlotInfo(0, null, null));
+          plotInfoMap.putIfAbsent(
+              getDayOfWeek(movingDate), () => BarPlotInfo(0, null, null));
         }
         movingDate = movingDate.add(Duration(days: 1));
       }
