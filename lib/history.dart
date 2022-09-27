@@ -77,10 +77,10 @@ class _HistoryPageState extends State<HistoryPage> {
               SizedBox(width: 0, height: 10),
               Row(
                 children: <Widget>[
-                  Text(chartName),
+                  Flexible(child: Text(chartName)),
                   Spacer(),
-                  Text(sprintf(L10n.of(context).resource('averageScore'),
-                      [chartAverage]))
+                  Flexible(child: Text(sprintf(L10n.of(context).resource('averageScore'),
+                      [chartAverage])))
                 ],
               ),
               Row(

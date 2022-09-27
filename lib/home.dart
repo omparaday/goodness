@@ -219,11 +219,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _goodnessScore = (50 * distance / radius).round();
     print('gs1 $_goodnessScore');
     int aboutLength = _writeAboutController.text.length;
-    double aboutFactor = 1;
+    double aboutFactor = 1.2;
     if (aboutLength <= 10) {
-      aboutFactor = 0.6;
-    } else if (aboutLength <= 30) {
       aboutFactor = 0.8;
+    } else if (aboutLength <= 30) {
+      aboutFactor = 1.0;
     }
     print('about fac $aboutFactor');
     if (isHappy) {
@@ -234,6 +234,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     } else {
       _goodnessScore = 50 - _goodnessScore;
       print('gs4 $_goodnessScore');
+      _goodnessScore = (_goodnessScore < 10) ? 10 : _goodnessScore;
       _goodnessScore = (_goodnessScore * aboutFactor).round();
       print('gs5 $_goodnessScore');
     }
