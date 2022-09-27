@@ -48,14 +48,14 @@ class MoodCircle extends StatelessWidget {
         children: <Widget>[
           Container(
             child: CustomPaint(
-              painter: LinePainter(diameter, radius, sideOfSquare),
+              painter: LinePainter(context, diameter, radius, sideOfSquare),
             ),
           ),
           Container(
             decoration: BoxDecoration(
               gradient: RadialGradient(colors: [
-                CupertinoColors.white.withOpacity(1),
-                CupertinoColors.white.withOpacity(0)
+                CupertinoTheme.of(context).scaffoldBackgroundColor.withOpacity(1),
+                CupertinoTheme.of(context).scaffoldBackgroundColor.withOpacity(0)
               ]),
             ),
             child: GestureDetector(
@@ -153,13 +153,14 @@ String getEmojiForXy(double x, double y) {
 }
 
 class LinePainter extends CustomPainter {
-  LinePainter(this.diameter, this.radius, this.sideOfSquare) {}
+  LinePainter(this.context, this.diameter, this.radius, this.sideOfSquare) {}
   double radius, diameter, sideOfSquare;
+  BuildContext context;
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = CupertinoColors.white
+      ..color = CupertinoTheme.of(context).scaffoldBackgroundColor
       ..strokeWidth = 5;
     canvas.drawLine(Offset(radius, 0), Offset(radius, diameter), paint);
     canvas.drawLine(Offset(0, radius), Offset(diameter, radius), paint);

@@ -27,6 +27,11 @@ class _HistoryPageState extends State<HistoryPage> {
   String chartName = '';
   String chartAverage = '0.0';
 
+  void dataChangeCallback() {
+    fetchChartData();
+    fetchRecentHistory();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +42,7 @@ class _HistoryPageState extends State<HistoryPage> {
     chartWeek = getFirstDayOfWeek(DateTime.now());
     chartMonth = getFirstDayOfMonth(DateTime.now());
     chartYear = getFirstDayOfYear(DateTime.now());
+    registerWriteCallback(dataChangeCallback);
     fetchRecentHistory();
     fetchChartData();
   }
@@ -77,9 +83,9 @@ class _HistoryPageState extends State<HistoryPage> {
               SizedBox(width: 0, height: 10),
               Row(
                 children: <Widget>[
-                  Flexible(child: Text(chartName)),
+                  Flexible(fit: FlexFit.tight, child: Text(chartName)),
                   Spacer(),
-                  Flexible(child: Text(sprintf(L10n.of(context).resource('averageScore'),
+                  Flexible(fit: FlexFit.tight, child: Text(sprintf(L10n.of(context).resource('averageScore'),
                       [chartAverage])))
                 ],
               ),
@@ -125,7 +131,7 @@ class _HistoryPageState extends State<HistoryPage> {
               padding: const EdgeInsets.all(5.0),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Color.fromARGB(200, 153, 204, 255),
+                  color: Color.fromARGB(100, 153, 204, 255),
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(4)),
                 shape: BoxShape.rectangle,

@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 children: <Widget>[
                   moodCircle,
                   (_processState.index > ProcessState.NotTaken.index
-                      ? Text(getHappyState()
+                      ? DecoratedText(getHappyState()
                           ? L10n.of(context).resource('lookAroundSmile')
                           : L10n.of(context).resource('deepBreath'))
                       : SizedBox.shrink()),

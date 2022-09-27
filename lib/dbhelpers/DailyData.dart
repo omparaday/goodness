@@ -21,7 +21,7 @@ class DailyData {
 
   Map<String, dynamic> toJson() => _$DailyDataToJson(this);
 }
-
+List<Function> writeCallbacks = [];
 Future<DailyData?>? getDataForDay(String day) async {
   Directory dir = await getApplicationDocumentsDirectory();
   String fileName = day.substring(0, 7);
@@ -244,6 +244,13 @@ void addDailyData(String key, DailyData value) {
     }
     print("File contents ${jsonFile.readAsStringSync()}");
   });
+  for (Function f in writeCallbacks) {
+    f();
+  }
+}
+
+void registerWriteCallback(Function f) {
+  writeCallbacks.add(f);
 }
 
 String getDateKeyFormat(DateTime date) => DateFormat('yyyy-MM-dd').format(date);

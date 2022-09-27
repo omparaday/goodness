@@ -14,7 +14,7 @@ class DecoratedText extends StatelessWidget {
         width: mediaQuery.size.width,
         decoration: BoxDecoration(
           border: Border.all(
-            color: CupertinoColors.opaqueSeparator,
+            color: CupertinoColors.opaqueSeparator.withAlpha(100),
           ),
           borderRadius: BorderRadius.all(Radius.circular(4)),
           shape: BoxShape.rectangle,
