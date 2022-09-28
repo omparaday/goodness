@@ -71,6 +71,7 @@ class _ProfilePageState extends State<ProfilePage>
   Widget build(BuildContext context) {
     print('profile build');
     return CupertinoPageScaffold(
+        resizeToAvoidBottomInset: false,
         navigationBar: CupertinoNavigationBar(
           leading: Visibility(
             visible: isEditing ? true : false,
@@ -96,7 +97,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Column buildDisplayColumn() {
     String genderStr = L10n.of(context).resource('notSet');
-    switch(_gender) {
+    switch (_gender) {
       case Gender.PreferNotToRespond:
         genderStr = L10n.of(context).resource('preferNotToRespond');
         break;
@@ -125,7 +126,8 @@ class _ProfilePageState extends State<ProfilePage>
                 ? getDisplayDate(_dob!)
                 : L10n.of(context).resource('notSet')
           ])),
-          DecoratedText(sprintf(L10n.of(context).resource('genderDisplay'), [genderStr])),
+          DecoratedText(
+              sprintf(L10n.of(context).resource('genderDisplay'), [genderStr])),
           DecoratedText(_married
               ? L10n.of(context).resource('maritalStatusMarried')
               : L10n.of(context).resource('maritalStatusUnmarried')),
