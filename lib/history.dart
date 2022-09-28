@@ -65,7 +65,10 @@ class _HistoryPageState extends State<HistoryPage> {
         child: SafeArea(
           child: Column(
             children: <Widget>[
-              Text(L10n.of(context).resource('history')),
+              Text(
+                L10n.of(context).resource('history'),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
               SizedBox(width: 0, height: 10),
               CupertinoSegmentedControl<HistoryType>(
                 groupValue: historyType,
@@ -85,8 +88,13 @@ class _HistoryPageState extends State<HistoryPage> {
                 children: <Widget>[
                   Flexible(fit: FlexFit.tight, child: Text(chartName)),
                   Spacer(),
-                  Flexible(fit: FlexFit.tight, child: Text(sprintf(L10n.of(context).resource('averageScore'),
-                      [chartAverage])))
+                  Flexible(
+                      fit: FlexFit.tight,
+                      child: Text(
+                        sprintf(L10n.of(context).resource('averageScore'),
+                            [chartAverage]),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ))
                 ],
               ),
               Row(
@@ -103,7 +111,10 @@ class _HistoryPageState extends State<HistoryPage> {
               SizedBox(width: 0, height: 10),
               chart,
               SizedBox(width: 0, height: 10),
-              Text(L10n.of(context).resource('recentSubmissions')),
+              Text(
+                L10n.of(context).resource('recentSubmissions'),
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               SizedBox(width: 0, height: 10),
               Container(
                   child: Column(

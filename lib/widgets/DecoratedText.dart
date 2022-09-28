@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 
 class DecoratedText extends StatelessWidget {
-  const DecoratedText(String this._text, {Key? key}) : super(key: key);
+  const DecoratedText(String this._text, {Key? key, TextStyle? this.textStyle})
+      : super(key: key);
 
   final String _text;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,9 @@ class DecoratedText extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(4)),
           shape: BoxShape.rectangle,
         ),
-        child: Text(_text));
+        child: Text(
+          _text,
+          style: textStyle,
+        ));
   }
 }

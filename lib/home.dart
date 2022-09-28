@@ -93,9 +93,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 children: <Widget>[
                   moodCircle,
                   (_processState.index > ProcessState.NotTaken.index
-                      ? DecoratedText(getHappyState()
-                          ? L10n.of(context).resource('lookAroundSmile')
-                          : L10n.of(context).resource('deepBreath'))
+                      ? DecoratedText(
+                          getHappyState()
+                              ? L10n.of(context).resource('lookAroundSmile')
+                              : L10n.of(context).resource('deepBreath'),
+                          textStyle: TextStyle(fontStyle: FontStyle.italic),
+                        )
                       : SizedBox.shrink()),
                   (_processState.index >= ProcessState.WritingAbout.index
                       ? Text(L10n.of(context).resource('yourMood'))
@@ -142,11 +145,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               ? Text(L10n.of(context).resource('submit'))
                               : Text(L10n.of(context).resource('proceed')),
                         )
-                      : DecoratedText(_goodnessScore >= 100
-                          ? L10n.of(context).resource('yourscorePerfect100')
-                          : sprintf(
-                              L10n.of(context).resource('yourscoreWithVal'),
-                              [_goodnessScore]))),
+                      : DecoratedText(
+                          _goodnessScore >= 100
+                              ? L10n.of(context).resource('yourscorePerfect100')
+                              : sprintf(
+                                  L10n.of(context).resource('yourscoreWithVal'),
+                                  [_goodnessScore]),
+                          textStyle: TextStyle(fontWeight: FontWeight.bold),
+                        )),
                 ],
               ),
             ),

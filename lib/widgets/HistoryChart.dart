@@ -56,8 +56,8 @@ class HistoryChart extends StatelessWidget {
                   ),
                 ),
                 height:
-                    barValue * (chartHeight - (textHeight.height + 5)) / 100,
-                width: historyType == HistoryType.Month ? 8 : 15,
+                    barValue * (chartHeight - (textHeight.height + 10)) / 100,
+                width: historyType == HistoryType.Month ? 8 : 12,
               ))));
     });
     return Container(
