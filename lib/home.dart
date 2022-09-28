@@ -143,9 +143,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   (_processState.index < ProcessState.Completed.index
                       ? CupertinoButton(
                           onPressed: _enableSubmit ? () => startFlow() : null,
-                          child: _processState == ProcessState.ShowingQuote
-                              ? Text(L10n.of(context).resource('submit'))
-                              : Text(L10n.of(context).resource('proceed')),
+                          child: AnimatedOpacity(
+                              opacity: _enableSubmit ? 1.0 : 0.0,
+                              duration: Duration(seconds: 1),
+                              child: _processState == ProcessState.ShowingQuote
+                                  ? Text(L10n.of(context).resource('submit'))
+                                  : Text(L10n.of(context).resource('proceed'))),
                         )
                       : DecoratedText(
                           _goodnessScore >= 100
@@ -178,6 +181,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   startFlow() async {
+    _enableSubmit = false;
+    Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        _enableSubmit = true;
+      });
+    });
     if (_processState == ProcessState.WritingAbout) {
       _wordData = await word.getNewWord(getHappyState());
     } else if (_processState == ProcessState.ShowingWord) {
