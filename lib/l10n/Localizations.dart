@@ -72,6 +72,7 @@ class L10n {
       'maritalStatusMarried': 'Marital Status: Married',
       'dateOfBirthDisplay': 'Date of Birth: %s',
       'genderDisplay': 'Gender: %s',
+      'didNotWrite': 'Did not write about mood.'
     },
     'ta': {
       'home': 'முகப்பு',
@@ -132,6 +133,7 @@ class L10n {
       'maritalStatusMarried': 'திருமண நிலை: திருமணமானவர்',
       'dateOfBirthDisplay': 'பிறந்த நாள்: %s',
       'genderDisplay': 'பாலினம்: %s',
+      'didNotWrite': 'ஏன் அப்படி உணர்கிறீர்கள் என்பதைப் பற்றி எழுதவில்லை.'
     },
   };
 

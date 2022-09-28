@@ -200,7 +200,9 @@ class _HistoryPageState extends State<HistoryPage> {
             children: [
               MoodCircle(150, 15, 75, 150 / (2 * math.sqrt2),
                   ProcessState.Completed, () => {}, dd.x / 2, dd.y / 2),
-              DecoratedText(dd.about),
+              DecoratedText(dd.about.isEmpty
+                  ? L10n.of(context).resource('didNotWrite')
+                  : dd.about),
               DecoratedText(sprintf(
                   L10n.of(context).resource('wordWithDetails'),
                   [wd.word, wd.meaning])),

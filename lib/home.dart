@@ -110,8 +110,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           controller: _writeAboutController,
                           enabled: _processState.index !=
                               ProcessState.Completed.index,
-                          placeholder:
-                              L10n.of(context).resource('writeAboutFeel'),
+                          placeholder: _processState.index !=
+                                  ProcessState.Completed.index
+                              ? L10n.of(context).resource('writeAboutFeel')
+                              : L10n.of(context).resource('didNotWrite'),
                         )
                       : SizedBox.shrink()),
                   (_processState.index >= ProcessState.ShowingWord.index
