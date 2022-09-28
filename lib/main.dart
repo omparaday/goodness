@@ -9,16 +9,28 @@ import 'package:google_fonts/google_fonts.dart';
 import 'history.dart';
 
 void main() {
-  runApp(new CupertinoApp(localizationsDelegates: const [
-    // Add this line
-    L10nDelegate(),
-    GlobalCupertinoLocalizations.delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ], supportedLocales: [
-    Locale('en', ''),
-    Locale('ta', ''),
-  ], home: new Main()));
+  runApp(new CupertinoApp(
+      theme: CupertinoThemeData(
+          textTheme: CupertinoTextThemeData(
+              textStyle: TextStyle(
+        fontFamily: GoogleFonts.nunito().fontFamily,
+        color: CupertinoDynamicColor.withBrightness(
+          color: CupertinoColors.black,
+          darkColor: CupertinoColors.white,
+        ),
+      ))),
+      localizationsDelegates: const [
+        // Add this line
+        L10nDelegate(),
+        GlobalCupertinoLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en', ''),
+        Locale('ta', ''),
+      ],
+      home: new Main()));
 }
 
 class Main extends StatefulWidget {
@@ -40,6 +52,10 @@ class _MainState extends State<Main> {
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
         tabBar: CupertinoTabBar(
+          backgroundColor: CupertinoDynamicColor.withBrightness(
+            color: Color.fromARGB(0, 0, 0, 0),
+            darkColor: Color.fromARGB(0, 0, 0, 0),
+          ),
           currentIndex: _currentIndex,
           onTap: onTabTapped,
           items: [
@@ -63,15 +79,14 @@ class _MainState extends State<Main> {
               return SafeArea(
                 child: CupertinoApp(
                   theme: CupertinoThemeData(
-                      textTheme: CupertinoTheme.of(context).textTheme.copyWith(
-                              textStyle: TextStyle(
-                            fontFamily: GoogleFonts.nunito().fontFamily,
-                            color: CupertinoDynamicColor.withBrightness(
-                              color: CupertinoColors.black,
-                              darkColor: CupertinoColors.white,
-                            ),
-                            fontSize: 20,
-                          ))),
+                      textTheme: CupertinoTextThemeData(
+                          textStyle: TextStyle(
+                    fontFamily: GoogleFonts.nunito().fontFamily,
+                    color: CupertinoDynamicColor.withBrightness(
+                      color: CupertinoColors.black,
+                      darkColor: CupertinoColors.white,
+                    ),
+                  ))),
                   localizationsDelegates: const [
                     // Add this line
                     L10nDelegate(),

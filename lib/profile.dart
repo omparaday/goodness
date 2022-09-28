@@ -73,6 +73,10 @@ class _ProfilePageState extends State<ProfilePage>
     return CupertinoPageScaffold(
         resizeToAvoidBottomInset: false,
         navigationBar: CupertinoNavigationBar(
+          backgroundColor: CupertinoDynamicColor.withBrightness(
+            color: CupertinoColors.white,
+            darkColor: CupertinoColors.black,
+          ),
           leading: Visibility(
             visible: isEditing ? true : false,
             child: CupertinoButton(
@@ -80,7 +84,10 @@ class _ProfilePageState extends State<ProfilePage>
               child: new Icon(CupertinoIcons.pencil_slash),
             ),
           ),
-          middle: Text(_name ?? L10n.of(context).resource('yourProfile')),
+          middle: Text(
+            L10n.of(context).resource('yourProfile'),
+            style: TextStyle(fontSize: 22),
+          ),
           trailing: CupertinoButton(
             onPressed: () => toggleEdit(),
             child: new Icon(_editsave),
@@ -88,7 +95,7 @@ class _ProfilePageState extends State<ProfilePage>
         ),
         child: SingleChildScrollView(
             child: Container(
-                margin: const EdgeInsets.all(10.0),
+                margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                 child: SafeArea(
                     child: isEditing
                         ? buildEditableColumn()

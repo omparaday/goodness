@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     Widget moodCircle = getMoodCircle();
 
     return Container(
-        margin: const EdgeInsets.all(10.0),
+        margin: EdgeInsets.only(left: 10.0, right: 10.0),
         child: SingleChildScrollView(
           child: SafeArea(
             child: Align(

@@ -60,14 +60,14 @@ class _HistoryPageState extends State<HistoryPage> {
       showHistoryDialog: showHistoryDialog,
     );
     return Container(
-      margin: const EdgeInsets.all(10.0),
+      margin: EdgeInsets.only(left: 10.0, right: 10.0),
       child: SingleChildScrollView(
         child: SafeArea(
           child: Column(
             children: <Widget>[
               Text(
                 L10n.of(context).resource('history'),
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(width: 0, height: 10),
               CupertinoSegmentedControl<HistoryType>(
