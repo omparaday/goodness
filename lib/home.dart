@@ -3,11 +3,11 @@ import 'package:goodness/dbhelpers/DailyData.dart' as dailydata;
 import 'package:goodness/dbhelpers/DeedHelper.dart' as deed;
 import 'dart:math' as math;
 
-import 'package:goodness/dbhelpers/WordData.dart' as word;
 import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:goodness/widgets/MoodCircle.dart';
 import 'package:sprintf/sprintf.dart';
 
+import 'dbhelpers/QuestionHelper.dart' as question;
 import 'dbhelpers/QuoteHelper.dart' as quote;
 import 'l10n/Localizations.dart';
 
@@ -15,7 +15,7 @@ enum ProcessState {
   NotTaken,
   Greeting,
   WritingAbout,
-  ShowingWord,
+  ShowingQuestion,
   OfferingDeed,
   ShowingQuote,
   Completed
@@ -36,7 +36,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   bool _enableSubmit = false;
   ProcessState _processState = ProcessState.NotTaken;
   late TextEditingController _writeAboutController;
-  late word.WordData? _wordData;
+  late question.Question? _question;
+  late TextEditingController _answerController;
   bool _showDeed = false;
   late deed.Deed? _deed;
   late quote.Quote? _quote;
@@ -71,6 +72,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     print('home initState');
     super.initState();
     _writeAboutController = TextEditingController();
+    _answerController = TextEditingController();
     _dateKey = dailydata.getDateKeyFormat(DateTime.now());
     readTodayData();
     WidgetsBinding.instance.addObserver(this);
@@ -116,10 +118,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               : L10n.of(context).resource('didNotWrite'),
                         )
                       : SizedBox.shrink()),
-                  (_processState.index >= ProcessState.ShowingWord.index
-                      ? DecoratedText(sprintf(
-                          L10n.of(context).resource('wordWithDetails'),
-                          [_wordData!.word, _wordData!.meaning]))
+                  (_processState.index >= ProcessState.ShowingQuestion.index
+                      ? Text(_question?.content ?? '')
+                      : SizedBox.shrink()),
+                  (_processState.index >= ProcessState.ShowingQuestion.index
+                      ? CupertinoTextField(
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          controller: _answerController,
+                          enabled: _processState.index !=
+                              ProcessState.Completed.index,
+                          placeholder: _processState.index !=
+                                  ProcessState.Completed.index
+                              ? L10n.of(context).resource('yourAnswer')
+                              : L10n.of(context).resource('didNotWrite'),
+                        )
                       : SizedBox.shrink()),
                   (_processState.index >= ProcessState.OfferingDeed.index &&
                           _processState != ProcessState.Completed &&
@@ -188,8 +201,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       });
     });
     if (_processState == ProcessState.WritingAbout) {
-      _wordData = await word.getNewWord(getHappyState());
-    } else if (_processState == ProcessState.ShowingWord) {
+      _question = await question.getNewQuestion();
+    } else if (_processState == ProcessState.ShowingQuestion) {
       _deed = await deed.getNewDeed();
     } else if (_processState == ProcessState.OfferingDeed) {
       _quote = await quote.getNewQuote();
@@ -207,9 +220,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           _processState = ProcessState.WritingAbout;
           break;
         case ProcessState.WritingAbout:
-          _processState = ProcessState.ShowingWord;
+          _processState = ProcessState.ShowingQuestion;
           break;
-        case ProcessState.ShowingWord:
+        case ProcessState.ShowingQuestion:
           _processState = ProcessState.OfferingDeed;
           break;
         case ProcessState.OfferingDeed:
@@ -235,24 +248,25 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     print('distance $distance');
     _goodnessScore = (50 * distance / radius).round();
     print('gs1 $_goodnessScore');
-    int aboutLength = _writeAboutController.text.length;
-    double aboutFactor = 1.2;
-    if (aboutLength <= 10) {
-      aboutFactor = 0.8;
-    } else if (aboutLength <= 30) {
-      aboutFactor = 1.0;
+    int writtenLength = _writeAboutController.text.length;
+    writtenLength += _answerController.text.length;
+    double writtenFactor = 1.2;
+    if (writtenLength <= 10) {
+      writtenFactor = 0.8;
+    } else if (writtenLength <= 30) {
+      writtenFactor = 1.0;
     }
-    print('about fac $aboutFactor');
+    print('about fac $writtenFactor');
     if (isHappy) {
       _goodnessScore += 50;
       print('gs2 $_goodnessScore');
-      _goodnessScore = (_goodnessScore * aboutFactor).round();
+      _goodnessScore = (_goodnessScore * writtenFactor).round();
       print('gs3 $_goodnessScore');
     } else {
       _goodnessScore = 50 - _goodnessScore;
       print('gs4 $_goodnessScore');
       _goodnessScore = (_goodnessScore < 10) ? 10 : _goodnessScore;
-      _goodnessScore = (_goodnessScore * aboutFactor).round();
+      _goodnessScore = (_goodnessScore * writtenFactor).round();
       print('gs5 $_goodnessScore');
     }
     if (_showDeed) {
@@ -277,7 +291,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _todayData = await dailydata.getDataForDay(_dateKey);
     if (_todayData != null) {
       var quote2 = await quote.getQuoteForKey(_todayData!.quoteKey);
-      var wordData2 = await word.getWordForKey(_todayData!.wordKey);
+      var question2 =
+          await question.getQuestionForKey(_todayData!.questionKey ?? '');
       var deedKey2 = _todayData!.deedKey;
       if (deedKey2 != null) {
         _showDeed = true;
@@ -290,7 +305,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _goodnessScore = _todayData!.goodness;
         _writeAboutController.text = _todayData!.about;
         _quote = quote2;
-        _wordData = wordData2;
+        _question = question2;
+        _answerController.text = _todayData!.answer ?? '';
       });
     } else {
       setState(() {
@@ -300,7 +316,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _goodnessScore = 0;
         _writeAboutController.text = '';
         _quote = null;
-        _wordData = null;
+        _question = null;
+        _answerController.text = '';
         _showDeed = false;
         _deed = null;
         _enableSubmit = false;
@@ -314,7 +331,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _y,
         _quote!.name,
         _writeAboutController.text,
-        _wordData!.word,
+        _question!.key,
+        _answerController.text,
         _showDeed ? _deed!.name : null,
         _goodnessScore);
     dailydata.addDailyData(_dateKey, _todayData!);

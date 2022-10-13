@@ -9,12 +9,12 @@ part 'DailyData.g.dart';
 @JsonSerializable()
 class DailyData {
   final double x, y;
-  final String quoteKey, about, wordKey;
-  final String? deedKey;
+  final String quoteKey, about;
+  final String? deedKey, questionKey, answer;
   final int goodness;
 
-  DailyData(this.x, this.y, this.quoteKey, this.about, this.wordKey,
-      this.deedKey, this.goodness);
+  DailyData(this.x, this.y, this.quoteKey, this.about, this.questionKey,
+      this.answer, this.deedKey, this.goodness);
 
   factory DailyData.fromJson(Map<String, dynamic> json) =>
       _$DailyDataFromJson(json);

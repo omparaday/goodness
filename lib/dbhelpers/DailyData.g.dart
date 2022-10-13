@@ -11,7 +11,8 @@ DailyData _$DailyDataFromJson(Map<String, dynamic> json) => DailyData(
       (json['y'] as num).toDouble(),
       json['quote'] as String,
       json['about'] as String,
-      json['word'] as String,
+      json['questionKey'] as String?,
+      json['answer'] as String?,
       json['deed'] as String?,
       json['goodness'] as int,
     );
@@ -21,7 +22,8 @@ Map<String, dynamic> _$DailyDataToJson(DailyData instance) => <String, dynamic>{
       'y': instance.y,
       'quote': instance.quoteKey,
       'about': instance.about,
-      'word': instance.wordKey,
+      'questionKey': instance.questionKey,
+      'answer': instance.answer,
       'deed': instance.deedKey,
       'goodness': instance.goodness,
     };

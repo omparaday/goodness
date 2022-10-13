@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:goodness/dbhelpers/DailyData.dart';
+import 'package:goodness/dbhelpers/QuestionHelper.dart';
 import 'package:goodness/dbhelpers/QuoteHelper.dart';
-import 'package:goodness/dbhelpers/WordData.dart';
 import 'package:goodness/home.dart';
 import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:goodness/widgets/HistoryChart.dart';
@@ -167,8 +167,6 @@ class _HistoryPageState extends State<HistoryPage> {
                           ? L10n.of(context).resource('scorePerfect100')
                           : sprintf(L10n.of(context).resource('scoreWithVal'),
                               [dd.goodness])),
-                      Spacer(),
-                      Text(dd.wordKey),
                     ],
                   ),
                   dd.about.isNotEmpty ? Text(dd.about) : SizedBox.shrink(),
@@ -185,7 +183,9 @@ class _HistoryPageState extends State<HistoryPage> {
     if (dd == null || datetime == null) {
       return;
     }
-    WordData wd = await getWordForKey(dd.wordKey);
+    Question? question = dd.questionKey != null
+        ? await getQuestionForKey(dd.questionKey ?? '')
+        : null;
     Quote quote = await getQuoteForKey(dd.quoteKey);
     String deedStr = L10n.of(context).resource('notOptedForDeed');
     if (dd.deedKey != null) {
@@ -203,9 +203,14 @@ class _HistoryPageState extends State<HistoryPage> {
               DecoratedText(dd.about.isEmpty
                   ? L10n.of(context).resource('didNotWrite')
                   : dd.about),
-              DecoratedText(sprintf(
-                  L10n.of(context).resource('wordWithDetails'),
-                  [wd.word, wd.meaning])),
+              dd.questionKey != null
+                  ? DecoratedText(sprintf('%s\n%s', [
+                      question?.content,
+                      dd.answer!.isEmpty
+                          ? L10n.of(context).resource('didNotWrite')
+                          : dd.answer
+                    ]))
+                  : SizedBox.shrink(),
               DecoratedText(sprintf(
                   L10n.of(context).resource('deedForTheDay'), [deedStr])),
               DecoratedText(sprintf(

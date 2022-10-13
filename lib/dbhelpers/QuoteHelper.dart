@@ -1,9 +1,6 @@
-import 'dart:io';
 import 'dart:convert'; //to convert json to maps and vice versa
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart'; //add path provider dart plugin on pubspec.yaml file
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
