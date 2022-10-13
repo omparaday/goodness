@@ -4,6 +4,7 @@ import 'package:goodness/dbhelpers/DeedHelper.dart' as deed;
 import 'dart:math' as math;
 
 import 'package:goodness/widgets/DecoratedText.dart';
+import 'package:goodness/widgets/DecoratedWidget.dart';
 import 'package:goodness/widgets/MoodCircle.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -103,36 +104,38 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         )
                       : SizedBox.shrink()),
                   (_processState.index >= ProcessState.WritingAbout.index
-                      ? Text(L10n.of(context).resource('yourMood'))
-                      : SizedBox.shrink()),
-                  (_processState.index >= ProcessState.WritingAbout.index
-                      ? CupertinoTextField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: _writeAboutController,
-                          enabled: _processState.index !=
-                              ProcessState.Completed.index,
-                          placeholder: _processState.index !=
-                                  ProcessState.Completed.index
-                              ? L10n.of(context).resource('writeAboutFeel')
-                              : L10n.of(context).resource('didNotWrite'),
-                        )
-                      : SizedBox.shrink()),
-                  (_processState.index >= ProcessState.ShowingQuestion.index
-                      ? Text(_question?.content ?? '')
+                      ? DecoratedWidget(Column(children: <Widget>[
+                          Text(L10n.of(context).resource('yourMood')),
+                          CupertinoTextField(
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            controller: _writeAboutController,
+                            enabled: _processState.index !=
+                                ProcessState.Completed.index,
+                            placeholder: _processState.index !=
+                                    ProcessState.Completed.index
+                                ? L10n.of(context).resource('writeAboutFeel')
+                                : L10n.of(context).resource('didNotWrite'),
+                          )
+                        ]))
                       : SizedBox.shrink()),
                   (_processState.index >= ProcessState.ShowingQuestion.index
-                      ? CupertinoTextField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: _answerController,
-                          enabled: _processState.index !=
-                              ProcessState.Completed.index,
-                          placeholder: _processState.index !=
-                                  ProcessState.Completed.index
-                              ? L10n.of(context).resource('yourAnswer')
-                              : L10n.of(context).resource('didNotWrite'),
-                        )
+                      ? DecoratedWidget(Column(
+                          children: <Widget>[
+                            Text(_question?.content ?? ''),
+                            CupertinoTextField(
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              controller: _answerController,
+                              enabled: _processState.index !=
+                                  ProcessState.Completed.index,
+                              placeholder: _processState.index !=
+                                      ProcessState.Completed.index
+                                  ? L10n.of(context).resource('yourAnswer')
+                                  : L10n.of(context).resource('didNotWrite'),
+                            )
+                          ],
+                        ))
                       : SizedBox.shrink()),
                   (_processState.index >= ProcessState.OfferingDeed.index &&
                           _processState != ProcessState.Completed &&
