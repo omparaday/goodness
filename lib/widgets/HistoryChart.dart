@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:goodness/dbhelpers/DailyData.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 enum HistoryType { Week, Month, Year, All }
 
@@ -17,7 +18,7 @@ class HistoryChart extends StatelessWidget {
   final double chartWidth;
   final double chartHeight;
   late List<Widget> barList;
-  late List<Widget> rowList;
+  late List<Widget> barNameList;
   final Map<String, BarPlotInfo> plotList;
   final HistoryType historyType;
   final Function showHistoryDialog;
@@ -25,22 +26,22 @@ class HistoryChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size textHeight = (TextPainter(
-            text: TextSpan(text: 'S'),
+            text: TextSpan(text: 'h '),
             maxLines: 1,
             textScaleFactor: MediaQuery.of(context).textScaleFactor,
             textDirection: TextDirection.ltr)
           ..layout())
         .size;
     barList = [];
-    rowList = [];
+    barNameList = [];
     plotList.forEach((barName, barPlotInfo) {
       int barValue = barPlotInfo.barValue;
       if (historyType == HistoryType.Month) {
-        rowList.add(Text(''));
+        barNameList.add(Text('', style: TextStyle(fontFamily: GoogleFonts.courierPrime().fontFamily),));
       } else if (historyType == HistoryType.All) {
-        rowList.add(Text(barName.substring(2)));
+        barNameList.add(Text(barName.substring(2), style: TextStyle(fontFamily: GoogleFonts.courierPrime().fontFamily),));
       } else {
-        rowList.add(Text(barName.substring(0, 1)));
+        barNameList.add(Text(barName.substring(0, 1), style: TextStyle(fontFamily: GoogleFonts.courierPrime().fontFamily),));
       }
       barList.add(Tooltip(
           message: '$barName: $barValue',
@@ -56,7 +57,7 @@ class HistoryChart extends StatelessWidget {
                   ),
                 ),
                 height:
-                    barValue * (chartHeight - (textHeight.height + 10)) / 100,
+                    barValue * (chartHeight-textHeight.height) / 100,
                 width: historyType == HistoryType.Month ? 8 : 12,
               ))));
     });
@@ -134,7 +135,7 @@ class HistoryChart extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: rowList,
+                            children: barNameList,
                           )),
                     ],
                   ),

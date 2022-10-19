@@ -51,7 +51,7 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     print('history build');
     var chartWidth = MediaQuery.of(context).size.width;
-    var chartHeight = 300.0;
+    var chartHeight = MediaQuery.of(context).size.height / 3;
     Widget chart = HistoryChart(
       chartWidth: chartWidth,
       chartHeight: chartHeight,
