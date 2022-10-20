@@ -35,7 +35,6 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   void initState() {
     super.initState();
-    print('history initState');
     historyType = HistoryType.Week;
     recentData = [];
     plotInfoMap = {};
@@ -49,7 +48,6 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('history build');
     var chartWidth = MediaQuery.of(context).size.width;
     var chartHeight = MediaQuery.of(context).size.height / 3;
     Widget chart = HistoryChart(

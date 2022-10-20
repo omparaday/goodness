@@ -50,27 +50,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     switch (state) {
       case AppLifecycleState.resumed:
-        print('home resumed');
         if (_dateKey != dailydata.getDateKeyFormat(DateTime.now())) {
           _dateKey = dailydata.getDateKeyFormat(DateTime.now());
           readTodayData();
         }
         break;
       case AppLifecycleState.inactive:
-        print('home inactive');
         break;
       case AppLifecycleState.paused:
-        print('home paused');
         break;
       case AppLifecycleState.detached:
-        print('home detached');
         break;
     }
   }
 
   @override
   void initState() {
-    print('home initState');
     super.initState();
     _writeAboutController = TextEditingController();
     _answerController = TextEditingController();
@@ -81,7 +76,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    print('home build');
     Widget moodCircle = getMoodCircle();
 
     return Container(
@@ -248,9 +242,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     bool isHappy = getHappyState();
     double distance =
         math.sqrt(math.pow(_x - radius, 2) + math.pow(_y - radius, 2));
-    print('distance $distance');
     _goodnessScore = (50 * distance / radius).round();
-    print('gs1 $_goodnessScore');
     int writtenLength = _writeAboutController.text.length;
     writtenLength += _answerController.text.length;
     double writtenFactor = 1.2;
@@ -259,28 +251,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     } else if (writtenLength <= 30) {
       writtenFactor = 1.0;
     }
-    print('about fac $writtenFactor');
     if (isHappy) {
       _goodnessScore += 50;
-      print('gs2 $_goodnessScore');
       _goodnessScore = (_goodnessScore * writtenFactor).round();
-      print('gs3 $_goodnessScore');
     } else {
       _goodnessScore = 50 - _goodnessScore;
-      print('gs4 $_goodnessScore');
       _goodnessScore = (_goodnessScore < 10) ? 10 : _goodnessScore;
       _goodnessScore = (_goodnessScore * writtenFactor).round();
-      print('gs5 $_goodnessScore');
     }
     if (_showDeed) {
       _goodnessScore = (_goodnessScore * 1.1).round();
-      print('gs6 $_goodnessScore');
     }
     if (_goodnessScore > 100) {
       _goodnessScore = 100;
-      print('gs7 $_goodnessScore');
     }
-    print('gs8 $_goodnessScore');
   }
 
   bool getHappyState() {

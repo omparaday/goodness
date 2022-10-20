@@ -35,7 +35,6 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   void initState() {
-    print('profile initState');
     super.initState();
     _nameController = TextEditingController();
     _corController = TextEditingController();
@@ -69,7 +68,6 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    print('profile build');
     return CupertinoPageScaffold(
         resizeToAvoidBottomInset: false,
         navigationBar: CupertinoNavigationBar(

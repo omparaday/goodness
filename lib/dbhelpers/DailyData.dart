@@ -29,7 +29,7 @@ List<Function> writeCallbacks = [];
 Future<DailyData?>? getDataForDay(String day) async {
   String monthKey = day.substring(0, 7);
   Map<String, dynamic>? fileContent = await getMonthlyContent(monthKey);
-  if (fileContent![day] != null) return DailyData.fromJson(fileContent[day]);
+  if (fileContent?[day] != null) return DailyData.fromJson(fileContent?[day]);
   return null;
 }
 
@@ -40,8 +40,8 @@ Future<Map<String, dynamic>?>? getDataForWeek(DateTime date) async {
     String dayKey = getDateKeyFormat(movingDate);
     String monthKey = dayKey.substring(0, 7);
     Map<String, dynamic>? fileContent = await getMonthlyContent(monthKey);
-    if (fileContent![dayKey] != null)
-      result.putIfAbsent(dayKey, () => fileContent[dayKey]);
+    if (fileContent?[dayKey] != null)
+      result.putIfAbsent(dayKey, () => fileContent?[dayKey]);
     movingDate = movingDate.add(Duration(days: 1));
   }
   return result;
@@ -218,7 +218,6 @@ Future<Map<String, dynamic>?> getMonthlyContent(String monthKey) async {
   if (kIsWeb) {
     final prefs = await SharedPreferences.getInstance();
     var fileContent = prefs.getString(monthKey);
-    Map<String, dynamic> jsonFileContent;
     if (fileContent != null) {
       return Map<String, dynamic>.from(jsonDecode(fileContent));
     }
