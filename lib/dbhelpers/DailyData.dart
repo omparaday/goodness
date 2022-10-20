@@ -3,6 +3,8 @@ import 'dart:convert'; //to convert json to maps and vice versa
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart'; //add path provider dart plugin on pubspec.yaml file
 import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'DailyData.g.dart';
 
@@ -21,49 +23,33 @@ class DailyData {
 
   Map<String, dynamic> toJson() => _$DailyDataToJson(this);
 }
+
 List<Function> writeCallbacks = [];
+
 Future<DailyData?>? getDataForDay(String day) async {
-  Directory dir = await getApplicationDocumentsDirectory();
-  String fileName = day.substring(0, 7);
-  File jsonFile = File("${dir.path}/$fileName");
-  bool fileExists = jsonFile.existsSync();
-  if (fileExists) {
-    Map<String, dynamic> fileContent =
-        Map<String, dynamic>.from(jsonDecode(jsonFile.readAsStringSync()));
-    if (fileContent[day] != null) return DailyData.fromJson(fileContent[day]);
-  }
+  String monthKey = day.substring(0, 7);
+  Map<String, dynamic>? fileContent = await getMonthlyContent(monthKey);
+  if (fileContent![day] != null) return DailyData.fromJson(fileContent[day]);
   return null;
 }
 
 Future<Map<String, dynamic>?>? getDataForWeek(DateTime date) async {
-  Directory dir = await getApplicationDocumentsDirectory();
   DateTime movingDate = date;
   Map<String, dynamic> result = {};
   for (int i = 0; i < 7; i++) {
     String dayKey = getDateKeyFormat(movingDate);
-    String fileName = dayKey.substring(0, 7);
-    File jsonFile = File("${dir.path}/$fileName");
-    bool fileExists = jsonFile.existsSync();
-    if (fileExists) {
-      Map<String, dynamic> fileContent =
-          Map<String, dynamic>.from(jsonDecode(jsonFile.readAsStringSync()));
-      if (fileContent[dayKey] != null)
-        result.putIfAbsent(dayKey, () => fileContent[dayKey]);
-    }
+    String monthKey = dayKey.substring(0, 7);
+    Map<String, dynamic>? fileContent = await getMonthlyContent(monthKey);
+    if (fileContent![dayKey] != null)
+      result.putIfAbsent(dayKey, () => fileContent[dayKey]);
     movingDate = movingDate.add(Duration(days: 1));
   }
   return result;
 }
 
 Future<Map<String, dynamic>?>? getDataForMonth(String day) async {
-  Directory dir = await getApplicationDocumentsDirectory();
-  String fileName = day.substring(0, 7);
-  File jsonFile = File("${dir.path}/$fileName");
-  bool fileExists = jsonFile.existsSync();
-  if (fileExists) {
-    return Map<String, dynamic>.from(jsonDecode(jsonFile.readAsStringSync()));
-  }
-  return null;
+  String monthKey = day.substring(0, 7);
+  return getMonthlyContent(monthKey);
 }
 
 Future<Map<String, dynamic>?>? getDataForYear(DateTime date) async {
@@ -105,7 +91,6 @@ Future<Map<String, dynamic>?>? getDataForYear(DateTime date) async {
 
 Future<Map<String, DailyData>?>? getRecentData() async {
   DateTime historyDate = DateTime.now();
-  Directory dir = await getApplicationDocumentsDirectory();
   Map<String, DailyData> result = {};
   while (true) {
     String day = DateFormat('yyyy-MM-dd').format(historyDate);
@@ -113,12 +98,9 @@ Future<Map<String, DailyData>?>? getRecentData() async {
     if (historyDate.month == 6 && historyDate.year == 2022) {
       break;
     }
-    String fileName = day.substring(0, 7);
-    File jsonFile = File("${dir.path}/$fileName");
-    bool fileExists = jsonFile.existsSync();
-    if (fileExists) {
-      Map<String, dynamic> fileContent =
-          Map<String, dynamic>.from(jsonDecode(jsonFile.readAsStringSync()));
+    String monthKey = day.substring(0, 7);
+    Map<String, dynamic>? fileContent = await getMonthlyContent(monthKey);
+    if (fileContent != null) {
       if (fileContent[day] != null) {
         result.putIfAbsent(day, () => DailyData.fromJson(fileContent[day]));
         if (result.length == 10) {
@@ -205,9 +187,14 @@ DateTime getFirstDayOfWeek(DateTime date) {
 
 String getDayOfWeek(DateTime date) => DateFormat('EEEE').format(date);
 
-String getDisplayDate(DateTime date) => DateFormat('MMM dd, yyyy EEEE').format(date);
-String getDisplayDateWithoutDoW(DateTime date) => DateFormat('MMM dd, yyyy').format(date);
-String getDisplayDateWithoutYear(DateTime date) => DateFormat('MMM dd, EEEE').format(date);
+String getDisplayDate(DateTime date) =>
+    DateFormat('MMM dd, yyyy EEEE').format(date);
+
+String getDisplayDateWithoutDoW(DateTime date) =>
+    DateFormat('MMM dd, yyyy').format(date);
+
+String getDisplayDateWithoutYear(DateTime date) =>
+    DateFormat('MMM dd, EEEE').format(date);
 
 DateTime getPreviousWeek(DateTime date) {
   return date.subtract(Duration(days: 7));
@@ -227,11 +214,43 @@ void createFile(Map<String, dynamic> content, Directory dir, String fileName) {
   file.writeAsStringSync(jsonEncode(content));
 }
 
-void addDailyData(String key, DailyData value) {
+Future<Map<String, dynamic>?> getMonthlyContent(String monthKey) async {
+  if (kIsWeb) {
+    final prefs = await SharedPreferences.getInstance();
+    var fileContent = prefs.getString(monthKey);
+    Map<String, dynamic> jsonFileContent;
+    if (fileContent != null) {
+      return Map<String, dynamic>.from(jsonDecode(fileContent));
+    }
+  } else {
+    Directory dir = await getApplicationDocumentsDirectory();
+    File jsonFile = File("${dir.path}/$monthKey");
+    bool fileExists = jsonFile.existsSync();
+    if (fileExists) {
+      return Map<String, dynamic>.from(jsonDecode(jsonFile.readAsStringSync()));
+    }
+  }
+  return null;
+}
+
+Future<void> addDailyData(String key, DailyData value) async {
   String fileName = key.substring(0, 7);
   Map<String, dynamic> content = {key: value};
-  getApplicationDocumentsDirectory().then((Directory directory) {
-    Directory dir = directory;
+  if (kIsWeb) {
+    final prefs = await SharedPreferences.getInstance();
+    var fileContent = prefs.getString(fileName);
+    Map<String, dynamic> jsonFileContent;
+    if (fileContent != null) {
+      jsonFileContent =
+          Map<String, dynamic>.from(jsonDecode(fileContent ?? ''));
+      jsonFileContent.addAll(content);
+    } else {
+      jsonFileContent = new Map();
+      jsonFileContent.addAll(content);
+    }
+    prefs.setString(fileName, jsonEncode(jsonFileContent));
+  } else {
+    Directory dir = await getApplicationDocumentsDirectory();
     File jsonFile = File("${dir.path}/$fileName");
     bool fileExists = jsonFile.existsSync();
     if (fileExists) {
@@ -243,7 +262,7 @@ void addDailyData(String key, DailyData value) {
       createFile(content, dir, fileName);
     }
     print("File contents ${jsonFile.readAsStringSync()}");
-  });
+  }
   for (Function f in writeCallbacks) {
     f();
   }
