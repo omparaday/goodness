@@ -130,36 +130,37 @@ class _MainState extends State<Main> {
                   ))),
                   home: Container(
                       padding: const EdgeInsets.only(
-                          top: 500, left: 20.0, bottom: 80.0, right: 20.0),
+                          top: 20, left: 20.0, bottom: 100.0, right: 20.0),
                       decoration: BoxDecoration(
-                          color: Color.fromARGB(100, 207, 207, 207)),
+                          color: CupertinoDynamicColor.withBrightness(
+                        color: Color.fromARGB(140, 60, 60, 60),
+                        darkColor: Color.fromARGB(140, 300, 300, 300),
+                      )),
                       child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            Container(),
-                            Column(children: <Widget>[
-                              Row(children: <Widget>[
-                                CupertinoButton(
-                                    child:
-                                        Text(L10n.of(context).resource('prev')),
-                                    onPressed: _welcomeIndex == 1
-                                        ? null
-                                        : previousWelcomeScreen),
-                                Spacer(),
-                                CupertinoButton(
-                                    child: Text(_welcomeIndex == 5
-                                        ? L10n.of(context).resource('close')
-                                        : L10n.of(context).resource('next')),
-                                    onPressed: nextWelcomeScreen)
-                              ]),
-                              getWelcomeText(),
-                              (_welcomeIndex <= 4 && _welcomeIndex >= 2)
-                                  ? Container(
-                                      padding: const EdgeInsets.only(
-                                          left: 30.0, right: 30.0),
-                                      child: getArrowWidget())
-                                  : SizedBox.shrink()
-                            ])
+                            Spacer(),
+                            Row(children: <Widget>[
+                              CupertinoButton(
+                                  child:
+                                      Text(L10n.of(context).resource('prev')),
+                                  onPressed: _welcomeIndex == 1
+                                      ? null
+                                      : previousWelcomeScreen),
+                              Spacer(),
+                              CupertinoButton(
+                                  child: Text(_welcomeIndex == 5
+                                      ? L10n.of(context).resource('close')
+                                      : L10n.of(context).resource('next')),
+                                  onPressed: nextWelcomeScreen)
+                            ]),
+                            getWelcomeText(),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            (_welcomeIndex <= 4 && _welcomeIndex >= 2)
+                                ? Container(child: getArrowWidget())
+                                : SizedBox.shrink()
                           ]))))
           : SizedBox.shrink()
     ]);
@@ -169,15 +170,46 @@ class _MainState extends State<Main> {
     switch (_welcomeIndex) {
       case 2:
         return Row(
-            children: <Widget>[Icon(CupertinoIcons.arrow_down), Spacer()]);
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Icon(CupertinoIcons.arrow_down),
+              SizedBox(
+                width: 60,
+                height: 10,
+              ),
+              SizedBox(
+                width: 60,
+                height: 10,
+              )
+            ]);
       case 3:
-        return Row(children: <Widget>[
-          Spacer(),
-          Icon(CupertinoIcons.arrow_down),
-          Spacer()
-        ]);
+        return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              SizedBox(
+                width: 60,
+                height: 10,
+              ),
+              Icon(CupertinoIcons.arrow_down),
+              SizedBox(
+                width: 60,
+                height: 10,
+              )
+            ]);
     }
-    return Row(children: <Widget>[Spacer(), Icon(CupertinoIcons.arrow_down)]);
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          SizedBox(
+            width: 60,
+            height: 10,
+          ),
+          SizedBox(
+            width: 60,
+            height: 10,
+          ),
+          Icon(CupertinoIcons.arrow_down)
+        ]);
   }
 
   Text getWelcomeText() {
@@ -212,6 +244,11 @@ class _MainState extends State<Main> {
     } else {
       setState(() {
         _welcomeIndex++;
+        if (_welcomeIndex < 5 && _welcomeIndex > 1) {
+          _currentIndex = _welcomeIndex - 2;
+        } else {
+          _currentIndex = 0;
+        }
       });
     }
     print(_welcomeIndex);
@@ -220,6 +257,11 @@ class _MainState extends State<Main> {
   void previousWelcomeScreen() {
     setState(() {
       _welcomeIndex--;
+      if (_welcomeIndex < 5 && _welcomeIndex > 1) {
+        _currentIndex = _welcomeIndex - 2;
+      } else {
+        _currentIndex = 0;
+      }
     });
   }
 
@@ -235,6 +277,7 @@ class _MainState extends State<Main> {
     setState(() {
       prefs.setBool('SHOW_WELCOME', false);
       _showWelcome = false;
+      _currentIndex = 0;
     });
   }
 }
