@@ -39,9 +39,9 @@ class HistoryChart extends StatelessWidget {
       if (historyType == HistoryType.Month) {
         barNameList.add(Text('', style: TextStyle(fontFamily: GoogleFonts.courierPrime().fontFamily),));
       } else if (historyType == HistoryType.All) {
-        barNameList.add(Text(barName.substring(2), style: TextStyle(fontFamily: GoogleFonts.courierPrime().fontFamily),));
+        barNameList.add(Text(barName.substring(2), style: TextStyle(fontFamily: GoogleFonts.inconsolata().fontFamily),));
       } else {
-        barNameList.add(Text(barName.substring(0, 1), style: TextStyle(fontFamily: GoogleFonts.courierPrime().fontFamily),));
+        barNameList.add(Text(barName.substring(0, 1), style: TextStyle(fontFamily: GoogleFonts.inconsolata().fontFamily),));
       }
       barList.add(Tooltip(
           message: '$barName: $barValue',
