@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class DecoratedText extends StatelessWidget {
   const DecoratedText(String this._text, {Key? key, TextStyle? this.textStyle})
@@ -14,16 +15,14 @@ class DecoratedText extends StatelessWidget {
         margin: const EdgeInsets.only(top: 5.0, bottom: 5.0),
         padding: const EdgeInsets.all(5.0),
         width: mediaQuery.size.width,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: CupertinoColors.opaqueSeparator.withAlpha(100),
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-          shape: BoxShape.rectangle,
-        ),
-        child: Text(
-          _text,
-          style: textStyle,
-        ));
+        child: PhysicalModel(
+            color: CupertinoTheme.of(context).scaffoldBackgroundColor,
+            elevation: 2,
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+            shadowColor: CupertinoColors.opaqueSeparator,
+            child: Text(
+              _text,
+              style: textStyle,
+            )));
   }
 }
