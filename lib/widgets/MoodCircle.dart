@@ -159,7 +159,18 @@ class MoodCircle extends StatelessWidget {
   }
 
   Widget getEmoji(String s, BuildContext context) {
-    return Tooltip(message: getMoodNameForEmoji(s, context), child: Text(s));
+    return Tooltip(message: getMoodNameForEmoji(s, context), child: RichText(
+      text: TextSpan(
+        children: <TextSpan>[
+          TextSpan(
+            text: s,
+            style: TextStyle(
+              fontFamily: 'EmojiOne',
+            ),
+          ),
+        ],
+      ),
+    ));
   }
 
   String getMoodText(BuildContext context) {
