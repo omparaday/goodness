@@ -75,7 +75,7 @@ class MoodCircle extends StatelessWidget {
                   Positioned(
                     top: y - 15,
                     left: x - 10,
-                    child: Text('🛟'),
+                    child: getEmoji('🛟', context),
                   )
                 ]),
               ),
@@ -198,7 +198,6 @@ class MoodCircle extends StatelessWidget {
 String getEmojiForXy(double x, double y, double radius) {
   double angle = -math.atan2(y - radius, x - radius);
   double degree = angle * 180 / math.pi;
-  print('degree ' + degree.toString());
   if (degree > 0 && degree <= 45) {
     return '😊';
   } else if (degree > 45 && degree <= 90) {

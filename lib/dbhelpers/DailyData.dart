@@ -260,7 +260,6 @@ Future<void> addDailyData(String key, DailyData value) async {
     } else {
       createFile(content, dir, fileName);
     }
-    print("File contents ${jsonFile.readAsStringSync()}");
   }
   for (Function f in writeCallbacks) {
     f();

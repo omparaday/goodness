@@ -45,7 +45,6 @@ class _MainState extends State<Main> {
   @override
   void initState() {
     _currentIndex = 0;
-    print('main initstate');
     checkAndShowWelcomeScreen();
     super.initState();
   }
@@ -251,7 +250,6 @@ class _MainState extends State<Main> {
         }
       });
     }
-    print(_welcomeIndex);
   }
 
   void previousWelcomeScreen() {
