@@ -190,34 +190,47 @@ class _HistoryPageState extends State<HistoryPage> {
       Deed deed = await getDeedForKey(dd.deedKey ?? '');
       deedStr = deed.content;
     }
+    Color backgroundColor = CupertinoDynamicColor.withBrightness(
+        color: Color.fromARGB(125, 215, 215, 215),
+        darkColor: Color.fromARGB(125, 70, 70, 70));
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) => CupertinoAlertDialog(
           title: Text('${getDisplayDate(datetime)}'),
           content: Column(
             children: [
-              MoodCircle(diameter/2, 15, 75, radius / (2 * math.sqrt2),
+              MoodCircle(diameter / 2, 15, 75, radius / (2 * math.sqrt2),
                   ProcessState.Completed, () => {}, dd.x / 2, dd.y / 2),
-              DecoratedText(dd.about.isEmpty
-                  ? L10n.of(context).resource('didNotWrite')
-                  : dd.about),
+              DecoratedText(
+                dd.about.isEmpty
+                    ? L10n.of(context).resource('didNotWrite')
+                    : dd.about,
+                backgroundColor: backgroundColor,
+              ),
               dd.questionKey != null
-                  ? DecoratedText(sprintf('%s\n%s', [
-                      question?.content,
-                      dd.answer!.isEmpty
-                          ? L10n.of(context).resource('didNotWrite')
-                          : dd.answer
-                    ]))
+                  ? DecoratedText(
+                      sprintf('%s\n%s', [
+                        question?.content,
+                        dd.answer!.isEmpty
+                            ? L10n.of(context).resource('didNotWrite')
+                            : dd.answer
+                      ]),
+                      backgroundColor: backgroundColor)
                   : SizedBox.shrink(),
-              DecoratedText(sprintf(
-                  L10n.of(context).resource('deedForTheDay'), [deedStr])),
-              DecoratedText(sprintf(
-                  L10n.of(context).resource('quoteWithContent'),
-                  [quote.content])),
-              DecoratedText(dd.goodness >= 100
-                  ? L10n.of(context).resource('scorePerfect100')
-                  : sprintf(
-                      L10n.of(context).resource('scoreWithVal'), [dd.goodness]))
+              DecoratedText(
+                  sprintf(
+                      L10n.of(context).resource('deedForTheDay'), [deedStr]),
+                  backgroundColor: backgroundColor),
+              DecoratedText(
+                  sprintf(L10n.of(context).resource('quoteWithContent'),
+                      [quote.content]),
+                  backgroundColor: backgroundColor),
+              DecoratedText(
+                  dd.goodness >= 100
+                      ? L10n.of(context).resource('scorePerfect100')
+                      : sprintf(L10n.of(context).resource('scoreWithVal'),
+                          [dd.goodness]),
+                  backgroundColor: backgroundColor)
             ],
           )),
     );

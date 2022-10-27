@@ -133,7 +133,7 @@ class _MainState extends State<Main> {
                       decoration: BoxDecoration(
                           color: CupertinoDynamicColor.withBrightness(
                         color: Color.fromARGB(140, 60, 60, 60),
-                        darkColor: Color.fromARGB(140, 300, 300, 300),
+                        darkColor: Color.fromARGB(140, 255, 255, 255),
                       )),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
