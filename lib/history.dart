@@ -154,7 +154,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     children: <Widget>[
                       Text(getDisplayDateWithoutYear(datetime)),
                       Spacer(),
-                      Text(getEmojiForXy(dd.x, dd.y)),
+                      Text(getEmojiForXy(dd.x, dd.y, radius)),
                     ],
                   ),
                   Row(
@@ -196,7 +196,7 @@ class _HistoryPageState extends State<HistoryPage> {
           title: Text('${getDisplayDate(datetime)}'),
           content: Column(
             children: [
-              MoodCircle(150, 15, 75, 150 / (2 * math.sqrt2),
+              MoodCircle(diameter/2, 15, 75, radius / (2 * math.sqrt2),
                   ProcessState.Completed, () => {}, dd.x / 2, dd.y / 2),
               DecoratedText(dd.about.isEmpty
                   ? L10n.of(context).resource('didNotWrite')

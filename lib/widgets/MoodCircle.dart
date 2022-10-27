@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:goodness/widgets/DecoratedText.dart';
+import 'package:sprintf/sprintf.dart';
 
 import '../home.dart';
 import 'dart:math' as math;
@@ -54,8 +56,12 @@ class MoodCircle extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               gradient: RadialGradient(colors: [
-                CupertinoTheme.of(context).scaffoldBackgroundColor.withOpacity(1),
-                CupertinoTheme.of(context).scaffoldBackgroundColor.withOpacity(0)
+                CupertinoTheme.of(context)
+                    .scaffoldBackgroundColor
+                    .withOpacity(1),
+                CupertinoTheme.of(context)
+                    .scaffoldBackgroundColor
+                    .withOpacity(0)
               ]),
             ),
             child: GestureDetector(
@@ -79,74 +85,123 @@ class MoodCircle extends StatelessWidget {
         ],
       ),
     );
-    return Stack(
+    return Column(
       children: <Widget>[
-        bigCircle,
-        Positioned(
-          top: sideOfSquare,
-          left: diameter + inset,
-          child: getEmoji('😊', L10n.of(context).resource('happy')),
+        Stack(
+          children: <Widget>[
+            bigCircle,
+            Positioned(
+              top: sideOfSquare,
+              left: diameter + inset,
+              child: getEmoji("😊", context),
+            ),
+            Positioned(
+              top: diameter - sideOfSquare + inset,
+              left: diameter + inset,
+              child: getEmoji("😃", context),
+            ),
+            Positioned(
+              top: diameter + inset / 2,
+              left: radius + sideOfSquare,
+              child: getEmoji("😴", context),
+            ),
+            Positioned(
+              top: diameter + inset / 2,
+              left: sideOfSquare,
+              child: getEmoji("😢", context),
+            ),
+            Positioned(
+              top: diameter - sideOfSquare + inset,
+              left: inset / 2,
+              child: getEmoji("😔", context),
+            ),
+            Positioned(
+              top: sideOfSquare,
+              left: inset / 2,
+              child: getEmoji("🤒", context),
+            ),
+            Positioned(
+              top: inset / 2,
+              left: sideOfSquare,
+              child: getEmoji("😡", context),
+            ),
+            Positioned(
+              top: inset / 2,
+              left: radius + sideOfSquare,
+              child: getEmoji("🤗", context),
+            ),
+          ],
         ),
-        Positioned(
-          top: diameter - sideOfSquare + inset,
-          left: diameter + inset,
-          child: getEmoji("😃", L10n.of(context).resource('excited')),
-        ),
-        Positioned(
-          top: diameter + inset / 2,
-          left: radius + sideOfSquare,
-          child: getEmoji("😴", L10n.of(context).resource('peaceful')),
-        ),
-        Positioned(
-          top: diameter + inset / 2,
-          left: sideOfSquare,
-          child: getEmoji("😢", L10n.of(context).resource('fear')),
-        ),
-        Positioned(
-          top: diameter - sideOfSquare + inset,
-          left: inset / 2,
-          child: getEmoji("😔", L10n.of(context).resource('sad')),
-        ),
-        Positioned(
-          top: sideOfSquare,
-          left: inset / 2,
-          child: getEmoji("🤒", L10n.of(context).resource('weak')),
-        ),
-        Positioned(
-          top: inset / 2,
-          left: sideOfSquare,
-          child: getEmoji("😡", L10n.of(context).resource('angry')),
-        ),
-        Positioned(
-          top: inset / 2,
-          left: radius + sideOfSquare,
-          child: getEmoji("🤗", L10n.of(context).resource('strong')),
-        ),
+        Text(getMoodText(context))
       ],
     );
   }
 
-  Widget getEmoji(String s, String tip) {
-    return Tooltip(message: tip, child: Text(s));
+  String getMoodNameForEmoji(String emoji, BuildContext context) {
+    switch (emoji) {
+      case "😊":
+        return L10n.of(context).resource('happy');
+      case "😃":
+        return L10n.of(context).resource('excited');
+      case "😴":
+        return L10n.of(context).resource('peaceful');
+      case "😢":
+        return L10n.of(context).resource('fear');
+      case "😔":
+        return L10n.of(context).resource('sad');
+      case "🤒":
+        return L10n.of(context).resource('weak');
+      case "😡":
+        return L10n.of(context).resource('angry');
+      case "🤗":
+        return L10n.of(context).resource('strong');
+    }
+    return '';
+  }
+
+  Widget getEmoji(String s, BuildContext context) {
+    return Tooltip(message: getMoodNameForEmoji(s, context), child: Text(s));
+  }
+
+  String getMoodText(BuildContext context) {
+    if (x == radius && y == radius) {
+      return '';
+    }
+    double distance =
+        math.sqrt(math.pow(x - radius, 2) + math.pow(y - radius, 2));
+    double strength = distance * 100 / radius;
+    String text = '';
+    if (strength > 80) {
+      text = sprintf(L10n.of(context).resource('highMood'),
+          [getMoodNameForEmoji(getEmojiForXy(x, y, radius), context)]);
+    } else if (strength > 50) {
+      text = sprintf(L10n.of(context).resource('moderateMood'),
+          [getMoodNameForEmoji(getEmojiForXy(x, y, radius), context)]);
+    } else {
+      text = sprintf(L10n.of(context).resource('slightMood'),
+          [getMoodNameForEmoji(getEmojiForXy(x, y, radius), context)]);
+    }
+    return text;
   }
 }
 
-String getEmojiForXy(double x, double y) {
-  double angle = -math.atan2(y - 165, x - 165);
+String getEmojiForXy(double x, double y, double radius) {
+  double angle = -math.atan2(y - radius, x - radius);
   double degree = angle * 180 / math.pi;
-  if (degree > 6 && degree <= 52) {
+  print('degree ' + degree.toString());
+  if (degree > 0 && degree <= 45) {
     return '😊';
-  } else if (degree > 52 && degree <= 95) {
+  } else if (degree > 45 && degree <= 90) {
     return '🤗';
-  } else if (degree > -44 && degree <= 6) {
+  } else if (degree > -45 && degree <= 0) {
     return '😃';
-  } else if (degree > 95 && degree <= 134) {
+  } else if (degree > 90 && degree <= 135) {
     return '😡';
-  } else if (degree > 134 && degree <= 175) {
+  } else if (degree > 135 && degree <= 180) {
     return '🤒';
-  } else if (degree > -94 && degree <= -44) {
+  } else if (degree > -90 && degree <= -44) {
     return '😴';
-  } else if (degree > -143 && degree <= -94) {
+  } else if (degree > -135 && degree <= -90) {
     return '😢';
   }
   return '😔';
@@ -168,8 +223,6 @@ class LinePainter extends CustomPainter {
         Offset(radius + sideOfSquare, radius + sideOfSquare), paint);
     canvas.drawLine(Offset(radius - sideOfSquare, radius + sideOfSquare),
         Offset(radius + sideOfSquare, radius - sideOfSquare), paint);
-    //canvas.drawLine(Offset(90, 23), Offset(243, 317), paint);
-    //canvas.drawLine(Offset(24, 90), Offset(319, 226), paint);
   }
 
   @override

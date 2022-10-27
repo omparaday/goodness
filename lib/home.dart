@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.initState();
     _writeAboutController = TextEditingController();
     _answerController = TextEditingController();
-    _dateKey = dailydata.getDateKeyFormat(DateTime.now());
+    _dateKey = dailydata.getDateKeyFormat(DateTime.now().add(Duration(days: 1)));
     readTodayData();
     WidgetsBinding.instance.addObserver(this);
   }
