@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:goodness/dbhelpers/DailyData.dart';
 import 'package:goodness/widgets/DecoratedText.dart';
+import 'package:goodness/widgets/DecoratedWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -156,73 +157,95 @@ class _ProfilePageState extends State<ProfilePage>
             controller: _corController,
             placeholder: L10n.of(context).resource('yourCountry'),
           ),
-          Text(L10n.of(context).resource('dateOfBirth')),
+          DecoratedWidget(Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(L10n.of(context).resource('dateOfBirth')),
+                CupertinoButton(
+                  onPressed: () => _showDialog(
+                    CupertinoDatePicker(
+                      initialDateTime: _dob,
+                      mode: CupertinoDatePickerMode.date,
+                      use24hFormat: true,
+                      onDateTimeChanged: (DateTime newDate) {
+                        setState(() => _dob = newDate);
+                      },
+                    ),
+                  ),
+                  child: Text(
+                    _dob != null
+                        ? getDisplayDate(_dob!)
+                        : L10n.of(context).resource('notSet'),
+                    style: const TextStyle(
+                      fontSize: 22.0,
+                    ),
+                  ),
+                ),
+              ])),
+          DecoratedWidget(Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(L10n.of(context).resource('gender')),
+                CupertinoSegmentedControl<Gender>(
+                  groupValue: _gender,
+                  onValueChanged: (Gender value) {
+                    setState(() {
+                      _gender = value;
+                    });
+                  },
+                  children: <Gender, Widget>{
+                    Gender.Male: Text(L10n.of(context).resource('male')),
+                    Gender.Female: Text(L10n.of(context).resource('female')),
+                    Gender.NonBinary:
+                        Text(L10n.of(context).resource('nonBinary')),
+                    Gender.Transgender:
+                        Text(L10n.of(context).resource('transgender')),
+                    Gender.PreferNotToRespond:
+                        Text(L10n.of(context).resource('preferNotToRespond')),
+                  },
+                ),
+              ])),
+          DecoratedWidget(Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(L10n.of(context).resource('maritalStatus')),
+                CupertinoSegmentedControl<bool>(
+                  groupValue: _married,
+                  onValueChanged: (bool value) {
+                    setState(() {
+                      _married = value;
+                    });
+                  },
+                  children: <bool, Widget>{
+                    true: Text(L10n.of(context).resource('married')),
+                    false: Text(L10n.of(context).resource('unmarried')),
+                  },
+                ),
+              ])),
+          DecoratedWidget(Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(L10n.of(context).resource('phyCondidtions')),
+                CupertinoSegmentedControl<bool>(
+                  groupValue: _disabled,
+                  onValueChanged: (bool value) {
+                    setState(() {
+                      _disabled = value;
+                    });
+                  },
+                  children: <bool, Widget>{
+                    true: Text(L10n.of(context).resource('disabled')),
+                    false: Text(L10n.of(context).resource('noDisability')),
+                  },
+                ),
+              ])),
+          SizedBox(
+            height: 20,
+          ),
           CupertinoButton(
-            onPressed: () => _showDialog(
-              CupertinoDatePicker(
-                initialDateTime: _dob,
-                mode: CupertinoDatePickerMode.date,
-                use24hFormat: true,
-                onDateTimeChanged: (DateTime newDate) {
-                  setState(() => _dob = newDate);
-                },
-              ),
-            ),
-            // In this example, the date value is formatted manually. You can use intl package
-            // to format the value based on user's locale settings.
-            child: Text(
-              _dob != null
-                  ? getDisplayDate(_dob!)
-                  : L10n.of(context).resource('notSet'),
-              style: const TextStyle(
-                fontSize: 22.0,
-              ),
-            ),
-          ),
-          Text(L10n.of(context).resource('gender')),
-          CupertinoSegmentedControl<Gender>(
-            groupValue: _gender,
-            onValueChanged: (Gender value) {
-              setState(() {
-                _gender = value;
-              });
-            },
-            children: <Gender, Widget>{
-              Gender.Male: Text(L10n.of(context).resource('male')),
-              Gender.Female: Text(L10n.of(context).resource('female')),
-              Gender.NonBinary: Text(L10n.of(context).resource('nonBinary')),
-              Gender.Transgender:
-                  Text(L10n.of(context).resource('transgender')),
-              Gender.PreferNotToRespond:
-                  Text(L10n.of(context).resource('preferNotToRespond')),
-            },
-          ),
-          Text(L10n.of(context).resource('maritalStatus')),
-          CupertinoSegmentedControl<bool>(
-            groupValue: _married,
-            onValueChanged: (bool value) {
-              setState(() {
-                _married = value;
-              });
-            },
-            children: <bool, Widget>{
-              true: Text(L10n.of(context).resource('married')),
-              false: Text(L10n.of(context).resource('unmarried')),
-            },
-          ),
-          Text(L10n.of(context).resource('phyCondidtions')),
-          CupertinoSegmentedControl<bool>(
-            groupValue: _disabled,
-            onValueChanged: (bool value) {
-              setState(() {
-                _disabled = value;
-              });
-            },
-            children: <bool, Widget>{
-              true: Text(L10n.of(context).resource('disabled')),
-              false: Text(L10n.of(context).resource('noDisability')),
-            },
-          ),
+            onPressed: () => toggleEdit(),
+            child: Text(L10n.of(context).resource('submit')),
+          )
         ]);
   }
 
@@ -240,7 +263,7 @@ class _ProfilePageState extends State<ProfilePage>
         prefs.setBool(ProfilePage.KEY_DISABLED, _disabled);
         prefs.setString(ProfilePage.KEY_DOB, _dob.toString());
       } else {
-        _editsave = CupertinoIcons.square_arrow_down;
+        _editsave = CupertinoIcons.folder_badge_plus;
       }
       isEditing = !isEditing;
     });
