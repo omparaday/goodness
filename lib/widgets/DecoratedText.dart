@@ -19,7 +19,7 @@ class DecoratedText extends StatelessWidget {
                 backgroundColor ??
                     CupertinoDynamicColor.withBrightness(
                         color: Color.fromARGB(125, 230, 230, 230),
-                        darkColor: Color.fromARGB(125, 70, 70, 70)),
+                        darkColor: Color.fromARGB(125, 50, 50, 50)),
                 context),
             borderRadius: BorderRadius.all(Radius.circular(4)),
             child: Container(

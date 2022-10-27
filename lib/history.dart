@@ -192,7 +192,7 @@ class _HistoryPageState extends State<HistoryPage> {
     }
     Color backgroundColor = CupertinoDynamicColor.withBrightness(
         color: Color.fromARGB(125, 215, 215, 215),
-        darkColor: Color.fromARGB(125, 70, 70, 70));
+        darkColor: Color.fromARGB(125, 50, 50, 50));
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) => CupertinoAlertDialog(
