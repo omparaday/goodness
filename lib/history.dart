@@ -199,7 +199,7 @@ class _HistoryPageState extends State<HistoryPage> {
           title: Text('${getDisplayDate(datetime)}'),
           content: Column(
             children: [
-              MoodCircle(diameter / 2, 15, 75, radius / (2 * math.sqrt2),
+              MoodCircle(diameter / 2, inset, radius/2, sideOfSquare/2,
                   ProcessState.Completed, () => {}, dd.x / 2, dd.y / 2),
               DecoratedText(
                 dd.about.isEmpty

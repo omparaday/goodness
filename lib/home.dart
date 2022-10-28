@@ -30,7 +30,7 @@ class HomePage extends StatefulWidget {
 const double diameter = 300;
 const double inset = 30;
 const double radius = diameter / 2;
-const double sideOfSquare = diameter / (2 * math.sqrt2);
+const double sideOfSquare = radius / math.sqrt2;
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   double _x = radius, _y = radius;

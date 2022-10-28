@@ -31,7 +31,7 @@ class MoodCircle extends StatelessWidget {
       ..layout())
         .size;
     Widget bigCircle = Container(
-      margin: EdgeInsets.all(inset),
+      margin: EdgeInsets.only(left: inset-10, right: inset-10, top: inset, bottom: inset),
       width: diameter,
       height: diameter,
       decoration: BoxDecoration(
@@ -94,46 +94,47 @@ class MoodCircle extends StatelessWidget {
     return Column(
       children: <Widget>[
         Stack(
+          fit: StackFit.passthrough,
           children: <Widget>[
             bigCircle,
             Positioned(
-              top: sideOfSquare,
-              left: diameter + inset,
+              top: inset + radius - (sideOfSquare/2 + smileySize.height),
+              left: diameter + inset - 10,
               child: getEmoji("😊", context),
             ),
             Positioned(
-              top: diameter - sideOfSquare + inset,
-              left: diameter + inset,
+              top: inset + radius + sideOfSquare/2 - smileySize.height/2,
+              left: diameter + inset - 10,
               child: getEmoji("😃", context),
             ),
             Positioned(
-              top: diameter + inset / 2,
-              left: radius + sideOfSquare,
+              top: diameter + inset - smileySize.height/4,
+              left: inset + diameter - (sideOfSquare),
               child: getEmoji("😴", context),
             ),
             Positioned(
-              top: diameter + inset / 2,
-              left: sideOfSquare - smileySize.width/2,
+              top: diameter + inset - smileySize.height/4,
+              left: inset + radius - (sideOfSquare/2 + smileySize.width),
               child: getEmoji("😢", context),
             ),
             Positioned(
-              top: diameter - sideOfSquare + inset,
-              left: (inset / 2) - smileySize.width/2,
+              top: inset + radius + sideOfSquare/2 - smileySize.height/2,
+              left: inset - (10 + smileySize.width),
               child: getEmoji("😔", context),
             ),
             Positioned(
-              top: sideOfSquare,
-              left: (inset / 2) - smileySize.width/2,
+              top: inset + radius - (sideOfSquare/2 + smileySize.height),
+              left: inset - (10 + smileySize.width),
               child: getEmoji("🤒", context),
             ),
             Positioned(
-              top: inset / 2,
-              left: sideOfSquare - smileySize.width/2,
+              top: inset - smileySize.height,
+              left: inset + radius - (sideOfSquare/2 + smileySize.width),
               child: getEmoji("😡", context),
             ),
             Positioned(
-              top: inset / 2,
-              left: radius + sideOfSquare,
+              top: inset - smileySize.height,
+              left: inset + diameter - (sideOfSquare),
               child: getEmoji("🤗", context),
             ),
           ],
