@@ -23,6 +23,13 @@ class MoodCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size smileySize = (TextPainter(
+        text: TextSpan(text: '😡'),
+        maxLines: 1,
+        textScaleFactor: MediaQuery.of(context).textScaleFactor,
+        textDirection: TextDirection.ltr)
+      ..layout())
+        .size;
     Widget bigCircle = Container(
       margin: EdgeInsets.all(inset),
       width: diameter,
@@ -106,22 +113,22 @@ class MoodCircle extends StatelessWidget {
             ),
             Positioned(
               top: diameter + inset / 2,
-              left: sideOfSquare,
+              left: sideOfSquare - smileySize.width/2,
               child: getEmoji("😢", context),
             ),
             Positioned(
               top: diameter - sideOfSquare + inset,
-              left: inset / 2,
+              left: (inset / 2) - smileySize.width/2,
               child: getEmoji("😔", context),
             ),
             Positioned(
               top: sideOfSquare,
-              left: inset / 2,
+              left: (inset / 2) - smileySize.width/2,
               child: getEmoji("🤒", context),
             ),
             Positioned(
               top: inset / 2,
-              left: sideOfSquare,
+              left: sideOfSquare - smileySize.width/2,
               child: getEmoji("😡", context),
             ),
             Positioned(
