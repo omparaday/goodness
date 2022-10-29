@@ -108,12 +108,12 @@ class MoodCircle extends StatelessWidget {
               child: getEmoji("😃", context),
             ),
             Positioned(
-              top: diameter + inset - smileySize.height/4,
+              top: diameter + inset - smileySize.height,
               left: inset + diameter - (sideOfSquare),
               child: getEmoji("😴", context),
             ),
             Positioned(
-              top: diameter + inset - smileySize.height/4,
+              top: diameter + inset - smileySize.height,
               left: inset + radius - (sideOfSquare/2 + smileySize.width),
               child: getEmoji("😢", context),
             ),
