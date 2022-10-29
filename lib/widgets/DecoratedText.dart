@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class DecoratedText extends StatelessWidget {
   const DecoratedText(String this._text,
@@ -28,13 +27,7 @@ class DecoratedText extends StatelessWidget {
                 width: mediaQuery.size.width,
                 child: Text(
                   _text,
-                  style: textStyle ?? TextStyle(
-                    fontFamily: GoogleFonts.nunito().fontFamily,
-                    color: CupertinoDynamicColor.resolve(CupertinoDynamicColor.withBrightness(
-                      color: CupertinoColors.black,
-                      darkColor: CupertinoColors.white,
-                    ), context)
-                  ),
+                  style: textStyle,
                 ))));
   }
 }

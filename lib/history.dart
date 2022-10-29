@@ -7,7 +7,6 @@ import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:goodness/widgets/HistoryChart.dart';
 import 'package:goodness/widgets/MoodCircle.dart';
 import 'package:sprintf/sprintf.dart';
-import 'dart:math' as math;
 
 import 'dbhelpers/DeedHelper.dart';
 import 'l10n/Localizations.dart';
@@ -199,7 +198,7 @@ class _HistoryPageState extends State<HistoryPage> {
           title: Text('${getDisplayDate(datetime)}'),
           content: Column(
             children: [
-              MoodCircle(diameter / 2, inset, radius/2, sideOfSquare/2,
+              MoodCircle(diameter / 2, inset, radius / 2, sideOfSquare / 2,
                   ProcessState.Completed, () => {}, dd.x / 2, dd.y / 2),
               DecoratedText(
                 dd.about.isEmpty
@@ -226,10 +225,8 @@ class _HistoryPageState extends State<HistoryPage> {
                       [quote.content]),
                   backgroundColor: backgroundColor),
               DecoratedText(
-                  dd.goodness >= 100
-                      ? L10n.of(context).resource('scorePerfect100')
-                      : sprintf(L10n.of(context).resource('scoreWithVal'),
-                          [dd.goodness]),
+                  sprintf(
+                      L10n.of(context).resource('scoreWithVal'), [dd.goodness]),
                   backgroundColor: backgroundColor)
             ],
           )),
