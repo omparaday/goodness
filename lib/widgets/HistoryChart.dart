@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:goodness/dbhelpers/DailyData.dart';
+import 'package:goodness/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 enum HistoryType { Week, Month, Year, All }
@@ -26,7 +27,7 @@ class HistoryChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size textHeight = (TextPainter(
-            text: TextSpan(text: 'h '),
+            text: TextSpan(text: 'h ', style: TextStyle(fontSize: FONTSIZE)),
             maxLines: 1,
             textScaleFactor: MediaQuery.of(context).textScaleFactor,
             textDirection: TextDirection.ltr)

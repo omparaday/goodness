@@ -8,6 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'history.dart';
 
+const double FONTSIZE = 18;
+const double MEDIUM_FONTSIZE = 20;
+const double LARGE_FONTSIZE = 22;
 void main() {
   runApp(new CupertinoApp(
       theme: CupertinoThemeData(
@@ -83,6 +86,7 @@ class _MainState extends State<Main> {
                     theme: CupertinoThemeData(
                         textTheme: CupertinoTextThemeData(
                             textStyle: TextStyle(
+                              fontSize: FONTSIZE,
                       fontFamily: GoogleFonts.nunito().fontFamily,
                       color: CupertinoDynamicColor.withBrightness(
                         color: CupertinoColors.black,
@@ -132,8 +136,8 @@ class _MainState extends State<Main> {
                           top: 20, left: 20.0, bottom: 100.0, right: 20.0),
                       decoration: BoxDecoration(
                           color: CupertinoDynamicColor.withBrightness(
-                        color: Color.fromARGB(140, 60, 60, 60),
-                        darkColor: Color.fromARGB(140, 255, 255, 255),
+                        color: Color.fromARGB(100, 60, 60, 60),
+                        darkColor: Color.fromARGB(100, 255, 255, 255),
                       )),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -142,7 +146,7 @@ class _MainState extends State<Main> {
                             Row(children: <Widget>[
                               CupertinoButton(
                                   child:
-                                      Text(L10n.of(context).resource('prev')),
+                                      Text(L10n.of(context).resource('prev'), style: TextStyle(fontWeight: FontWeight.bold),),
                                   onPressed: _welcomeIndex == 1
                                       ? null
                                       : previousWelcomeScreen),
@@ -150,7 +154,7 @@ class _MainState extends State<Main> {
                               CupertinoButton(
                                   child: Text(_welcomeIndex == 5
                                       ? L10n.of(context).resource('close')
-                                      : L10n.of(context).resource('next')),
+                                      : L10n.of(context).resource('next'), style: TextStyle(fontWeight: FontWeight.bold),),
                                   onPressed: nextWelcomeScreen)
                             ]),
                             getWelcomeText(),

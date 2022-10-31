@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:goodness/main.dart';
 import 'package:sprintf/sprintf.dart';
 
 import '../home.dart';
@@ -24,7 +25,7 @@ class MoodCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size smileySize = (TextPainter(
-        text: TextSpan(text: '😡'),
+        text: TextSpan(text: '😡', style: TextStyle(fontSize: FONTSIZE)),
         maxLines: 1,
         textScaleFactor: MediaQuery.of(context).textScaleFactor,
         textDirection: TextDirection.ltr)
@@ -139,7 +140,7 @@ class MoodCircle extends StatelessWidget {
             ),
           ],
         ),
-        Text(getMoodText(context))
+        Text(getMoodText(context), style: TextStyle(fontSize: LARGE_FONTSIZE),)
       ],
     );
   }
@@ -173,6 +174,7 @@ class MoodCircle extends StatelessWidget {
           TextSpan(
             text: s,
             style: TextStyle(
+              fontSize: LARGE_FONTSIZE,
               fontFamily: 'EmojiOne',
             ),
           ),

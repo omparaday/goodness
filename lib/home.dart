@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:goodness/dbhelpers/DailyData.dart' as dailydata;
 import 'package:goodness/dbhelpers/DeedHelper.dart' as deed;
+import 'package:goodness/main.dart';
 import 'dart:math' as math;
 
 import 'package:goodness/widgets/DecoratedText.dart';
@@ -28,7 +29,7 @@ class HomePage extends StatefulWidget {
 }
 
 const double diameter = 300;
-const double inset = 30;
+const double inset = 40;
 const double radius = diameter / 2;
 const double sideOfSquare = radius / math.sqrt2;
 
@@ -166,7 +167,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               : sprintf(
                                   L10n.of(context).resource('yourscoreWithVal'),
                                   [_goodnessScore]),
-                          textStyle: TextStyle(fontWeight: FontWeight.bold),
+                          textStyle: TextStyle(fontSize: MEDIUM_FONTSIZE, fontWeight: FontWeight.bold),
                         )),
                 ],
               ),

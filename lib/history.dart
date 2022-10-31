@@ -3,7 +3,9 @@ import 'package:goodness/dbhelpers/DailyData.dart';
 import 'package:goodness/dbhelpers/QuestionHelper.dart';
 import 'package:goodness/dbhelpers/QuoteHelper.dart';
 import 'package:goodness/home.dart';
+import 'package:goodness/main.dart';
 import 'package:goodness/widgets/DecoratedText.dart';
+import 'package:goodness/widgets/DecoratedWidget.dart';
 import 'package:goodness/widgets/HistoryChart.dart';
 import 'package:goodness/widgets/MoodCircle.dart';
 import 'package:sprintf/sprintf.dart';
@@ -97,11 +99,11 @@ class _HistoryPageState extends State<HistoryPage> {
               Row(
                 children: <Widget>[
                   CupertinoButton(
-                      child: Text(L10n.of(context).resource('prev')),
+                      child: Text(L10n.of(context).resource('prev'), style: TextStyle(fontWeight: FontWeight.bold),),
                       onPressed: () => goPrevious()),
                   Spacer(),
                   CupertinoButton(
-                      child: Text(L10n.of(context).resource('next')),
+                      child: Text(L10n.of(context).resource('next'), style: TextStyle(fontWeight: FontWeight.bold),),
                       onPressed: () => goNext())
                 ],
               ),
@@ -134,16 +136,9 @@ class _HistoryPageState extends State<HistoryPage> {
           int.parse(key.substring(5, 7)), int.parse(key.substring(8, 10)));
       recentData.add(GestureDetector(
           onTap: () => showHistoryDialog(dd, datetime),
-          child: Container(
+          child: DecoratedWidget(Container(
               margin: const EdgeInsets.only(top: 5.0, bottom: 5.0),
               padding: const EdgeInsets.all(5.0),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Color.fromARGB(100, 153, 204, 255),
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(4)),
-                shape: BoxShape.rectangle,
-              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -152,8 +147,6 @@ class _HistoryPageState extends State<HistoryPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Text(getDisplayDateWithoutYear(datetime)),
-                      Spacer(),
-                      Text(getEmojiForXy(dd.x, dd.y, radius)),
                     ],
                   ),
                   Row(
@@ -163,12 +156,14 @@ class _HistoryPageState extends State<HistoryPage> {
                       Text(dd.goodness >= 100
                           ? L10n.of(context).resource('scorePerfect100')
                           : sprintf(L10n.of(context).resource('scoreWithVal'),
-                              [dd.goodness])),
+                              [dd.goodness]), style: TextStyle(fontSize: MEDIUM_FONTSIZE, fontWeight: FontWeight.bold)),
+                      Spacer(),
+                      Text(getEmojiForXy(dd.x, dd.y, radius), style: TextStyle(fontSize: LARGE_FONTSIZE),),
                     ],
                   ),
-                  dd.about.isNotEmpty ? Text(dd.about) : SizedBox.shrink(),
+                  dd.about.isNotEmpty ? Text(dd.about, style: TextStyle(fontSize: MEDIUM_FONTSIZE)) : SizedBox.shrink(),
                 ],
-              ))));
+              )))));
       //recentData.add(Divider());
     });
     setState(() {
@@ -227,7 +222,7 @@ class _HistoryPageState extends State<HistoryPage> {
               DecoratedText(
                   sprintf(
                       L10n.of(context).resource('scoreWithVal'), [dd.goodness]),
-                  backgroundColor: backgroundColor)
+                  backgroundColor: backgroundColor, textStyle: TextStyle(fontSize: MEDIUM_FONTSIZE, fontWeight: FontWeight.bold),)
             ],
           )),
     );
