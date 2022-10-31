@@ -99,11 +99,17 @@ class _HistoryPageState extends State<HistoryPage> {
               Row(
                 children: <Widget>[
                   CupertinoButton(
-                      child: Text(L10n.of(context).resource('prev'), style: TextStyle(fontWeight: FontWeight.bold),),
+                      child: Text(
+                        L10n.of(context).resource('prev'),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       onPressed: () => goPrevious()),
                   Spacer(),
                   CupertinoButton(
-                      child: Text(L10n.of(context).resource('next'), style: TextStyle(fontWeight: FontWeight.bold),),
+                      child: Text(
+                        L10n.of(context).resource('next'),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       onPressed: () => goNext())
                 ],
               ),
@@ -135,6 +141,7 @@ class _HistoryPageState extends State<HistoryPage> {
       DateTime datetime = DateTime(int.parse(key.substring(0, 4)),
           int.parse(key.substring(5, 7)), int.parse(key.substring(8, 10)));
       recentData.add(GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () => showHistoryDialog(dd, datetime),
           child: DecoratedWidget(Container(
               margin: const EdgeInsets.only(top: 5.0, bottom: 5.0),
@@ -153,15 +160,26 @@ class _HistoryPageState extends State<HistoryPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(dd.goodness >= 100
-                          ? L10n.of(context).resource('scorePerfect100')
-                          : sprintf(L10n.of(context).resource('scoreWithVal'),
-                              [dd.goodness]), style: TextStyle(fontSize: MEDIUM_FONTSIZE, fontWeight: FontWeight.bold)),
+                      Text(
+                          dd.goodness >= 100
+                              ? L10n.of(context).resource('scorePerfect100')
+                              : sprintf(
+                                  L10n.of(context).resource('scoreWithVal'),
+                                  [dd.goodness]),
+                          style: TextStyle(
+                              fontSize: MEDIUM_FONTSIZE,
+                              fontWeight: FontWeight.bold)),
                       Spacer(),
-                      Text(getEmojiForXy(dd.x, dd.y, radius), style: TextStyle(fontSize: LARGE_FONTSIZE),),
+                      Text(
+                        getEmojiForXy(dd.x, dd.y, radius),
+                        style: TextStyle(fontSize: LARGE_FONTSIZE),
+                      ),
                     ],
                   ),
-                  dd.about.isNotEmpty ? Text(dd.about, style: TextStyle(fontSize: MEDIUM_FONTSIZE)) : SizedBox.shrink(),
+                  dd.about.isNotEmpty
+                      ? Text(dd.about,
+                          style: TextStyle(fontSize: MEDIUM_FONTSIZE))
+                      : SizedBox.shrink(),
                 ],
               )))));
       //recentData.add(Divider());
@@ -220,9 +238,12 @@ class _HistoryPageState extends State<HistoryPage> {
                       [quote.content]),
                   backgroundColor: backgroundColor),
               DecoratedText(
-                  sprintf(
-                      L10n.of(context).resource('scoreWithVal'), [dd.goodness]),
-                  backgroundColor: backgroundColor, textStyle: TextStyle(fontSize: MEDIUM_FONTSIZE, fontWeight: FontWeight.bold),)
+                sprintf(
+                    L10n.of(context).resource('scoreWithVal'), [dd.goodness]),
+                backgroundColor: backgroundColor,
+                textStyle: TextStyle(
+                    fontSize: MEDIUM_FONTSIZE, fontWeight: FontWeight.bold),
+              )
             ],
           )),
     );
