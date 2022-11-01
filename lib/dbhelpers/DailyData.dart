@@ -94,10 +94,6 @@ Future<Map<String, DailyData>?>? getRecentData() async {
   Map<String, DailyData> result = {};
   while (true) {
     String day = DateFormat('yyyy-MM-dd').format(historyDate);
-    historyDate = getPreviousDay(historyDate);
-    if (historyDate.month == 6 && historyDate.year == 2022) {
-      break;
-    }
     String monthKey = day.substring(0, 7);
     Map<String, dynamic>? fileContent = await getMonthlyContent(monthKey);
     if (fileContent != null) {
@@ -107,9 +103,13 @@ Future<Map<String, DailyData>?>? getRecentData() async {
           return result;
         }
       }
+      historyDate = getPreviousDay(historyDate);
     } else {
       historyDate = getFirstDayOfMonth(historyDate);
       historyDate = getPreviousDay(historyDate);
+    }
+    if (historyDate.month == 6 && historyDate.year == 2022) {
+      break;
     }
   }
   return result;
