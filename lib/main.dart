@@ -11,6 +11,7 @@ import 'history.dart';
 const double FONTSIZE = 18;
 const double MEDIUM_FONTSIZE = 20;
 const double LARGE_FONTSIZE = 22;
+
 void main() {
   runApp(new CupertinoApp(
       theme: CupertinoThemeData(
@@ -86,7 +87,7 @@ class _MainState extends State<Main> {
                     theme: CupertinoThemeData(
                         textTheme: CupertinoTextThemeData(
                             textStyle: TextStyle(
-                              fontSize: FONTSIZE,
+                      fontSize: FONTSIZE,
                       fontFamily: GoogleFonts.nunito().fontFamily,
                       color: CupertinoDynamicColor.withBrightness(
                         color: CupertinoColors.black,
@@ -143,24 +144,46 @@ class _MainState extends State<Main> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Spacer(),
-                            Row(children: <Widget>[
-                              CupertinoButton(
-                                  child:
-                                      Text(L10n.of(context).resource('prev'), style: TextStyle(fontWeight: FontWeight.bold),),
-                                  onPressed: _welcomeIndex == 1
-                                      ? null
-                                      : previousWelcomeScreen),
-                              Spacer(),
-                              CupertinoButton(
-                                  child: Text(_welcomeIndex == 5
-                                      ? L10n.of(context).resource('close')
-                                      : L10n.of(context).resource('next'), style: TextStyle(fontWeight: FontWeight.bold),),
-                                  onPressed: nextWelcomeScreen)
-                            ]),
-                            getWelcomeText(),
-                            SizedBox(
-                              height: 20,
-                            ),
+                            Container(
+                                padding: const EdgeInsets.only(
+                                    top: 20,
+                                    left: 20.0,
+                                    bottom: 20.0,
+                                    right: 20.0),
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(4)),
+                                    color: CupertinoDynamicColor.withBrightness(
+                                      color: Color.fromARGB(230, 60, 60, 60),
+                                      darkColor:
+                                          Color.fromARGB(230, 255, 255, 255),
+                                    )),
+                                child: Column(children: <Widget>[
+                                  Row(children: <Widget>[
+                                    CupertinoButton(
+                                        child: Text(
+                                          L10n.of(context).resource('prev'),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        onPressed: _welcomeIndex == 1
+                                            ? null
+                                            : previousWelcomeScreen),
+                                    Spacer(),
+                                    CupertinoButton(
+                                        child: Text(
+                                          _welcomeIndex == 5
+                                              ? L10n.of(context)
+                                                  .resource('close')
+                                              : L10n.of(context)
+                                                  .resource('next'),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        onPressed: nextWelcomeScreen)
+                                  ]),
+                                  getWelcomeText(),
+                                ])),
                             (_welcomeIndex <= 4 && _welcomeIndex >= 2)
                                 ? Container(child: getArrowWidget())
                                 : SizedBox.shrink()
@@ -216,7 +239,10 @@ class _MainState extends State<Main> {
   }
 
   Text getWelcomeText() {
-    var textStyle = TextStyle(fontSize: 18, fontStyle: FontStyle.italic);
+    var textStyle = TextStyle(
+        fontSize: 18,
+        fontStyle: FontStyle.italic,
+        color: CupertinoColors.white);
     switch (_welcomeIndex) {
       case 1:
         return Text(
