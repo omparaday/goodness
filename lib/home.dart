@@ -181,11 +181,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         onTapUpCallback, _x, _y);
   }
 
-  Set<void> onTapUpCallback(TapUpDetails details) {
+  Set<void> onTapUpCallback(double dx, double dy) {
     return {
       setState(() {
-        _x = details.localPosition.dx;
-        _y = details.localPosition.dy;
+        double x = dx;
+        double y = dy;
+        double distance = math.sqrt(math.pow(x - radius, 2) + math.pow(y - radius, 2));
+        if (distance > radius) {
+          double angle = -math.atan2(y - radius, x - radius);
+          double degree = angle * 180 / math.pi;
+          _x = radius + (radius * math.cos(angle));
+          _y = radius + (-radius * math.sin(angle));
+        } else {
+          _x = x;
+          _y = y;
+        }
         _enableSubmit = true;
       })
     };
