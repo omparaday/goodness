@@ -89,6 +89,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+                  (_processState == ProcessState.Completed
+                      ? Row(children: <Widget>[
+                          Text(_goodnessScore >= 100
+                              ? L10n.of(context).resource('scorePerfect100')
+                              : sprintf(
+                                  L10n.of(context).resource('scoreWithVal'),
+                                  [_goodnessScore]), style: TextStyle(fontWeight: FontWeight.bold),),
+                          Spacer(),
+                          CupertinoButton(
+                              child: new Icon(CupertinoIcons.pen),
+                              onPressed: setEditMode)
+                        ])
+                      : SizedBox.shrink()),
                   moodCircle,
                   (_processState.index > ProcessState.NotTaken.index
                       ? DecoratedText(
@@ -167,7 +180,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               : sprintf(
                                   L10n.of(context).resource('yourscoreWithVal'),
                                   [_goodnessScore]),
-                          textStyle: TextStyle(fontSize: MEDIUM_FONTSIZE, fontWeight: FontWeight.bold),
+                          textStyle: TextStyle(
+                              fontSize: MEDIUM_FONTSIZE,
+                              fontWeight: FontWeight.bold),
                         )),
                 ],
               ),
@@ -186,7 +201,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       setState(() {
         double x = dx;
         double y = dy;
-        double distance = math.sqrt(math.pow(x - radius, 2) + math.pow(y - radius, 2));
+        double distance =
+            math.sqrt(math.pow(x - radius, 2) + math.pow(y - radius, 2));
         if (distance > radius) {
           double angle = -math.atan2(y - radius, x - radius);
           double degree = angle * 180 / math.pi;
@@ -334,5 +350,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _showDeed ? _deed!.name : null,
         _goodnessScore);
     dailydata.addDailyData(_dateKey, _todayData!);
+  }
+
+  setEditMode() {
+    setState(() {
+      _processState = ProcessState.ShowingQuote;
+      _enableSubmit = true;
+    });
   }
 }
