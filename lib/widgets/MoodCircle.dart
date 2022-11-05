@@ -4,6 +4,7 @@ import 'package:goodness/main.dart';
 import 'package:sprintf/sprintf.dart';
 
 import '../home.dart';
+import '../home.dart' as home;
 import 'dart:math' as math;
 
 import '../l10n/Localizations.dart';
@@ -145,7 +146,7 @@ class MoodCircle extends StatelessWidget {
               left: getLeft(9*math.pi/8, smileySize.height, smileySize.width),
               child: getEmoji("🤗", context),
             ),
-            this.diameter != 300 ? SizedBox.shrink() : Positioned(
+            this.diameter != home.diameter ? SizedBox.shrink() : Positioned(
                 top: radius + inset,
                 left: radius + inset - 10,
                 child: Stack(children: <Widget>[
@@ -170,7 +171,7 @@ class MoodCircle extends StatelessWidget {
 
   ArcText buildArcText(BuildContext context, String emoji, double startAngle) {
     return ArcText(
-      radius: radius,
+      radius: radius - 2,
       text: getMoodNameForEmoji(emoji, context),
       textStyle: CupertinoTheme.of(context).textTheme.textStyle.copyWith(fontSize: SMALL_FONTSIZE),
       startAngle: startAngle,
@@ -240,11 +241,11 @@ class MoodCircle extends StatelessWidget {
   }
 
   getTop(double angle, double height) {
-    return inset + radius + (((diameter != 300 ? height/2 : height) + radius + 2) * math.cos(angle)) - height/2;
+    return inset + radius + (((diameter != home.diameter ? height/2 : height) + radius + 4) * math.cos(angle)) - height/2;
   }
 
   getLeft(double angle, double height, double width) {
-    return inset -10 + radius + (-((diameter != 300 ? height/2 : height) + radius + 2) * math.sin(angle)) - width/2;
+    return inset -10 + radius + (-((diameter != home.diameter ? height/2 : height) + radius + 4) * math.sin(angle)) - width/2;
   }
 }
 
