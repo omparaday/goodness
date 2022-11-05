@@ -332,7 +332,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       });
     } else {
       setState(() {
-        if (_processState != ProcessState.NotTaken) {
+        if (_processState != ProcessState.NotTaken && _processState != ProcessState.Completed) {
           return;
         }
         _processState = ProcessState.NotTaken;
