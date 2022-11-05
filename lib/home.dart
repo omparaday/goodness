@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _dateKey = dailydata.getDateKeyFormat(DateTime.now());
     readTodayData();
     WidgetsBinding.instance.addObserver(this);
-    Timer.periodic(Duration(minutes: 1), (timer) {
+    Timer.periodic(Duration(hours: 1), (timer) {
       if (_dateKey != dailydata.getDateKeyFormat(DateTime.now())) {
         _dateKey = dailydata.getDateKeyFormat(DateTime.now());
         readTodayData();
@@ -99,11 +99,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 children: <Widget>[
                   (_processState == ProcessState.Completed
                       ? Row(children: <Widget>[
-                          Text(_goodnessScore >= 100
-                              ? L10n.of(context).resource('scorePerfect100')
-                              : sprintf(
-                                  L10n.of(context).resource('scoreWithVal'),
-                                  [_goodnessScore]), style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text(
+                            _goodnessScore >= 100
+                                ? L10n.of(context).resource('scorePerfect100')
+                                : sprintf(
+                                    L10n.of(context).resource('scoreWithVal'),
+                                    [_goodnessScore]),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           Spacer(),
                           CupertinoButton(
                               child: new Icon(CupertinoIcons.pen),
@@ -332,7 +335,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       });
     } else {
       setState(() {
-        if (_processState != ProcessState.NotTaken && _processState != ProcessState.Completed) {
+        if (_processState != ProcessState.NotTaken &&
+            _processState != ProcessState.Completed) {
           return;
         }
         _processState = ProcessState.NotTaken;
