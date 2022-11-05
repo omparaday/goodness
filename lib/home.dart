@@ -211,7 +211,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (_processState == ProcessState.WritingAbout) {
       _question = await question.getNewQuestion();
     } else if (_processState == ProcessState.ShowingQuestion) {
-      _deed = await deed.getNewDeed();
+      _deed = await deed.getNewDeed(getHappyState());
     } else if (_processState == ProcessState.OfferingDeed) {
       _quote = await quote.getNewQuote();
     } else if (_processState == ProcessState.ShowingQuote) {

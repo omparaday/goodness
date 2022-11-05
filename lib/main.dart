@@ -14,6 +14,7 @@ const double LARGE_FONTSIZE = 22;
 
 void main() {
   runApp(new CupertinoApp(
+      debugShowCheckedModeBanner: false,
       theme: CupertinoThemeData(
           textTheme: CupertinoTextThemeData(
               textStyle: TextStyle(
@@ -84,6 +85,7 @@ class _MainState extends State<Main> {
               builder: (BuildContext context) {
                 return SafeArea(
                   child: CupertinoApp(
+                    debugShowCheckedModeBanner: false,
                     theme: CupertinoThemeData(
                         textTheme: CupertinoTextThemeData(
                             textStyle: TextStyle(
