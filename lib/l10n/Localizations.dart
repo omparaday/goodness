@@ -75,14 +75,15 @@ class L10n {
       'genderDisplay': 'Gender: %s',
       'didNotWrite': 'Did not write.',
       'close': 'Close',
-      'getStarted': 'Get started.\nWishing you a good time ahead!',
+      'getStarted': 'Your privacy is assured. Your data or anything you write in this app is not transferred outside your phone or used by anyone else.\n\nGet started.\nWishing you a good time ahead!',
       'profileWelcome': 'Update your profile to get a personalized experience everyday that is specially prepared for you.',
       'historyWelcome': 'Check your past mood state and see your happiness progress everyday. Keep yourself motivated.',
       'homeWelcome': 'Select your mood every day on the home page and go through the flow which motivates you for the day.',
       'welcome': 'Welcome to Goodness!\nHelp yourself to improve your mood by reducing negative thoughts and encouraging positive thoughts.',
       'highMood': 'Highly %s',
       'moderateMood': 'Moderately %s',
-      'slightMood': 'Slightly %s'
+      'slightMood': 'Slightly %s',
+      'privacyAssurance': 'Your privacy is assured. Your data or anything you write in this app is not transferred outside your phone or used by anyone else.'
     },
     'ta': {
       'home': 'முகப்பு',
@@ -146,14 +147,15 @@ class L10n {
       'genderDisplay': 'பாலினம்: %s',
       'didNotWrite': 'எழுதவில்லை',
       'close': 'மூடு',
-      'getStarted': 'தொடங்கலாம்.\nஉங்கள் நாட்கள் இனிதாக அமைய வாழ்த்துக்கள்!',
+      'getStarted': 'உங்கள் தனியுரிமைக்கு உறுதி. உங்கள் தரவு அல்லது இந்த செயலியில் நீங்கள் எழுதும் எதுவும் உங்கள் மொபைலுக்கு வெளியே மாற்றப்படுவதில்லை அல்லது வேறு யாராலும் பயன்படுத்தப்படுவதில்லை.\n\nதொடங்கலாம்.\nஉங்கள் நாட்கள் இனிதாக அமைய வாழ்த்துக்கள்!',
       'profileWelcome': 'உங்களுக்காக பிரத்யேகமாகத் தயாரிக்கப்பட்ட தனிப்பட்ட அனுபவத்தைப் பெற உங்கள் சுயவிவரத்தைப் புதுப்பிக்கவும்.',
       'historyWelcome': 'உங்கள் கடந்தகால மனநிலையை சரிபார்த்து, உங்கள் மகிழ்ச்சியின் முன்னேற்றத்தை தினமும் பாருங்கள். உங்களை ஊக்கப் படுத்திக் கொள்ளுங்கள்.',
       'homeWelcome': 'முகப்புப் பக்கத்தில் ஒவ்வொரு நாளும் உங்கள் மனநிலையைத் தேர்ந்தெடுத்து, அந்த நாளுக்கு புத்துணர்ச்சி அளிக்கும் பாதையில் செல்லுங்கள்.',
       'welcome': 'Goodnessக்கு வரவேற்கிறோம்!\nஎதிர்மறை எண்ணங்களைக் குறைத்து, நல்ல எண்ணங்களை ஊக்குவித்து உங்கள் மனநிலையை மேம்படுத்திக்கொள்ள உதவுங்கள்.',
       'highMood': 'மிகவும் %s',
       'moderateMood': 'மிதமான %s',
-      'slightMood': 'சிறிதளவு %s'
+      'slightMood': 'சிறிதளவு %s',
+      'privacyAssurance': 'உங்கள் தனியுரிமைக்கு உறுதி. உங்கள் தரவு அல்லது இந்த செயலியில் நீங்கள் எழுதும் எதுவும் உங்கள் மொபைலுக்கு வெளியே மாற்றப்படுவதில்லை அல்லது வேறு யாராலும் பயன்படுத்தப்படுவதில்லை.'
     },
   };
 

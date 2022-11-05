@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:goodness/dbhelpers/DailyData.dart';
+import 'package:goodness/main.dart';
 import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:goodness/widgets/DecoratedWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -96,9 +97,15 @@ class _ProfilePageState extends State<ProfilePage>
             child: Container(
                 margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                 child: SafeArea(
-                    child: isEditing
-                        ? buildEditableColumn()
-                        : buildDisplayColumn()))));
+                    child: Column(children: <Widget>[
+                  isEditing ? buildEditableColumn() : buildDisplayColumn(),
+                  Text(
+                    L10n.of(context).resource('privacyAssurance'),
+                    style: TextStyle(
+                        fontSize: SMALL_FONTSIZE,
+                        color: CupertinoColors.systemGrey),
+                  )
+                ])))));
   }
 
   Column buildDisplayColumn() {
