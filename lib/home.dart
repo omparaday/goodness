@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:goodness/dbhelpers/DailyData.dart' as dailydata;
 import 'package:goodness/dbhelpers/DeedHelper.dart' as deed;
@@ -73,6 +75,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _dateKey = dailydata.getDateKeyFormat(DateTime.now());
     readTodayData();
     WidgetsBinding.instance.addObserver(this);
+    Timer.periodic(Duration(minutes: 1), (timer) {
+      if (_dateKey != dailydata.getDateKeyFormat(DateTime.now())) {
+        _dateKey = dailydata.getDateKeyFormat(DateTime.now());
+        readTodayData();
+      }
+    });
   }
 
   @override
@@ -324,6 +332,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       });
     } else {
       setState(() {
+        if (_processState != ProcessState.NotTaken) {
+          return;
+        }
         _processState = ProcessState.NotTaken;
         _x = radius;
         _y = radius;
