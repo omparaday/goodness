@@ -7,6 +7,7 @@ import '../home.dart';
 import 'dart:math' as math;
 
 import '../l10n/Localizations.dart';
+import 'ArcText.dart';
 
 class MoodCircle extends StatelessWidget {
   MoodCircle(double this.diameter, this.inset, this.radius, this.sideOfSquare,
@@ -25,14 +26,15 @@ class MoodCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size smileySize = (TextPainter(
-        text: TextSpan(text: '😡', style: TextStyle(fontSize: FONTSIZE)),
-        maxLines: 1,
-        textScaleFactor: MediaQuery.of(context).textScaleFactor,
-        textDirection: TextDirection.ltr)
-      ..layout())
+            text: TextSpan(text: '😡', style: TextStyle(fontSize: FONTSIZE)),
+            maxLines: 1,
+            textScaleFactor: MediaQuery.of(context).textScaleFactor,
+            textDirection: TextDirection.ltr)
+          ..layout())
         .size;
     Widget bigCircle = Container(
-      margin: EdgeInsets.only(left: inset-10, right: inset-10, top: inset, bottom: inset),
+      margin: EdgeInsets.only(
+          left: inset - 10, right: inset - 10, top: inset, bottom: inset),
       width: diameter,
       height: diameter,
       decoration: BoxDecoration(
@@ -73,10 +75,12 @@ class MoodCircle extends StatelessWidget {
             ),
             child: GestureDetector(
               onPanUpdate: _processState == ProcessState.NotTaken
-                  ? (details) => onTapUp(details.localPosition.dx, details.localPosition.dy)
+                  ? (details) => onTapUp(
+                      details.localPosition.dx, details.localPosition.dy)
                   : (details) => null,
-              onPanStart:  _processState == ProcessState.NotTaken
-                  ? (details) => onTapUp(details.localPosition.dx, details.localPosition.dy)
+              onPanStart: _processState == ProcessState.NotTaken
+                  ? (details) => onTapUp(
+                      details.localPosition.dx, details.localPosition.dy)
                   : (details) => null,
               child: Container(
                 decoration: BoxDecoration(
@@ -102,49 +106,75 @@ class MoodCircle extends StatelessWidget {
           children: <Widget>[
             bigCircle,
             Positioned(
-              top: inset + radius - (sideOfSquare/2 + smileySize.height),
-              left: diameter + inset - 10,
+              top: getTop(11*math.pi/8, smileySize.height),
+              left: getLeft(11*math.pi/8, smileySize.height, smileySize.width),
               child: getEmoji("😊", context),
             ),
             Positioned(
-              top: inset + radius + sideOfSquare/2 - smileySize.height/2,
-              left: diameter + inset - 10,
+              top: getTop(13*math.pi/8, smileySize.height),
+              left: getLeft(13*math.pi/8, smileySize.height, smileySize.width),
               child: getEmoji("😃", context),
             ),
             Positioned(
-              top: diameter + inset,
-              left: inset + diameter - (sideOfSquare),
+              top: getTop(15*math.pi/8, smileySize.height),
+              left: getLeft(15*math.pi/8, smileySize.height, smileySize.width),
               child: getEmoji("😴", context),
             ),
             Positioned(
-              top: diameter + inset,
-              left: inset + radius - (sideOfSquare/2 + smileySize.width),
+              top: getTop(math.pi/8, smileySize.height),
+              left: getLeft(math.pi/8, smileySize.height, smileySize.width),
               child: getEmoji("😢", context),
             ),
             Positioned(
-              top: inset + radius + sideOfSquare/2 - smileySize.height/2,
-              left: inset - (10 + smileySize.width),
+              top: getTop(3 * math.pi/8, smileySize.height),
+              left: getLeft(3 * math.pi/8, smileySize.height, smileySize.width),
               child: getEmoji("😔", context),
             ),
             Positioned(
-              top: inset + radius - (sideOfSquare/2 + smileySize.height),
-              left: inset - (10 + smileySize.width),
+              top: getTop(5*math.pi/8, smileySize.height),
+              left: getLeft(5*math.pi/8, smileySize.height, smileySize.width),
               child: getEmoji("🤒", context),
             ),
             Positioned(
-              top: inset - smileySize.height,
-              left: inset + radius - (sideOfSquare/2 + smileySize.width),
+              top: getTop(7*math.pi/8, smileySize.height),
+              left: getLeft(7*math.pi/8, smileySize.height, smileySize.width),
               child: getEmoji("😡", context),
             ),
             Positioned(
-              top: inset - smileySize.height,
-              left: inset + diameter - (sideOfSquare),
+              top: getTop(9*math.pi/8, smileySize.height),
+              left: getLeft(9*math.pi/8, smileySize.height, smileySize.width),
               child: getEmoji("🤗", context),
             ),
+            this.diameter != 300 ? SizedBox.shrink() : Positioned(
+                top: radius + inset,
+                left: radius + inset - 10,
+                child: Stack(children: <Widget>[
+                  buildArcText(context, '😊', 0.25+ math.pi / 4),
+                  buildArcText(context, '😃', 0.2 + math.pi / 2),
+                  buildArcText(context, '😴', 0.15 + (3 * math.pi / 4)),
+                  buildArcText(context, '😢', 0.3 + math.pi),
+                  buildArcText(context, '😔', 0.3 + (5 * math.pi / 4)),
+                  buildArcText(context, '🤒', 0.25 + (3 * math.pi / 2)),
+                  buildArcText(context, '😡', 0.25 + (7 * math.pi / 4)),
+                  buildArcText(context, '🤗', 0.25 + 0)
+                ])),
           ],
         ),
-        Text(getMoodText(context), style: TextStyle(fontSize: LARGE_FONTSIZE),)
+        Text(
+          getMoodText(context),
+          style: TextStyle(fontSize: LARGE_FONTSIZE),
+        )
       ],
+    );
+  }
+
+  ArcText buildArcText(BuildContext context, String emoji, double startAngle) {
+    return ArcText(
+      radius: radius,
+      text: getMoodNameForEmoji(emoji, context),
+      textStyle: CupertinoTheme.of(context).textTheme.textStyle.copyWith(fontSize: SMALL_FONTSIZE),
+      startAngle: startAngle,
+      key: null,
     );
   }
 
@@ -171,19 +201,21 @@ class MoodCircle extends StatelessWidget {
   }
 
   Widget getEmoji(String s, BuildContext context) {
-    return Tooltip(message: getMoodNameForEmoji(s, context), child: RichText(
-      text: TextSpan(
-        children: <TextSpan>[
-          TextSpan(
-            text: s,
-            style: TextStyle(
-              fontSize: LARGE_FONTSIZE,
-              fontFamily: 'EmojiOne',
-            ),
+    return Tooltip(
+        message: getMoodNameForEmoji(s, context),
+        child: RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                text: s,
+                style: TextStyle(
+                  fontSize: LARGE_FONTSIZE,
+                  fontFamily: 'EmojiOne',
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 
   String getMoodText(BuildContext context) {
@@ -205,6 +237,14 @@ class MoodCircle extends StatelessWidget {
           [getMoodNameForEmoji(getEmojiForXy(x, y, radius), context)]);
     }
     return text;
+  }
+
+  getTop(double angle, double height) {
+    return inset + radius + (((diameter != 300 ? height/2 : height) + radius + 2) * math.cos(angle)) - height/2;
+  }
+
+  getLeft(double angle, double height, double width) {
+    return inset -10 + radius + (-((diameter != 300 ? height/2 : height) + radius + 2) * math.sin(angle)) - width/2;
   }
 }
 
