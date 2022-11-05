@@ -75,13 +75,17 @@ class MoodCircle extends StatelessWidget {
               ]),
             ),
             child: GestureDetector(
-              onPanUpdate: _processState == ProcessState.NotTaken
+              onPanUpdate: _processState != ProcessState.Completed
                   ? (details) => onTapUp(
                       details.localPosition.dx, details.localPosition.dy)
                   : (details) => null,
-              onPanStart: _processState == ProcessState.NotTaken
+              onPanStart: _processState != ProcessState.Completed
                   ? (details) => onTapUp(
                       details.localPosition.dx, details.localPosition.dy)
+                  : (details) => null,
+              onTapUp: _processState != ProcessState.Completed
+                  ? (details) => onTapUp(
+                  details.localPosition.dx, details.localPosition.dy)
                   : (details) => null,
               child: Container(
                 decoration: BoxDecoration(
