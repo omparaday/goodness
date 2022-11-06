@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'history.dart';
 
+const double VERYSMALL_FONTSIZE = 14;
 const double SMALL_FONTSIZE = 16;
 const double FONTSIZE = 18;
 const double MEDIUM_FONTSIZE = 20;
