@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:goodness/dbhelpers/DailyData.dart';
 import 'package:goodness/dbhelpers/QuestionHelper.dart';
@@ -50,7 +52,7 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     var chartWidth = MediaQuery.of(context).size.width;
-    var chartHeight = MediaQuery.of(context).size.height / 3;
+    var chartHeight = max(180.0, MediaQuery.of(context).size.height / 3);
     Widget chart = HistoryChart(
       chartWidth: chartWidth,
       chartHeight: chartHeight,
