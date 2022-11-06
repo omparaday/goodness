@@ -115,28 +115,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  (_processState == ProcessState.Completed
+                  (_processState == ProcessState.Completed || _isEditing
                       ? Row(children: <Widget>[
-                          Text(
+                          !_isEditing ? Text(
                             _goodnessScore >= 100
                                 ? L10n.of(context).resource('scorePerfect100')
                                 : sprintf(
                                     L10n.of(context).resource('scoreWithVal'),
                                     [_goodnessScore]),
                             style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                          ) : SizedBox.shrink(),
                           Spacer(),
                           CupertinoButton(
-                              child: new Icon(CupertinoIcons.pen),
-                              onPressed: setEditMode)
-                        ])
-                      : SizedBox.shrink()),
-                  (_isEditing
-                      ? Row(children: <Widget>[
-                          Spacer(),
-                          CupertinoButton(
-                              child: Text(L10n.of(context).resource('submit')),
-                              onPressed: startFlow)
+                              child: new Icon(_isEditing ? CupertinoIcons.doc_checkmark : CupertinoIcons.pen),
+                              onPressed: _isEditing ? startFlow : setEditMode)
                         ])
                       : SizedBox.shrink()),
                   moodCircle,
