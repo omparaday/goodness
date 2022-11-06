@@ -45,6 +45,7 @@ class ImageShareState extends State<ImageShare> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(5.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
       ),
@@ -53,7 +54,7 @@ class ImageShareState extends State<ImageShare> {
             key: globalKey,
             child: Container(
               width: 300,
-              color: CupertinoColors.white,
+              color: Color.fromARGB(255, 250, 224, 190),
               padding: EdgeInsets.all(10),
               child: Column(
                 children: <Widget>[

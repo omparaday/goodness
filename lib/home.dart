@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:goodness/dbhelpers/DailyData.dart' as dailydata;
 import 'package:goodness/dbhelpers/DeedHelper.dart' as deed;
@@ -11,6 +12,7 @@ import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:goodness/widgets/DecoratedWidget.dart';
 import 'package:goodness/widgets/ImageShare.dart';
 import 'package:goodness/widgets/MoodCircle.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sprintf/sprintf.dart';
 
 import 'dbhelpers/QuestionHelper.dart' as question;
@@ -52,9 +54,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late String _dateKey;
 
   void showSharePopup() {
-    showCupertinoModalPopup<void>(
-        context: context,
-        builder: (BuildContext context) => Dialog(child:ImageShare(_quote?.content?? '')));
+  if (!kIsWeb) {
+      showCupertinoModalPopup<void>(
+          context: context,
+          builder: (BuildContext context) =>
+              Dialog(backgroundColor: CupertinoTheme.of(context).scaffoldBackgroundColor, child: ImageShare(_quote?.content ?? '')));
+    } else {
+      Share.share(_quote?.content?? '');
+    }
   }
 
   @override
