@@ -52,15 +52,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late int _goodnessScore;
   late dailydata.DailyData? _todayData;
   late String _dateKey;
+  bool _isEditing = false;
 
   void showSharePopup() {
-  if (!kIsWeb) {
+    if (!kIsWeb) {
       showCupertinoModalPopup<void>(
           context: context,
-          builder: (BuildContext context) =>
-              Dialog(backgroundColor: CupertinoTheme.of(context).scaffoldBackgroundColor, child: ImageShare(_quote?.content ?? '')));
+          builder: (BuildContext context) => Dialog(
+              backgroundColor:
+                  CupertinoTheme.of(context).scaffoldBackgroundColor,
+              child: ImageShare(_quote?.content ?? '')));
     } else {
-      Share.share(_quote?.content?? '');
+      Share.share(_quote?.content ?? '');
     }
   }
 
@@ -126,6 +129,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           CupertinoButton(
                               child: new Icon(CupertinoIcons.pen),
                               onPressed: setEditMode)
+                        ])
+                      : SizedBox.shrink()),
+                  (_isEditing
+                      ? Row(children: <Widget>[
+                          Spacer(),
+                          CupertinoButton(
+                              child: Text(L10n.of(context).resource('submit')),
+                              onPressed: startFlow)
                         ])
                       : SizedBox.shrink()),
                   moodCircle,
@@ -266,6 +277,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     } else if (_processState == ProcessState.OfferingDeed) {
       _quote = await quote.getNewQuote();
     } else if (_processState == ProcessState.ShowingQuote) {
+      _isEditing = false;
       measureGoodness();
       submit();
     }
@@ -395,6 +407,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     setState(() {
       _processState = ProcessState.ShowingQuote;
       _enableSubmit = true;
+      _isEditing = true;
     });
   }
 }
