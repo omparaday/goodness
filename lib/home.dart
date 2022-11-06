@@ -117,17 +117,23 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 children: <Widget>[
                   (_processState == ProcessState.Completed || _isEditing
                       ? Row(children: <Widget>[
-                          !_isEditing ? Text(
-                            _goodnessScore >= 100
-                                ? L10n.of(context).resource('scorePerfect100')
-                                : sprintf(
-                                    L10n.of(context).resource('scoreWithVal'),
-                                    [_goodnessScore]),
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ) : SizedBox.shrink(),
+                          !_isEditing
+                              ? Text(
+                                  _goodnessScore >= 100
+                                      ? L10n.of(context)
+                                          .resource('scorePerfect100')
+                                      : sprintf(
+                                          L10n.of(context)
+                                              .resource('scoreWithVal'),
+                                          [_goodnessScore]),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                )
+                              : SizedBox.shrink(),
                           Spacer(),
                           CupertinoButton(
-                              child: new Icon(_isEditing ? CupertinoIcons.doc_checkmark : CupertinoIcons.pen),
+                              child: new Icon(_isEditing
+                                  ? CupertinoIcons.doc_checkmark
+                                  : CupertinoIcons.pen),
                               onPressed: _isEditing ? startFlow : setEditMode)
                         ])
                       : SizedBox.shrink()),
@@ -265,7 +271,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (_processState == ProcessState.WritingAbout) {
       _question = await question.getNewQuestion();
     } else if (_processState == ProcessState.ShowingQuestion) {
-      _deed = await deed.getNewDeed(getHappyState());
     } else if (_processState == ProcessState.OfferingDeed) {
       _quote = await quote.getNewQuote();
     } else if (_processState == ProcessState.ShowingQuote) {
@@ -298,7 +303,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
-  showDeed() {
+  showDeed() async {
+    _deed = await deed.getNewDeed(getHappyState());
     setState(() {
       _showDeed = true;
     });
