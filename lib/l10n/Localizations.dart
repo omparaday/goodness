@@ -37,7 +37,7 @@ class L10n {
       'scoreWithVal': 'Score: %d',
       'notOptedForDeed': 'Not opted for deed.',
       'wordWithDetails': 'Word: %s\n%s',
-      'quoteWithContent': 'Quote\n%s',
+      'quoteWithContent': '%s',
       'deedForTheDay': 'Good Deed for the day\n%s',
       'weekWithStart': 'Week: %s',
       'lookAroundSmile': 'Look around with a good smile.',
@@ -83,7 +83,9 @@ class L10n {
       'highMood': 'Highly %s',
       'moderateMood': 'Moderately %s',
       'slightMood': 'Slightly %s',
-      'privacyAssurance': 'Your privacy is assured. Your data or anything you write in this app is not transferred outside your phone or used by anyone else.'
+      'privacyAssurance': 'Your privacy is assured. Your data or anything you write in this app is not transferred outside your phone or used by anyone else.',
+      'quote': 'Quote',
+      'share': 'Share'
     },
     'ta': {
       'home': 'முகப்பு',
@@ -109,7 +111,7 @@ class L10n {
       'scoreWithVal': 'மதிப்பு: %d',
       'notOptedForDeed': 'நற்செயலில் ஈடுபட விழையவில்லை.',
       'wordWithDetails': 'வார்த்தை: %s\n%s',
-      'quoteWithContent': 'வாசகம்\n%s',
+      'quoteWithContent': '%s',
       'deedForTheDay': 'நாள்தோறும் நற்செயல்\n%s',
       'weekWithStart': 'வாரம்: %s',
       'lookAroundSmile': 'புன்னகையுடன் சுற்றிப் பாருங்கள்',
@@ -155,7 +157,9 @@ class L10n {
       'highMood': 'மிகவும் %s',
       'moderateMood': 'மிதமான %s',
       'slightMood': 'சிறிதளவு %s',
-      'privacyAssurance': 'உங்கள் தனியுரிமைக்கு உறுதி. உங்கள் தரவு அல்லது இந்த செயலியில் நீங்கள் எழுதும் எதுவும் உங்கள் மொபைலுக்கு வெளியே மாற்றப்படுவதில்லை அல்லது வேறு யாராலும் பயன்படுத்தப்படுவதில்லை.'
+      'privacyAssurance': 'உங்கள் தனியுரிமைக்கு உறுதி. உங்கள் தரவு அல்லது இந்த செயலியில் நீங்கள் எழுதும் எதுவும் உங்கள் மொபைலுக்கு வெளியே மாற்றப்படுவதில்லை அல்லது வேறு யாராலும் பயன்படுத்தப்படுவதில்லை.',
+      'quote': 'வாசகம்',
+      'share': 'பகிர்'
     },
   };
 

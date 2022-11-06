@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:goodness/dbhelpers/DailyData.dart' as dailydata;
 import 'package:goodness/dbhelpers/DeedHelper.dart' as deed;
 import 'package:goodness/main.dart';
@@ -8,6 +9,7 @@ import 'dart:math' as math;
 
 import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:goodness/widgets/DecoratedWidget.dart';
+import 'package:goodness/widgets/ImageShare.dart';
 import 'package:goodness/widgets/MoodCircle.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -48,6 +50,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late int _goodnessScore;
   late dailydata.DailyData? _todayData;
   late String _dateKey;
+
+  void showSharePopup() {
+    showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => Dialog(child:ImageShare(_quote?.content?? '')));
+  }
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -171,9 +179,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           [_deed!.content]))
                       : SizedBox.shrink()),
                   (_processState.index >= ProcessState.ShowingQuote.index
-                      ? DecoratedText(sprintf(
-                          L10n.of(context).resource('quoteWithContent'),
-                          [_quote!.content]))
+                      ? DecoratedWidget(Column(children: <Widget>[
+                          Row(children: <Widget>[
+                            Text(L10n.of(context).resource('quote')),
+                            Spacer(),
+                            CupertinoButton(
+                                child: Text(L10n.of(context).resource('share')),
+                                onPressed: showSharePopup)
+                          ]),
+                          Text(sprintf(
+                              L10n.of(context).resource('quoteWithContent'),
+                              [_quote!.content])),
+                        ]))
                       : SizedBox.shrink()),
                   (_processState.index < ProcessState.Completed.index
                       ? CupertinoButton(
