@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:goodness/dbhelpers/DailyData.dart';
 import 'package:goodness/dbhelpers/QuestionHelper.dart';
 import 'package:goodness/dbhelpers/QuoteHelper.dart';
@@ -9,7 +11,9 @@ import 'package:goodness/main.dart';
 import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:goodness/widgets/DecoratedWidget.dart';
 import 'package:goodness/widgets/HistoryChart.dart';
+import 'package:goodness/widgets/ImageShare.dart';
 import 'package:goodness/widgets/MoodCircle.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sprintf/sprintf.dart';
 
 import 'dbhelpers/DeedHelper.dart';
@@ -235,9 +239,18 @@ class _HistoryPageState extends State<HistoryPage> {
                   sprintf(
                       L10n.of(context).resource('deedForTheDay'), [deedStr]),
                   backgroundColor: backgroundColor),
-              DecoratedText(
-                  sprintf(L10n.of(context).resource('quoteWithContent'),
-                      [quote.content]),
+              DecoratedWidget(
+                  Column(children: <Widget>[
+                    Row(children: <Widget>[
+                      Text(L10n.of(context).resource('quote')),
+                      Spacer(),
+                      CupertinoButton(
+                          child: Text(L10n.of(context).resource('share')),
+                          onPressed: () => {showSharePopup(quote.content)})
+                    ]),
+                    Text(sprintf(L10n.of(context).resource('quoteWithContent'),
+                        [quote.content]))
+                  ]),
                   backgroundColor: backgroundColor),
               DecoratedText(
                 sprintf(
@@ -398,5 +411,18 @@ class _HistoryPageState extends State<HistoryPage> {
       case HistoryType.All:
     }
     fetchChartData();
+  }
+
+  void showSharePopup(String quote) {
+    if (!kIsWeb) {
+      showCupertinoModalPopup<void>(
+          context: context,
+          builder: (BuildContext context) => Dialog(
+              backgroundColor:
+                  CupertinoTheme.of(context).scaffoldBackgroundColor,
+              child: ImageShare(quote)));
+    } else {
+      Share.share(quote);
+    }
   }
 }
