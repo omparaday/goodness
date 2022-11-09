@@ -39,7 +39,8 @@ class ImageShareState extends State<ImageShare> {
     if (!clicked) {
       await _capturePng();
     }
-    Share.shareXFiles([XFile.fromData(pngBytes, mimeType: 'image/png')]);
+    final box = context.findRenderObject() as RenderBox?;
+    Share.shareXFiles([XFile.fromData(pngBytes, mimeType: 'image/png')], sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
   }
 
   @override
