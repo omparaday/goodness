@@ -28,7 +28,7 @@ class ImageShareState extends State<ImageShare> {
   Future<void> _capturePng() async {
     RenderRepaintBoundary boundary =
         globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-    ui.Image image = await boundary.toImage();
+    ui.Image image = await boundary.toImage(pixelRatio: 4.0);
     ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     setState(() {
       pngBytes = byteData!.buffer.asUint8List();
