@@ -171,10 +171,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               ? L10n.of(context).resource('scorePerfect100')
                               : sprintf(
                                   L10n.of(context).resource('scoreWithVal'),
-                                  [dd.goodness]),
-                          style: TextStyle(
-                              fontSize: MEDIUM_FONTSIZE,
-                              fontWeight: FontWeight.bold)),
+                                  [dd.goodness])),
                       Spacer(),
                       Text(
                         getEmojiForXy(dd.x, dd.y, radius),

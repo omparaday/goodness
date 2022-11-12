@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:goodness/main.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
@@ -71,6 +72,7 @@ class ImageShareState extends State<ImageShare> {
                     Text(
                       'goodness.day',
                       style: TextStyle(
+                          fontFamily: GoogleFonts.caveat().fontFamily,
                           color: CupertinoColors.black,
                           fontSize: VERYSMALL_FONTSIZE),
                     )
@@ -80,9 +82,9 @@ class ImageShareState extends State<ImageShare> {
                   ),
                   Text(text,
                       style: TextStyle(
+                          fontFamily: GoogleFonts.caveat().fontFamily,
                           color: CupertinoColors.black,
-                          fontStyle: FontStyle.italic,
-                          fontSize: MEDIUM_FONTSIZE))
+                          fontSize: LARGE_FONTSIZE))
                 ],
               ),
             )),
