@@ -34,13 +34,14 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-const double diameter = 300;
-const double inset = 40;
-const double radius = diameter / 2;
-const double sideOfSquare = radius / math.sqrt2;
+late double diameter;
+late double inset;
+late double radius;
+late double sideOfSquare;
+const double MAX_CIRCLE_SIZE = 300;
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  double _x = radius, _y = radius;
+  double _x = -1, _y = -1;
   bool _enableSubmit = false;
   ProcessState _processState = ProcessState.NotTaken;
   late TextEditingController _writeAboutController;
@@ -103,6 +104,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    inset = getSmileySize(context).height + getArcTextSize(context).height;
+    diameter = math.min(MAX_CIRCLE_SIZE, math.min(MediaQuery.of(context).size.height,MediaQuery.of(context).size.width) - (2*inset));
+    radius = diameter / 2;
+    sideOfSquare = radius / math.sqrt2;
+    if (_x == -1) {
+      _x = radius;
+      _y = radius;
+    }
     Widget moodCircle = getMoodCircle();
 
     return Container(
@@ -249,7 +258,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             math.sqrt(math.pow(x - radius, 2) + math.pow(y - radius, 2));
         if (distance > radius) {
           double angle = -math.atan2(y - radius, x - radius);
-          double degree = angle * 180 / math.pi;
           _x = radius + (radius * math.cos(angle));
           _y = radius + (-radius * math.sin(angle));
         } else {
@@ -359,8 +367,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       }
       setState(() {
         _processState = ProcessState.Completed;
-        _x = _todayData!.x;
-        _y = _todayData!.y;
+        _x = getValueFromPer3centage(_todayData!.x);
+        _y = getValueFromPer3centage(_todayData!.y);
         _goodnessScore = _todayData!.goodness;
         _writeAboutController.text = _todayData!.about;
         _quote = quote2;
@@ -390,8 +398,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   void submit() {
     _todayData = new dailydata.DailyData(
-        _x,
-        _y,
+        getPer3centage(_x),
+        getPer3centage(_y),
         _quote!.name,
         _writeAboutController.text,
         _question!.key,
@@ -408,4 +416,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       _isEditing = true;
     });
   }
+}
+
+double getPer3centage(double value) {
+  return MAX_CIRCLE_SIZE * value/diameter;
+}
+
+double getValueFromPer3centage(double per3cent) {
+  return per3cent * diameter/MAX_CIRCLE_SIZE;
 }

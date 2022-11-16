@@ -1,11 +1,11 @@
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
 import 'package:goodness/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'dart:math' as math;
 
 class ImageShare extends StatefulWidget {
   final String text;
@@ -55,7 +55,7 @@ class ImageShareState extends State<ImageShare> {
         RepaintBoundary(
             key: globalKey,
             child: Container(
-              width: 300,
+              width: math.min(300, MediaQuery.of(context).size.width),
               color: Color.fromARGB(255, 250, 224, 190),
               padding: EdgeInsets.all(10),
               child: Column(

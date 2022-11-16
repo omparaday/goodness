@@ -26,13 +26,8 @@ class MoodCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size smileySize = (TextPainter(
-            text: TextSpan(text: '😡', style: TextStyle(fontSize: FONTSIZE)),
-            maxLines: 1,
-            textScaleFactor: MediaQuery.of(context).textScaleFactor,
-            textDirection: TextDirection.ltr)
-          ..layout())
-        .size;
+    final Size smileySize = getSmileySize(context);
+    final Size arctextSize = getArcTextSize(context);
     Widget bigCircle = Container(
       margin: EdgeInsets.only(
           left: inset - 10, right: inset - 10, top: inset, bottom: inset),
@@ -111,43 +106,43 @@ class MoodCircle extends StatelessWidget {
           children: <Widget>[
             bigCircle,
             Positioned(
-              top: getTop(11*math.pi/8, smileySize.height),
-              left: getLeft(11*math.pi/8, smileySize.height, smileySize.width),
+              top: getTop(11*math.pi/8, smileySize.height, arctextSize.height),
+              left: getLeft(11*math.pi/8, smileySize.height, smileySize.width, arctextSize.height),
               child: getEmoji("😊", context),
             ),
             Positioned(
-              top: getTop(13*math.pi/8, smileySize.height),
-              left: getLeft(13*math.pi/8, smileySize.height, smileySize.width),
+              top: getTop(13*math.pi/8, smileySize.height, arctextSize.height),
+              left: getLeft(13*math.pi/8, smileySize.height, smileySize.width, arctextSize.height),
               child: getEmoji("😃", context),
             ),
             Positioned(
-              top: getTop(15*math.pi/8, smileySize.height),
-              left: getLeft(15*math.pi/8, smileySize.height, smileySize.width),
+              top: getTop(15*math.pi/8, smileySize.height, arctextSize.height),
+              left: getLeft(15*math.pi/8, smileySize.height, smileySize.width, arctextSize.height),
               child: getEmoji("😴", context),
             ),
             Positioned(
-              top: getTop(math.pi/8, smileySize.height),
-              left: getLeft(math.pi/8, smileySize.height, smileySize.width),
+              top: getTop(math.pi/8, smileySize.height, arctextSize.height),
+              left: getLeft(math.pi/8, smileySize.height, smileySize.width, arctextSize.height),
               child: getEmoji("😢", context),
             ),
             Positioned(
-              top: getTop(3 * math.pi/8, smileySize.height),
-              left: getLeft(3 * math.pi/8, smileySize.height, smileySize.width),
+              top: getTop(3 * math.pi/8, smileySize.height, arctextSize.height),
+              left: getLeft(3 * math.pi/8, smileySize.height, smileySize.width, arctextSize.height),
               child: getEmoji("😔", context),
             ),
             Positioned(
-              top: getTop(5*math.pi/8, smileySize.height),
-              left: getLeft(5*math.pi/8, smileySize.height, smileySize.width),
+              top: getTop(5*math.pi/8, smileySize.height, arctextSize.height),
+              left: getLeft(5*math.pi/8, smileySize.height, smileySize.width, arctextSize.height),
               child: getEmoji("🤒", context),
             ),
             Positioned(
-              top: getTop(7*math.pi/8, smileySize.height),
-              left: getLeft(7*math.pi/8, smileySize.height, smileySize.width),
+              top: getTop(7*math.pi/8, smileySize.height, arctextSize.height),
+              left: getLeft(7*math.pi/8, smileySize.height, smileySize.width, arctextSize.height),
               child: getEmoji("😡", context),
             ),
             Positioned(
-              top: getTop(9*math.pi/8, smileySize.height),
-              left: getLeft(9*math.pi/8, smileySize.height, smileySize.width),
+              top: getTop(9*math.pi/8, smileySize.height, arctextSize.height),
+              left: getLeft(9*math.pi/8, smileySize.height, smileySize.width, arctextSize.height),
               child: getEmoji("🤗", context),
             ),
             this.diameter != home.diameter ? SizedBox.shrink() : Positioned(
@@ -168,7 +163,7 @@ class MoodCircle extends StatelessWidget {
         Text(
           getMoodText(context),
           style: TextStyle(fontSize: LARGE_FONTSIZE),
-        )
+        ),
       ],
     );
   }
@@ -213,7 +208,7 @@ class MoodCircle extends StatelessWidget {
             children: <TextSpan>[
               TextSpan(
                 text: s,
-                style: TextStyle(
+                style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(
                   fontSize: LARGE_FONTSIZE,
                   fontFamily: 'EmojiOne',
                 ),
@@ -244,12 +239,12 @@ class MoodCircle extends StatelessWidget {
     return text;
   }
 
-  getTop(double angle, double height) {
-    return inset + radius + (((diameter != home.diameter ? height/2 : height) + radius + 4) * math.cos(angle)) - height/2;
+  getTop(double angle, double smileyHeight, double arctextHeight) {
+    return inset + radius + (((diameter != home.diameter ? 0 : arctextHeight) + smileyHeight/2 + radius) * math.cos(angle)) - smileyHeight/2;
   }
 
-  getLeft(double angle, double height, double width) {
-    return inset -10 + radius + (-((diameter != home.diameter ? height/2 : height) + radius + 4) * math.sin(angle)) - width/2;
+  getLeft(double angle, double smileyHeight, double smileyWidth, double arctextHeight) {
+    return (inset-10) + radius + (-((diameter != home.diameter ? 0 : arctextHeight) + smileyHeight/2 + radius) * math.sin(angle)) - smileyWidth/2;
   }
 }
 
@@ -296,4 +291,23 @@ class LinePainter extends CustomPainter {
   bool shouldRepaint(CustomPainter old) {
     return false;
   }
+}
+
+Size getSmileySize(BuildContext context) {
+  return (TextPainter(
+      text: TextSpan(text: '😡', style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(fontSize: LARGE_FONTSIZE,
+        fontFamily: 'EmojiOne',)),
+      maxLines: 1,
+      textDirection: TextDirection.ltr)
+    ..layout(minWidth: 0, maxWidth: double.infinity))
+      .size;
+}
+
+Size getArcTextSize(BuildContext context) {
+  return (TextPainter(
+      text: TextSpan(text: 'W', style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(fontSize: SMALL_FONTSIZE)),
+      maxLines: 1,
+      textDirection: TextDirection.ltr)
+    ..layout(minWidth: 0, maxWidth: double.infinity))
+      .size;
 }

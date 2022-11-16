@@ -51,7 +51,6 @@ class _Painter extends CustomPainter {
     double angle = initialAngle;
     for (int i = 0; i < text.length; i++) {
       angle = _drawLetter(canvas, text[i], angle);
-      //angle = angle + (pi/(4 * text.length));
     }
   }
 

@@ -174,7 +174,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   [dd.goodness])),
                       Spacer(),
                       Text(
-                        getEmojiForXy(dd.x, dd.y, radius),
+                        getEmojiForXy(getValueFromPer3centage(dd.x), getValueFromPer3centage(dd.y), radius),
                         style: TextStyle(fontSize: LARGE_FONTSIZE),
                       ),
                     ],
@@ -215,7 +215,7 @@ class _HistoryPageState extends State<HistoryPage> {
           content: Column(
             children: [
               MoodCircle(diameter / 2, inset, radius / 2, sideOfSquare / 2,
-                  ProcessState.Completed, () => {}, dd.x / 2, dd.y / 2),
+                  ProcessState.Completed, () => {}, getValueFromPer3centage(dd.x) / 2, getValueFromPer3centage(dd.y) / 2),
               DecoratedText(
                 dd.about.isEmpty
                     ? L10n.of(context).resource('didNotWrite')
