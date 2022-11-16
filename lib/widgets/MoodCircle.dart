@@ -90,7 +90,7 @@ class MoodCircle extends StatelessWidget {
                   Positioned(
                     top: y - 15,
                     left: x - 10,
-                    child: getEmoji('⭐', context),
+                    child: getEmoji('⭕', context),
                   )
                 ]),
               ),
