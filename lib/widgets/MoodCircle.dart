@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:goodness/main.dart';
 import 'package:sprintf/sprintf.dart';
@@ -91,7 +92,7 @@ class MoodCircle extends StatelessWidget {
                   Positioned(
                     top: y - 15,
                     left: x - 10,
-                    child: getEmoji(Platform.isAndroid ? '🔔' : '🛟', context),
+                    child: getEmoji(!kIsWeb && Platform.isAndroid ? '🔔' : '🛟', context),
                   )
                 ]),
               ),
