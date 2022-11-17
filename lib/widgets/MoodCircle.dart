@@ -6,6 +6,7 @@ import 'package:sprintf/sprintf.dart';
 import '../home.dart';
 import '../home.dart' as home;
 import 'dart:math' as math;
+import 'dart:io' show Platform;
 
 import '../l10n/Localizations.dart';
 import 'ArcText.dart';
@@ -90,7 +91,7 @@ class MoodCircle extends StatelessWidget {
                   Positioned(
                     top: y - 15,
                     left: x - 10,
-                    child: getEmoji('⭕', context),
+                    child: getEmoji(Platform.isAndroid ? '🔔' : '🛟', context),
                   )
                 ]),
               ),
