@@ -348,7 +348,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   bool getHappyState() {
-    double angle = -math.atan2(_y - 165, _x - 165);
+    double angle = -math.atan2(_y - radius, _x - radius);
     double degree = angle * 180 / math.pi;
     bool isHappy = (degree >= -95 && degree <= 95);
     return isHappy;
