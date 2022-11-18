@@ -43,6 +43,7 @@ const double MAX_CIRCLE_SIZE = 300;
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   double _x = -1, _y = -1;
   bool _enableSubmit = false;
+  bool _questionAnswerFocused = false, _moodFocused = false;
   ProcessState _processState = ProcessState.NotTaken;
   late TextEditingController _writeAboutController;
   late question.Question? _question;
@@ -105,7 +106,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     inset = getSmileySize(context).height + getArcTextSize(context).height;
-    diameter = math.min(MAX_CIRCLE_SIZE, math.min(MediaQuery.of(context).size.height,MediaQuery.of(context).size.width) - (2*inset));
+    diameter = math.min(
+        MAX_CIRCLE_SIZE,
+        math.min(MediaQuery.of(context).size.height,
+                MediaQuery.of(context).size.width) -
+            (2 * inset));
     radius = diameter / 2;
     sideOfSquare = radius / math.sqrt2;
     if (_x == -1) {
@@ -158,34 +163,68 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   (_processState.index >= ProcessState.WritingAbout.index
                       ? DecoratedWidget(Column(children: <Widget>[
                           Text(L10n.of(context).resource('yourMood')),
-                          CupertinoTextField(
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            controller: _writeAboutController,
-                            enabled: _processState.index !=
-                                ProcessState.Completed.index,
-                            placeholder: _processState.index !=
-                                    ProcessState.Completed.index
-                                ? L10n.of(context).resource('writeAboutFeel')
-                                : L10n.of(context).resource('didNotWrite'),
-                          )
+                          FocusScope(
+                              child: Focus(
+                                  onFocusChange: (focus) => setState(() {
+                                        _moodFocused = focus;
+                                      }),
+                                  child: CupertinoTextField(
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: null,
+                                    controller: _writeAboutController,
+                                    enabled: _processState.index !=
+                                        ProcessState.Completed.index,
+                                    suffix: _moodFocused
+                                        ? CupertinoButton(
+                                            child: new Icon(CupertinoIcons
+                                                .checkmark_circle),
+                                            onPressed: () {
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+                                            },
+                                          )
+                                        : SizedBox.shrink(),
+                                    placeholder: _processState.index !=
+                                            ProcessState.Completed.index
+                                        ? L10n.of(context)
+                                            .resource('writeAboutFeel')
+                                        : L10n.of(context)
+                                            .resource('didNotWrite'),
+                                  )))
                         ]))
                       : SizedBox.shrink()),
                   (_processState.index >= ProcessState.ShowingQuestion.index
                       ? DecoratedWidget(Column(
                           children: <Widget>[
                             Text(_question?.content ?? ''),
-                            CupertinoTextField(
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              controller: _answerController,
-                              enabled: _processState.index !=
-                                  ProcessState.Completed.index,
-                              placeholder: _processState.index !=
-                                      ProcessState.Completed.index
-                                  ? L10n.of(context).resource('yourAnswer')
-                                  : L10n.of(context).resource('didNotWrite'),
-                            )
+                            FocusScope(
+                                child: Focus(
+                                    onFocusChange: (focus) => setState(() {
+                                          _questionAnswerFocused = focus;
+                                        }),
+                                    child: CupertinoTextField(
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: null,
+                                      controller: _answerController,
+                                      enabled: _processState.index !=
+                                          ProcessState.Completed.index,
+                                      suffix: _questionAnswerFocused
+                                          ? CupertinoButton(
+                                              child: new Icon(CupertinoIcons
+                                                  .checkmark_circle),
+                                              onPressed: () {
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                              })
+                                          : SizedBox.shrink(),
+                                      placeholder: _processState.index !=
+                                              ProcessState.Completed.index
+                                          ? L10n.of(context)
+                                              .resource('yourAnswer')
+                                          : L10n.of(context)
+                                              .resource('didNotWrite'),
+                                    )))
                           ],
                         ))
                       : SizedBox.shrink()),
@@ -419,9 +458,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 }
 
 double getPer3centage(double value) {
-  return MAX_CIRCLE_SIZE * value/diameter;
+  return MAX_CIRCLE_SIZE * value / diameter;
 }
 
 double getValueFromPer3centage(double per3cent) {
-  return per3cent * diameter/MAX_CIRCLE_SIZE;
+  return per3cent * diameter / MAX_CIRCLE_SIZE;
 }
