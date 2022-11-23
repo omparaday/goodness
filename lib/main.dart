@@ -221,6 +221,8 @@ class _MainState extends State<Main> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Container(
+                                padding: const EdgeInsets.only(
+                                    top: 20, left: 20.0, bottom: 20.0, right: 20.0),
                                 color: CupertinoDynamicColor.resolve(
                                     CupertinoDynamicColor.withBrightness(
                                       color: Color.fromARGB(255, 240, 240, 240),
