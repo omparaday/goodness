@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:goodness/home.dart';
 import 'package:goodness/l10n/Localizations.dart';
 import 'package:goodness/profile.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'history.dart';
 
@@ -46,7 +48,7 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   late int _currentIndex;
-  bool _showWelcome = false;
+  bool _showWelcome = false, _showAppDownload = false;
   int _welcomeIndex = 1;
 
   @override
@@ -192,6 +194,94 @@ class _MainState extends State<Main> {
                                 ? Container(child: getArrowWidget())
                                 : SizedBox.shrink()
                           ]))))
+          : SizedBox.shrink(),
+      (kIsWeb && !_showWelcome && _showAppDownload)
+          ? (SizedBox.expand(
+              child: CupertinoApp(
+                  theme: CupertinoThemeData(
+                      textTheme: CupertinoTextThemeData(
+                          textStyle: TextStyle(
+                    fontFamily: GoogleFonts.nunito().fontFamily,
+                    color: CupertinoDynamicColor.withBrightness(
+                      color: CupertinoColors.black,
+                      darkColor: CupertinoColors.white,
+                    ),
+                  ))),
+                  home: Container(
+                      padding: const EdgeInsets.only(
+                          top: 20, left: 20.0, bottom: 100.0, right: 20.0),
+                      decoration: BoxDecoration(
+                          color: CupertinoDynamicColor.resolve(
+                              CupertinoDynamicColor.withBrightness(
+                                color: Color.fromARGB(100, 240, 240, 240),
+                                darkColor: Color.fromARGB(100, 40, 40, 40),
+                              ),
+                              context)),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Container(
+                                color: CupertinoDynamicColor.resolve(
+                                    CupertinoDynamicColor.withBrightness(
+                                      color: Color.fromARGB(255, 240, 240, 240),
+                                      darkColor:
+                                          Color.fromARGB(255, 40, 40, 40),
+                                    ),
+                                    context),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(L10n.of(context).resource('tryApp')),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          CupertinoButton(
+                                            onPressed: () {
+                                              launchUrl(new Uri(
+                                                  scheme: 'https',
+                                                  host: 'play.google.com',
+                                                  path: '/store/apps/details',
+                                                  queryParameters: {
+                                                    'id': 'com.monsoon.goodness'
+                                                  }));
+                                            },
+                                            child: new Image.asset(
+                                              'assets/googlePlayStore.png',
+                                              width: 50,
+                                              height: 50,
+                                            ),
+                                          ),
+                                          CupertinoButton(
+                                            onPressed: () {
+                                              launchUrl(new Uri(
+                                                  scheme: 'https',
+                                                  host: 'apps.apple.com',
+                                                  path:
+                                                      '/app/goodness-day/id6444273449'));
+                                            },
+                                            child: new Image.asset(
+                                              'assets/appStoreIcon.png',
+                                              width: 50,
+                                              height: 50,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Text(
+                                          L10n.of(context).resource(
+                                              'appDownloadProfileInfo'),
+                                          style: TextStyle(
+                                              fontSize: SMALL_FONTSIZE,
+                                              color:
+                                                  CupertinoColors.systemGrey)),
+                                      CupertinoButton(
+                                          child: Text(L10n.of(context)
+                                              .resource('close')),
+                                          onPressed: finishShowAppDownload)
+                                    ]))
+                          ])))))
           : SizedBox.shrink()
     ]);
   }
@@ -301,6 +391,9 @@ class _MainState extends State<Main> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _showWelcome = prefs.getBool('SHOW_WELCOME') ?? true;
+      if (_showWelcome == false) {
+        _showAppDownload = prefs.getBool('SHOW_APP_DOWNLOAD') ?? true;
+      }
     });
   }
 
@@ -309,6 +402,17 @@ class _MainState extends State<Main> {
     setState(() {
       prefs.setBool('SHOW_WELCOME', false);
       _showWelcome = false;
+      _showAppDownload = true;
+      _currentIndex = 0;
+    });
+  }
+
+  Future<void> finishShowAppDownload() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setBool('SHOW_APP_DOWNLOAD', false);
+      _showWelcome = false;
+      _showAppDownload = false;
       _currentIndex = 0;
     });
   }

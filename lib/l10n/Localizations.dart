@@ -85,7 +85,9 @@ class L10n {
       'slightMood': 'Slightly %s',
       'privacyAssurance': 'Your privacy is assured. Your data or anything you write in this app is not transferred outside your phone or used by anyone else.',
       'quote': 'Quote',
-      'share': 'Share'
+      'share': 'Share',
+      'tryApp': 'Try our app for iOS and Android for full history retention and more enhanced features. Click on the links below to download.',
+      'appDownloadProfileInfo': 'You can download this later in profile page.'
     },
     'ta': {
       'home': 'முகப்பு',
@@ -159,7 +161,9 @@ class L10n {
       'slightMood': 'சிறிதளவு %s',
       'privacyAssurance': 'உங்கள் தனியுரிமைக்கு உறுதி. உங்கள் தரவு அல்லது இந்த செயலியில் நீங்கள் எழுதும் எதுவும் உங்கள் மொபைலுக்கு வெளியே மாற்றப்படுவதில்லை அல்லது வேறு யாராலும் பயன்படுத்தப்படுவதில்லை.',
       'quote': 'வாசகம்',
-      'share': 'பகிர்'
+      'share': 'பகிர்',
+      'tryApp': 'முழு வரலாற்றைத் தக்கவைத்துக் கொள்ளவும் மேலும் மேம்படுத்தப்பட்ட அம்சங்களுக்கும் iOS மற்றும் Androidக்கான எங்கள் செயலியை முயற்சிக்கவும். பதிவிறக்கம் செய்ய கீழே உள்ள இணைப்புகளை கிளிக் செய்யவும்.',
+      'appDownloadProfileInfo': 'சுயவிவரப் பக்கத்தில் இதைப் பின்னரும் பதிவிறக்கம் செய்யலாம்.'
     },
   };
 

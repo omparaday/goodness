@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:goodness/dbhelpers/DailyData.dart';
 import 'package:goodness/main.dart';
 import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:goodness/widgets/DecoratedWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'l10n/Localizations.dart';
 
@@ -99,12 +101,54 @@ class _ProfilePageState extends State<ProfilePage>
                 child: SafeArea(
                     child: Column(children: <Widget>[
                   isEditing ? buildEditableColumn() : buildDisplayColumn(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  kIsWeb
+                      ? Text(L10n.of(context).resource('tryApp'))
+                      : SizedBox.shrink(),
+                  kIsWeb
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            CupertinoButton(
+                              onPressed: () {
+                                launchUrl(new Uri(
+                                    scheme: 'https',
+                                    host: 'play.google.com',
+                                    path: '/store/apps/details',
+                                    queryParameters: {
+                                      'id': 'com.monsoon.goodness'
+                                    }));
+                              },
+                              child: new Image.asset(
+                                'assets/googlePlayStore.png',
+                                width: 50,
+                                height: 50,
+                              ),
+                            ),
+                            CupertinoButton(
+                              onPressed: () {
+                                launchUrl(new Uri(
+                                    scheme: 'https',
+                                    host: 'apps.apple.com',
+                                    path: '/app/goodness-day/id6444273449'));
+                              },
+                              child: new Image.asset(
+                                'assets/appStoreIcon.png',
+                                width: 50,
+                                height: 50,
+                              ),
+                            )
+                          ],
+                        )
+                      : SizedBox.shrink(),
                   Text(
                     L10n.of(context).resource('privacyAssurance'),
                     style: TextStyle(
                         fontSize: SMALL_FONTSIZE,
                         color: CupertinoColors.systemGrey),
-                  )
+                  ),
                 ])))));
   }
 
