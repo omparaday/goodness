@@ -62,7 +62,7 @@ class ImageShareState extends State<ImageShare> {
                 children: <Widget>[
                   Row(children: <Widget>[
                     Image.asset(
-                      'assets/goodness.png',
+                      'assets/goodnessOldPaper.png',
                       width: 15,
                       height: 15,
                     ),

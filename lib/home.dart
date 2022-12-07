@@ -15,10 +15,12 @@ import 'package:goodness/widgets/MoodCircle.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sprintf/sprintf.dart';
 
+import 'NotificationService.dart';
 import 'dbhelpers/QuestionHelper.dart' as question;
 import 'dbhelpers/QuoteHelper.dart' as quote;
 import 'l10n/Localizations.dart';
 
+const int ID_DAILY_NOTIFICATION = 1;
 enum ProcessState {
   NotTaken,
   Greeting,
@@ -55,6 +57,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late dailydata.DailyData? _todayData;
   late String _dateKey;
   bool _isEditing = false;
+  late final NotificationService notificationService;
 
   void showSharePopup() {
     if (!kIsWeb) {
@@ -77,6 +80,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           _dateKey = dailydata.getDateKeyFormat(DateTime.now());
           readTodayData();
         }
+        DateTime nextTimeToNotify = DateTime.now().add(Duration(days: 1));
+        nextTimeToNotify = new DateTime(nextTimeToNotify.year, nextTimeToNotify.month, nextTimeToNotify.day, 20, 30);
+        int secondsToNotify = nextTimeToNotify.difference(DateTime.now()).inSeconds;
+        notificationService.cancelSingleNotifications(ID_DAILY_NOTIFICATION);
+        await notificationService.showScheduledLocalNotification(
+            id: ID_DAILY_NOTIFICATION,
+            title: "Time to record your day!",
+            body: "Record your mood today for a better tomorrow.",
+            payload: "Way to go for better tomorrow!",
+            seconds: secondsToNotify);
         break;
       case AppLifecycleState.inactive:
         break;
@@ -101,6 +114,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         readTodayData();
       }
     });
+    notificationService = NotificationService();
+    notificationService.initializePlatformNotifications();
   }
 
   @override
