@@ -87,7 +87,10 @@ class L10n {
       'quote': 'Quote',
       'share': 'Share',
       'tryApp': 'Try our app for iOS and Android for full history retention and more enhanced features. Click on the links below to download.',
-      'appDownloadProfileInfo': 'You can download this later in profile page.'
+      'appDownloadProfileInfo': 'You can download this later in profile page.',
+      'dailyReminderNotificationTitle': 'Time to record your day!',
+      'dailyReminderNotificationBody': 'Record your mood today for a better tomorrow.',
+      'dailyReminderNotificationPayload': 'Way to go for better tomorrow!'
     },
     'ta': {
       'home': 'முகப்பு',
@@ -163,7 +166,10 @@ class L10n {
       'quote': 'வாசகம்',
       'share': 'பகிர்',
       'tryApp': 'முழு வரலாற்றைத் தக்கவைத்துக் கொள்ளவும் மேலும் மேம்படுத்தப்பட்ட அம்சங்களுக்கும் iOS மற்றும் Androidக்கான எங்கள் செயலியை முயற்சிக்கவும். பதிவிறக்கம் செய்ய கீழே உள்ள இணைப்புகளை கிளிக் செய்யவும்.',
-      'appDownloadProfileInfo': 'சுயவிவரப் பக்கத்தில் இதைப் பின்னரும் பதிவிறக்கம் செய்யலாம்.'
+      'appDownloadProfileInfo': 'சுயவிவரப் பக்கத்தில் இதைப் பின்னரும் பதிவிறக்கம் செய்யலாம்.',
+      'dailyReminderNotificationTitle': 'உங்கள் நாளை பதிவு செய்ய வேண்டிய நேரம்!',
+      'dailyReminderNotificationBody': 'ஒரு சிறந்த நாளைக்காக உங்கள் மனநிலையை இன்று பதிவு செய்யுங்கள்.',
+      'dailyReminderNotificationPayload': 'நல்ல நாளை நோக்கி செல்வதற்கான வழி!'
     },
   };
 

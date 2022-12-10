@@ -86,9 +86,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         notificationService.cancelSingleNotifications(ID_DAILY_NOTIFICATION);
         await notificationService.showScheduledLocalNotification(
             id: ID_DAILY_NOTIFICATION,
-            title: "Time to record your day!",
-            body: "Record your mood today for a better tomorrow.",
-            payload: "Way to go for better tomorrow!",
+            title: L10n.of(context).resource('dailyReminderNotificationTitle'),
+            body: L10n.of(context).resource('dailyReminderNotificationBody'),
+            payload: L10n.of(context).resource('dailyReminderNotificationPayload'),
             seconds: secondsToNotify);
         break;
       case AppLifecycleState.inactive:
