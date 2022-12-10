@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'dbhelpers/Utils.dart';
 import 'l10n/Localizations.dart';
 
 enum Gender { Male, Female, Transgender, NonBinary, PreferNotToRespond }

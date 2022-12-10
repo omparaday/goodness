@@ -17,6 +17,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:sprintf/sprintf.dart';
 
 import 'dbhelpers/DeedHelper.dart';
+import 'dbhelpers/Utils.dart';
 import 'l10n/Localizations.dart';
 
 class HistoryPage extends StatefulWidget {
