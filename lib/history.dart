@@ -13,12 +13,15 @@ import 'package:goodness/widgets/DecoratedWidget.dart';
 import 'package:goodness/widgets/HistoryChart.dart';
 import 'package:goodness/widgets/ImageShare.dart';
 import 'package:goodness/widgets/MoodCircle.dart';
+import 'package:goodness/widgets/MoodSummaryBars.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sprintf/sprintf.dart';
 
 import 'dbhelpers/DeedHelper.dart';
 import 'dbhelpers/Utils.dart';
 import 'l10n/Localizations.dart';
+
+enum ChartType { MoodSummary, GoodnessScoreAverage }
 
 class HistoryPage extends StatefulWidget {
   @override
@@ -27,11 +30,14 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   late HistoryType historyType;
+  late ChartType chartType;
   late List<Widget> recentData;
   late DateTime chartWeek;
   late DateTime chartMonth;
   late DateTime chartYear;
   Map<String, BarPlotInfo> plotInfoMap = {};
+  Map<String, double> moodPlotInfo = {};
+  late double takenCount = 0;
   String chartName = '';
   String chartAverage = '0.0';
 
@@ -44,8 +50,11 @@ class _HistoryPageState extends State<HistoryPage> {
   void initState() {
     super.initState();
     historyType = HistoryType.Week;
+    chartType = ChartType.MoodSummary;
     recentData = [];
     plotInfoMap = {};
+    moodPlotInfo = {};
+    takenCount = 0;
     chartWeek = getFirstDayOfWeek(DateTime.now());
     chartMonth = getFirstDayOfMonth(DateTime.now());
     chartYear = getFirstDayOfYear(DateTime.now());
@@ -64,6 +73,12 @@ class _HistoryPageState extends State<HistoryPage> {
       plotList: plotInfoMap,
       historyType: historyType,
       showHistoryDialog: showHistoryDialog,
+    );
+    Widget moodBars = MoodSummaryBars(
+      chartWidth: chartWidth,
+      chartHeight: chartHeight,
+      plotList: moodPlotInfo,
+      totalCount: takenCount,
     );
     return Container(
       margin: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -89,18 +104,34 @@ class _HistoryPageState extends State<HistoryPage> {
                   HistoryType.All: Text(L10n.of(context).resource('all')),
                 },
               ),
+              SizedBox(width: 0, height: 15),
+              CupertinoSegmentedControl<ChartType>(
+                groupValue: chartType,
+                onValueChanged: (ChartType value) {
+                  chartType = value;
+                  fetchChartData();
+                },
+                children: <ChartType, Widget>{
+                  ChartType.MoodSummary:
+                      Text(L10n.of(context).resource('moodSummary')),
+                  ChartType.GoodnessScoreAverage:
+                      Text(L10n.of(context).resource('goodnessScoreAverage')),
+                },
+              ),
               SizedBox(width: 0, height: 10),
               Row(
                 children: <Widget>[
                   Flexible(fit: FlexFit.tight, child: Text(chartName)),
                   Spacer(),
-                  Flexible(
-                      fit: FlexFit.tight,
-                      child: Text(
-                        sprintf(L10n.of(context).resource('averageScore'),
-                            [chartAverage]),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ))
+                  chartType == ChartType.GoodnessScoreAverage
+                      ? Flexible(
+                          fit: FlexFit.tight,
+                          child: Text(
+                            sprintf(L10n.of(context).resource('averageScore'),
+                                [chartAverage]),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ))
+                      : SizedBox.shrink()
                 ],
               ),
               Row(
@@ -121,7 +152,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 ],
               ),
               SizedBox(width: 0, height: 10),
-              chart,
+              chartType == ChartType.GoodnessScoreAverage ? chart : moodBars,
               SizedBox(width: 0, height: 10),
               Text(
                 L10n.of(context).resource('recentSubmissions'),
@@ -167,15 +198,14 @@ class _HistoryPageState extends State<HistoryPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                          dd.goodness >= 100
-                              ? L10n.of(context).resource('scorePerfect100')
-                              : sprintf(
-                                  L10n.of(context).resource('scoreWithVal'),
-                                  [dd.goodness])),
+                      Text(dd.goodness >= 100
+                          ? L10n.of(context).resource('scorePerfect100')
+                          : sprintf(L10n.of(context).resource('scoreWithVal'),
+                              [dd.goodness])),
                       Spacer(),
                       Text(
-                        getEmojiForXy(getValueFromPer3centage(dd.x), getValueFromPer3centage(dd.y), radius),
+                        getEmojiForXy(getValueFromPer3centage(dd.x),
+                            getValueFromPer3centage(dd.y), radius),
                         style: TextStyle(fontSize: LARGE_FONTSIZE),
                       ),
                     ],
@@ -215,8 +245,15 @@ class _HistoryPageState extends State<HistoryPage> {
           title: Text('${getDisplayDate(datetime)}'),
           content: Column(
             children: [
-              MoodCircle(diameter / 2, inset, radius / 2, sideOfSquare / 2,
-                  ProcessState.Completed, () => {}, getValueFromPer3centage(dd.x) / 2, getValueFromPer3centage(dd.y) / 2),
+              MoodCircle(
+                  diameter / 2,
+                  inset,
+                  radius / 2,
+                  sideOfSquare / 2,
+                  ProcessState.Completed,
+                  () => {},
+                  getValueFromPer3centage(dd.x) / 2,
+                  getValueFromPer3centage(dd.y) / 2),
               DecoratedText(
                 dd.about.isEmpty
                     ? L10n.of(context).resource('didNotWrite')
@@ -264,6 +301,17 @@ class _HistoryPageState extends State<HistoryPage> {
 
   Future<void> fetchChartData() async {
     plotInfoMap = {};
+    moodPlotInfo = {
+      '🤗': 0,
+      '😊': 0,
+      '😃': 0,
+      '😴': 0,
+      '😡': 0,
+      '🤒': 0,
+      '😢': 0,
+      '😔': 0
+    };
+    takenCount = 0;
     chartName = '';
     chartAverage = 0.toString();
     switch (historyType) {
@@ -289,16 +337,25 @@ class _HistoryPageState extends State<HistoryPage> {
     double totalDays = 0, totalScore = 0;
     while (start.year <= today.year) {
       Map<String, dynamic>? yearlyData = await getDataForYear(start);
-      Map<String, double>? monthlyData = yearlyData!['monthlyData'];
-      Map<String, double>? metaData = yearlyData!['metaData'];
-      if (metaData!['Average'] != 0 || startFound) {
+      Map<String, double>? monthlyData = yearlyData![KEY_MONTHLY_DATA];
+      Map<String, double>? metaData = yearlyData![KEY_METADATA];
+      if (metaData![KEY_AVERAGE] != 0 || startFound) {
         startFound = true;
-        int avg = metaData!['Average']?.round() ?? 0;
+        int avg = metaData![KEY_AVERAGE]?.round() ?? 0;
         plotInfoMap.putIfAbsent(
             (start.year).toString(), () => BarPlotInfo(avg, null, null));
-        totalDays += metaData!['totalDays'] ?? 0;
-        totalScore += metaData!['totalScore'] ?? 0;
+        totalDays += metaData![KEY_TOTAL_DAYS] ?? 0;
+        totalScore += metaData![KEY_TOTAL_SCORE] ?? 0;
       }
+      takenCount = takenCount + (metaData![KEY_TOTAL_DAYS] ?? 0);
+      moodPlotInfo.update('🤗', (value) => value + (metaData!['🤗'] ?? 0));
+      moodPlotInfo.update('😊', (value) => value + (metaData!['😊'] ?? 0));
+      moodPlotInfo.update('😃', (value) => value + (metaData!['😃'] ?? 0));
+      moodPlotInfo.update('😴', (value) => value + (metaData!['😴'] ?? 0));
+      moodPlotInfo.update('😡', (value) => value + (metaData!['😡'] ?? 0));
+      moodPlotInfo.update('🤒', (value) => value + (metaData!['🤒'] ?? 0));
+      moodPlotInfo.update('😢', (value) => value + (metaData!['😢'] ?? 0));
+      moodPlotInfo.update('😔', (value) => value + (metaData!['😔'] ?? 0));
       start = getNextYear(start);
     }
     if (totalDays != 0) {
@@ -308,15 +365,24 @@ class _HistoryPageState extends State<HistoryPage> {
 
   Future<void> fetchYearlyData() async {
     Map<String, dynamic>? yearlyData = await getDataForYear(chartYear);
-    Map<String, double>? monthlyData = yearlyData!['monthlyData'];
-    Map<String, double>? metaData = yearlyData!['metaData'];
+    Map<String, double>? monthlyData = yearlyData![KEY_MONTHLY_DATA];
+    Map<String, double>? metaData = yearlyData![KEY_METADATA];
     chartName = chartYear.year.toString();
     if (yearlyData != null) {
-      chartAverage = metaData!['Average']?.toStringAsFixed(1) ?? '0.0';
+      chartAverage = metaData![KEY_AVERAGE]?.toStringAsFixed(1) ?? '0.0';
       monthlyData?.forEach((key, value) {
         int intval = value.round();
         plotInfoMap.putIfAbsent(key, () => BarPlotInfo(intval, null, null));
       });
+      takenCount = metaData![KEY_TOTAL_DAYS] ?? 0;
+      moodPlotInfo.update('🤗', (value) => metaData!['🤗'] ?? 0);
+      moodPlotInfo.update('😊', (value) => metaData!['😊'] ?? 0);
+      moodPlotInfo.update('😃', (value) => metaData!['😃'] ?? 0);
+      moodPlotInfo.update('😴', (value) => metaData!['😴'] ?? 0);
+      moodPlotInfo.update('😡', (value) => metaData!['😡'] ?? 0);
+      moodPlotInfo.update('🤒', (value) => metaData!['🤒'] ?? 0);
+      moodPlotInfo.update('😢', (value) => metaData!['😢'] ?? 0);
+      moodPlotInfo.update('😔', (value) => metaData!['😔'] ?? 0);
     }
   }
 
@@ -337,6 +403,10 @@ class _HistoryPageState extends State<HistoryPage> {
           plotInfoMap.putIfAbsent(
               transKey, () => BarPlotInfo(dd.goodness, dd, trans));
           count++;
+          String mood = getEmojiForXy(getValueFromPer3centage(dd.x),
+              getValueFromPer3centage(dd.y), radius);
+          moodPlotInfo.update(mood, (value) => ++value);
+          takenCount++;
           sum = sum + dd.goodness;
         } else {
           plotInfoMap.putIfAbsent(transKey, () => BarPlotInfo(0, null, null));
@@ -365,7 +435,11 @@ class _HistoryPageState extends State<HistoryPage> {
           dd = DailyData.fromJson(json);
           plotInfoMap.putIfAbsent(getDayOfWeek(movingDate),
               () => BarPlotInfo(dd.goodness, dd, movingDate));
+          String mood = getEmojiForXy(getValueFromPer3centage(dd.x),
+              getValueFromPer3centage(dd.y), radius);
+          moodPlotInfo.update(mood, (value) => ++value);
           count++;
+          takenCount++;
           sum = sum + dd.goodness;
         } else {
           plotInfoMap.putIfAbsent(

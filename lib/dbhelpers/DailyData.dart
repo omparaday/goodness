@@ -6,9 +6,17 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../home.dart';
+import '../widgets/MoodCircle.dart';
 import 'Utils.dart';
 
 part 'DailyData.g.dart';
+
+const String KEY_AVERAGE = 'Average';
+const String KEY_MONTHLY_DATA = 'monthlyData';
+const String KEY_TOTAL_SCORE = 'totalScore';
+const String KEY_TOTAL_DAYS = 'totalDays';
+const String KEY_METADATA = 'metaData';
 
 @JsonSerializable()
 class DailyData {
@@ -60,6 +68,16 @@ Future<Map<String, dynamic>?>? getDataForYear(DateTime date) async {
   Map<String, dynamic> result = {};
   Map<String, double> monthlyData = {};
   Map<String, double> metaData = {};
+  metaData = {
+    '🤗': 0,
+    '😊': 0,
+    '😃': 0,
+    '😴': 0,
+    '😡': 0,
+    '🤒': 0,
+    '😢': 0,
+    '😔': 0
+  };
   while (transDate.year == date.year) {
     Map<String, dynamic>? monthData =
         await getDataForMonth(getDateKeyFormat(transDate));
@@ -68,6 +86,9 @@ Future<Map<String, dynamic>?>? getDataForYear(DateTime date) async {
       monthDays++;
       DailyData dd = DailyData.fromJson(value);
       monthScore += dd.goodness;
+      String mood = getEmojiForXy(
+          getValueFromPer3centage(dd.x), getValueFromPer3centage(dd.y), radius);
+      metaData.update(mood, (value) => ++value);
     });
     totalDays += monthDays;
     totalScore += monthScore;
@@ -80,14 +101,14 @@ Future<Map<String, dynamic>?>? getDataForYear(DateTime date) async {
     transDate = getNextMonth(transDate);
   }
   if (totalDays == 0) {
-    metaData.putIfAbsent('Average', () => 0);
+    metaData.putIfAbsent(KEY_AVERAGE, () => 0);
   } else {
-    metaData.putIfAbsent('Average', () => totalScore / totalDays);
+    metaData.putIfAbsent(KEY_AVERAGE, () => totalScore / totalDays);
   }
-  metaData.putIfAbsent('totalScore', () => totalScore);
-  metaData.putIfAbsent('totalDays', () => totalDays);
-  result.putIfAbsent('monthlyData', () => monthlyData);
-  result.putIfAbsent('metaData', () => metaData);
+  metaData.putIfAbsent(KEY_TOTAL_SCORE, () => totalScore);
+  metaData.putIfAbsent(KEY_TOTAL_DAYS, () => totalDays);
+  result.putIfAbsent(KEY_MONTHLY_DATA, () => monthlyData);
+  result.putIfAbsent(KEY_METADATA, () => metaData);
   return result;
 }
 

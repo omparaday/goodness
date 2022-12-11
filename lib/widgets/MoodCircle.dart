@@ -180,28 +180,6 @@ class MoodCircle extends StatelessWidget {
     );
   }
 
-  String getMoodNameForEmoji(String emoji, BuildContext context) {
-    switch (emoji) {
-      case "😊":
-        return L10n.of(context).resource('happy');
-      case "😃":
-        return L10n.of(context).resource('excited');
-      case "😴":
-        return L10n.of(context).resource('peaceful');
-      case "😢":
-        return L10n.of(context).resource('fear');
-      case "😔":
-        return L10n.of(context).resource('sad');
-      case "🤒":
-        return L10n.of(context).resource('weak');
-      case "😡":
-        return L10n.of(context).resource('angry');
-      case "🤗":
-        return L10n.of(context).resource('strong');
-    }
-    return '';
-  }
-
   Widget getEmoji(String s, BuildContext context) {
     return Tooltip(
         message: getMoodNameForEmoji(s, context),
@@ -312,4 +290,26 @@ Size getArcTextSize(BuildContext context) {
       textDirection: TextDirection.ltr)
     ..layout(minWidth: 0, maxWidth: double.infinity))
       .size;
+}
+
+String getMoodNameForEmoji(String emoji, BuildContext context) {
+  switch (emoji) {
+    case "😊":
+      return L10n.of(context).resource('happy');
+    case "😃":
+      return L10n.of(context).resource('excited');
+    case "😴":
+      return L10n.of(context).resource('peaceful');
+    case "😢":
+      return L10n.of(context).resource('fear');
+    case "😔":
+      return L10n.of(context).resource('sad');
+    case "🤒":
+      return L10n.of(context).resource('weak');
+    case "😡":
+      return L10n.of(context).resource('angry');
+    case "🤗":
+      return L10n.of(context).resource('strong');
+  }
+  return '';
 }

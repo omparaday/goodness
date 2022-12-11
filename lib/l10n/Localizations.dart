@@ -90,7 +90,9 @@ class L10n {
       'appDownloadProfileInfo': 'You can download this later in profile page.',
       'dailyReminderNotificationTitle': 'Time to record your day!',
       'dailyReminderNotificationBody': 'Record your mood today for a better tomorrow.',
-      'dailyReminderNotificationPayload': 'Way to go for better tomorrow!'
+      'dailyReminderNotificationPayload': 'Way to go for better tomorrow!',
+      "moodSummary": "Mood Summary",
+      "goodnessScoreAverage": "Average Goodness"
     },
     'ta': {
       'home': 'முகப்பு',
@@ -169,7 +171,9 @@ class L10n {
       'appDownloadProfileInfo': 'சுயவிவரப் பக்கத்தில் இதைப் பின்னரும் பதிவிறக்கம் செய்யலாம்.',
       'dailyReminderNotificationTitle': 'உங்கள் நாளை பதிவு செய்ய வேண்டிய நேரம்!',
       'dailyReminderNotificationBody': 'ஒரு சிறந்த எதிர்காலத்திற்காக உங்கள் மனநிலையை இன்று பதிவு செய்யுங்கள்.',
-      'dailyReminderNotificationPayload': 'நல்ல எதிர்காலத்தை நோக்கி செல்வதற்கான வழி!'
+      'dailyReminderNotificationPayload': 'நல்ல எதிர்காலத்தை நோக்கி செல்வதற்கான வழி!',
+      "moodSummary": "மனநிலை சுருக்கம்",
+      "goodnessScoreAverage": "சராசரி நன்மை மதிப்பு"
     },
   };
 
