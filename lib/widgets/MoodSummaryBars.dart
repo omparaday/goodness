@@ -22,26 +22,36 @@ class MoodSummaryBars extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size textHeight = (TextPainter(
-            text: TextSpan(text: 'h ', style: TextStyle(fontSize: FONTSIZE)),
-            maxLines: 1,
-            textScaleFactor: MediaQuery.of(context).textScaleFactor,
-            textDirection: TextDirection.ltr)
-          ..layout())
+    final Size textSize = (TextPainter(
+        text: TextSpan(text: '🤗', style: TextStyle(fontSize: LARGE_FONTSIZE)),
+        maxLines: 1,
+        textScaleFactor: MediaQuery.of(context).textScaleFactor,
+        textDirection: TextDirection.ltr)
+      ..layout())
         .size;
+    final Size percentageSize = (TextPainter(
+        text: TextSpan(text: '100% (100/100)', style: TextStyle(fontSize: VERYSMALL_FONTSIZE)),
+        maxLines: 1,
+        textScaleFactor: MediaQuery.of(context).textScaleFactor,
+        textDirection: TextDirection.ltr)
+      ..layout())
+        .size;
+    double barMaxWidth = chartWidth - (textSize.width+percentageSize.width+5);
     barList = [];
     plotList.forEach((barName, barPlotInfo) {
       double barValue = barPlotInfo;
-      double percentage = barValue * 100/totalCount;
+      double percentage = barValue * 100 / totalCount;
       barList.add(Tooltip(
-          message: '${getMoodNameForEmoji(barName, context)}: ${barValue.truncate()}/${totalCount.truncate()}',
+          message:
+              '${getMoodNameForEmoji(barName, context)}: ${barValue.truncate()}/${totalCount.truncate()}',
           child: GestureDetector(
               child: Row(children: <Widget>[
             Text(
               barName,
               style:
-                  TextStyle(fontFamily: GoogleFonts.inconsolata().fontFamily),
+                  TextStyle(fontSize: LARGE_FONTSIZE),
             ),
+            SizedBox(width: 5,),
             Container(
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 255, 153, 102),
@@ -51,14 +61,14 @@ class MoodSummaryBars extends StatelessWidget {
                 ),
               ),
               width: totalCount != 0
-                  ? barValue * (chartWidth) * 0.7 / totalCount
+                  ? barValue * barMaxWidth / totalCount
                   : 0,
               height: 12,
             ),
             barValue != 0
                 ? Text(
                     '${percentage.truncate()}% (${barValue.truncate()}/${totalCount.truncate()})',
-              style: TextStyle(fontSize: VERYSMALL_FONTSIZE),
+                    style: TextStyle(fontSize: VERYSMALL_FONTSIZE),
                   )
                 : SizedBox.shrink(),
           ]))));

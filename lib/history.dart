@@ -14,6 +14,7 @@ import 'package:goodness/widgets/HistoryChart.dart';
 import 'package:goodness/widgets/ImageShare.dart';
 import 'package:goodness/widgets/MoodCircle.dart';
 import 'package:goodness/widgets/MoodSummaryBars.dart';
+import 'package:goodness/widgets/RounderSegmentControl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -91,31 +92,17 @@ class _HistoryPageState extends State<HistoryPage> {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(width: 0, height: 10),
-              CupertinoSegmentedControl<HistoryType>(
+              RoundedSegmentControl<HistoryType>(
                 groupValue: historyType,
                 onValueChanged: (HistoryType value) {
                   historyType = value;
                   fetchChartData();
                 },
-                children: <HistoryType, Widget>{
-                  HistoryType.Week: Text(L10n.of(context).resource('week')),
-                  HistoryType.Month: Text(L10n.of(context).resource('month')),
-                  HistoryType.Year: Text(L10n.of(context).resource('year')),
-                  HistoryType.All: Text(L10n.of(context).resource('all')),
-                },
-              ),
-              SizedBox(width: 0, height: 15),
-              CupertinoSegmentedControl<ChartType>(
-                groupValue: chartType,
-                onValueChanged: (ChartType value) {
-                  chartType = value;
-                  fetchChartData();
-                },
-                children: <ChartType, Widget>{
-                  ChartType.MoodSummary:
-                      Text(L10n.of(context).resource('moodSummary')),
-                  ChartType.GoodnessScoreAverage:
-                      Text(L10n.of(context).resource('goodnessScoreAverage')),
+                children: <HistoryType, String>{
+                  HistoryType.Week: L10n.of(context).resource('week'),
+                  HistoryType.Month: L10n.of(context).resource('month'),
+                  HistoryType.Year: L10n.of(context).resource('year'),
+                  HistoryType.All: L10n.of(context).resource('all'),
                 },
               ),
               SizedBox(width: 0, height: 10),
@@ -134,6 +121,21 @@ class _HistoryPageState extends State<HistoryPage> {
                       : SizedBox.shrink()
                 ],
               ),
+              SizedBox(width: 0, height: 10),
+              CupertinoSegmentedControl<ChartType>(
+                groupValue: chartType,
+                onValueChanged: (ChartType value) {
+                  chartType = value;
+                  fetchChartData();
+                },
+                children: <ChartType, Widget>{
+                  ChartType.MoodSummary:
+                  Text(L10n.of(context).resource('moodSummary')),
+                  ChartType.GoodnessScoreAverage:
+                  Text(L10n.of(context).resource('goodnessScoreAverage')),
+                },
+              ),
+              SizedBox(width: 0, height: 10),
               Row(
                 children: <Widget>[
                   CupertinoButton(
@@ -151,7 +153,6 @@ class _HistoryPageState extends State<HistoryPage> {
                       onPressed: () => goNext())
                 ],
               ),
-              SizedBox(width: 0, height: 10),
               chartType == ChartType.GoodnessScoreAverage ? chart : moodBars,
               SizedBox(width: 0, height: 10),
               Text(

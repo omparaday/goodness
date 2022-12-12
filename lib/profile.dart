@@ -5,6 +5,7 @@ import 'package:goodness/dbhelpers/DailyData.dart';
 import 'package:goodness/main.dart';
 import 'package:goodness/widgets/DecoratedText.dart';
 import 'package:goodness/widgets/DecoratedWidget.dart';
+import 'package:goodness/widgets/RounderSegmentControl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -238,22 +239,22 @@ class _ProfilePageState extends State<ProfilePage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(L10n.of(context).resource('gender')),
-                CupertinoSegmentedControl<Gender>(
+                RoundedSegmentControl<Gender>(
                   groupValue: _gender,
                   onValueChanged: (Gender value) {
                     setState(() {
                       _gender = value;
                     });
                   },
-                  children: <Gender, Widget>{
-                    Gender.Male: Text(L10n.of(context).resource('male')),
-                    Gender.Female: Text(L10n.of(context).resource('female')),
+                  children: <Gender, String>{
+                    Gender.Male: L10n.of(context).resource('male'),
+                    Gender.Female: (L10n.of(context).resource('female')),
                     Gender.NonBinary:
-                        Text(L10n.of(context).resource('nonBinary')),
+                        (L10n.of(context).resource('nonBinary')),
                     Gender.Transgender:
-                        Text(L10n.of(context).resource('transgender')),
+                        (L10n.of(context).resource('transgender')),
                     Gender.PreferNotToRespond:
-                        Text(L10n.of(context).resource('preferNotToRespond')),
+                        (L10n.of(context).resource('preferNotToRespond')),
                   },
                 ),
               ])),
@@ -261,16 +262,16 @@ class _ProfilePageState extends State<ProfilePage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(L10n.of(context).resource('maritalStatus')),
-                CupertinoSegmentedControl<bool>(
+                RoundedSegmentControl<bool>(
                   groupValue: _married,
                   onValueChanged: (bool value) {
                     setState(() {
                       _married = value;
                     });
                   },
-                  children: <bool, Widget>{
-                    true: Text(L10n.of(context).resource('married')),
-                    false: Text(L10n.of(context).resource('unmarried')),
+                  children: <bool, String>{
+                    true: (L10n.of(context).resource('married')),
+                    false: (L10n.of(context).resource('unmarried')),
                   },
                 ),
               ])),
@@ -278,16 +279,16 @@ class _ProfilePageState extends State<ProfilePage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(L10n.of(context).resource('phyCondidtions')),
-                CupertinoSegmentedControl<bool>(
+                RoundedSegmentControl<bool>(
                   groupValue: _disabled,
                   onValueChanged: (bool value) {
                     setState(() {
                       _disabled = value;
                     });
                   },
-                  children: <bool, Widget>{
-                    true: Text(L10n.of(context).resource('disabled')),
-                    false: Text(L10n.of(context).resource('noDisability')),
+                  children: <bool, String>{
+                    true: (L10n.of(context).resource('disabled')),
+                    false: (L10n.of(context).resource('noDisability')),
                   },
                 ),
               ])),
